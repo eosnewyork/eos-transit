@@ -1,4 +1,4 @@
-# scatter-basic
+# eos-scatter-basic
 
 This is an example of running a `pay` transaction via Scatter (either `ScatterWebExtension` or `Scatter Desktop`).
 
