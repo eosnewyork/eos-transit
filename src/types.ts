@@ -10,7 +10,6 @@ export type EosSignProvider = (
 
 export interface Integration {
   name: string;
-  // signatureProvider?: SignatureProvider;
   signProvider?: EosSignProvider;
 }
 
