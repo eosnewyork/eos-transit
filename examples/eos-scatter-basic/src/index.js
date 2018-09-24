@@ -20,7 +20,7 @@ const customEosOptions = {
   chainId: network.chainId
 };
 
-function connectToScatter(preferExtension = true, appName = 'some_app') {
+function connectToScatter(preferExtension = true, appName = 'my_eos_dapp') {
   return new Promise((resolve, reject) => {
     if (preferExtension) {
       document.addEventListener('scatterLoaded', () => {
@@ -86,7 +86,7 @@ function pay(eosInstance, senderName, receiverName, amount) {
 }
 
 async function init() {
-  const scatter = await connectToScatter();
+  const scatter = await connectToScatter(false);
   console.log('[app] Scatter instance', scatter);
 
   const eosInstance = scatter.eos(network, Eos, eosOptions);
@@ -101,7 +101,7 @@ async function init() {
   function requestTxn(senderName, receiverName, amount) {
     return pay(
       eosInstance,
-      // Eos(Object.assign({}, altEosOptions, { signProvider: customSignProvider })),
+      // Eos(Object.assign({}, customEosOptions, { signProvider: customSignProvider })),
       senderName /* account.name */,
       receiverName,
       amount
