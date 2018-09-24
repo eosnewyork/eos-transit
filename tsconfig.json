@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib",
+    "module": "esnext",
+    "target": "es5",
+    "lib": ["dom", "es5", "es2015"],
+    "declaration": true,
+    "declarationDir": "./lib",
+    "sourceMap": true,
+    "jsx": "react",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": false,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types", "./src/typings"]
+  },
+  "files": ["src/index.ts", "src/integrations/scatter-desktop/index.ts"],
+  "include": ["src/typings/*"]
+}
