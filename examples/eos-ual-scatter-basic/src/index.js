@@ -1,5 +1,5 @@
 import { makeUAL } from 'eos-ual';
-import { makeScatterDesktopIntegration } from 'ual-js/lib/integrations/scatter-desktop';
+import { makeScatterDesktopIntegration } from 'eos-ual/lib/integrations/scatter-desktop';
 
 // Some hardcode data
 
