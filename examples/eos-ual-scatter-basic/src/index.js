@@ -1,4 +1,4 @@
-import { makeUAL } from 'ual-js';
+import { makeUAL } from 'eos-ual';
 import { makeScatterDesktopIntegration } from 'ual-js/lib/integrations/scatter-desktop';
 
 // Some hardcode data
