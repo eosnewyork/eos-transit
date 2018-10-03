@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'react-emotion';
 import { WalletList } from 'shared/wallets/WalletList';
+import { WalletModel } from 'shared/wallets/types';
 
 // Visual components
 
-const UserMenuRoot = styled('div')({
-  padding: '15px 25px',
-  width: 350
+const UserWalletListRoot = styled('div')({
+  marginBottom: 15
 });
 
 // Exported / behavior components
@@ -16,29 +16,59 @@ export interface UserWalletListProps {
   // TODO
 }
 
-const wallets = [
+const wallets: WalletModel[] = [
   {
-    id: 'scatter-desktop',
-    name: 'Scatter Desktop',
-    description:
-      'Scatter Desktop application that keeps your private keys secure'
+    providerInfo: {
+      id: 'scatter-desktop',
+      name: 'Scatter Desktop',
+      description:
+        'Scatter Desktop application that keeps your private keys secure'
+    },
+    connectionStatus: {
+      connected: true
+    },
+    walletInfo: {
+      accountName: 'bob123451234',
+      accountAuthority: 'active',
+      eosBalance: 99963.0000,
+      ram: 1020241, // Kb
+      cpu: 10793253535, // ms
+      net: 56587736535 // KiB
+    }
   },
   {
-    id: 'paste-the-private-key',
-    name: 'Paste-The-Private-Key™',
-    description:
-      'Forget about security and just paste your private key directly to sign your transactions'
+    providerInfo: {
+      id: 'paste-the-private-key',
+      name: 'Paste-The-Private-Key™',
+      description:
+        'Forget about security and just paste your private key directly to sign your transactions'
+    },
+    connectionStatus: {
+      connected: false,
+      error: true,
+      errorMessage: 'Connection error, please try again'
+    }
   },
   {
-    id: 'eos-metro',
-    name: 'METRO™ Hardware Wallet',
-    description:
-      'Use secure hardware private key vault to sign your transactions'
+    providerInfo: {
+      id: 'eos-metro',
+      name: 'METRO™ Hardware Wallet',
+      description:
+        'Use secure hardware private key vault to sign your transactions'
+    },
+    connectionStatus: {
+      connected: false,
+      connecting: true
+    }
   }
 ];
 
 export function UserWalletList({  }: UserWalletListProps) {
-  return <WalletList wallets={wallets} />;
+  return (
+    <UserWalletListRoot>
+      <WalletList wallets={wallets} />
+    </UserWalletListRoot>
+  );
 }
 
 export default UserWalletList;
