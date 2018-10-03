@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import WalletSelectItem, { WalletListItemData } from './WalletListItem';
+import WalletSelectItem from './WalletListItem';
+import { WalletModel } from './types';
 
 // Visual components
 
@@ -11,24 +12,7 @@ const WalletListRoot = styled('div')({
 // Exported component
 
 export interface WalletListProps {
-  wallets: WalletListItemData[];
-}
-
-const walletProvidersInProgress = {
-  // 'scatter-desktop': true
-};
-
-const walletProvidersWithError = {
-  // 'paste-the-private-key': true
-};
-
-// TEMP
-function isWalletConnecting(walletProviderId: string) {
-  return !!walletProvidersInProgress[walletProviderId];
-}
-
-function walletHasError(walletProviderId: string) {
-  return !!walletProvidersWithError[walletProviderId];
+  wallets: WalletModel[];
 }
 
 export class WalletList extends Component<WalletListProps> {
@@ -38,12 +22,7 @@ export class WalletList extends Component<WalletListProps> {
     return (
       <WalletListRoot>
         {wallets.map(wallet => (
-          <WalletSelectItem
-            key={wallet.id}
-            data={wallet}
-            isConnecting={isWalletConnecting(wallet.id)}
-            hasError={walletHasError(wallet.id)}
-          />
+          <WalletSelectItem key={wallet.providerInfo.id} data={wallet} />
         ))}
       </WalletListRoot>
     );
