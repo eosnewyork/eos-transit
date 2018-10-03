@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'react-emotion';
 import { UserWalletList } from './UserWalletList';
+import { UserMenuLogoutButton } from './UserMenuLogoutButton';
 
 // Visual components
 
@@ -31,6 +32,7 @@ export function UserMenu({  }: UserMenuProps) {
       <UserMenuSection>
         <UserMenuSectionHeading>My Wallets</UserMenuSectionHeading>
         <UserWalletList />
+        <UserMenuLogoutButton />
       </UserMenuSection>
     </UserMenuRoot>
   );

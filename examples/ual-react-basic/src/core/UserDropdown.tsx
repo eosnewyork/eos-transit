@@ -12,7 +12,12 @@ export function UserDropdown() {
     <Dropdown>
       {({ isExpanded, toggle }) => (
         <DropdownContainer>
-          <UserMedia caret={true} isActive={isExpanded} onClick={toggle} />
+          <UserMedia
+            caret={true}
+            isActive={isExpanded}
+            onClick={toggle}
+            username="bob123451234"
+          />
 
           <DropdownContent visible={isExpanded} alignRight={true}>
             <UserMenu />
