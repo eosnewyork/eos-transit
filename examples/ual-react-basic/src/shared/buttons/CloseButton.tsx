@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'react-emotion';
+import styled from 'react-emotion';
 import { IoIosClose } from 'react-icons/io';
 
 export interface CloseButtonProps {
