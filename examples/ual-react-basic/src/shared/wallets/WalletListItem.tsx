@@ -246,6 +246,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
             )}
           </WalletListItemBody>
         </WalletListItemContent>
+
         <WalletListItemProgress active={connecting} indeterminate={true} />
         {error && (
           <WalletListItemConnectButton>Reconnect</WalletListItemConnectButton>
