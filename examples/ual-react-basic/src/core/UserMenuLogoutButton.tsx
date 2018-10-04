@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'react-emotion';
 import { IoIosLogOut } from 'react-icons/io';
+import { Subscribe } from 'unstated';
+import { SessionStateContainer } from './SessionStateContainer';
 
 export interface UserMenuLogoutButtonProps {
   onClick?: (event: any) => void;
@@ -53,4 +55,14 @@ export function UserMenuLogoutButton({ onClick }: UserMenuLogoutButtonProps) {
   );
 }
 
-export default UserMenuLogoutButton;
+export function UserMenuLogoutButtonConnected() {
+  return (
+    <Subscribe to={[SessionStateContainer]}>
+      {(sessionStateContainer: SessionStateContainer) => (
+        <UserMenuLogoutButton onClick={sessionStateContainer.logout} />
+      )}
+    </Subscribe>
+  );
+}
+
+export default UserMenuLogoutButtonConnected;
