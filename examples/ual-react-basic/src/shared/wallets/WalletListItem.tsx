@@ -1,11 +1,12 @@
 import React, { Component, ComponentType } from 'react';
 import styled from 'react-emotion';
-import { IoIosLock, IoMdClose, IoIosLogOut } from 'react-icons/io';
+import { IoMdClose, IoIosLogOut } from 'react-icons/io';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { WalletModel } from './types';
 import { WalletListItemProgress } from './WalletListItemProgress';
 import { WalletListItemStatus } from './WalletListItemStatus';
 import { WalletListItemInfo } from './WalletListItemInfo';
+import { WalletProviderIcon } from './WalletProviderIcon';
 
 // Visual components
 
@@ -264,8 +265,14 @@ export class WalletListItem extends Component<WalletListItemProps> {
         `${walletInfo.accountName}@${walletInfo.accountAuthority}`) ||
       'unknown';
 
-    const IconComponent = this.props.iconComponent || IoIosLock;
-    const icon = connecting ? <SpinnerIcon size={24} /> : <IconComponent />;
+    const IconComponent = this.props.iconComponent;
+    const icon = connecting ? (
+      <SpinnerIcon size={24} />
+    ) : IconComponent ? (
+      <IconComponent />
+    ) : (
+      <WalletProviderIcon providerId={providerInfo.id} />
+    );
 
     return (
       <WalletListItemRoot
