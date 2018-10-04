@@ -35,9 +35,9 @@ export const UserMenuLogoutButtonRoot = styled('div')({
 });
 
 export const UserMenuLogoutButtonIcon = styled('div')({
-  paddingLeft: 10,
   display: 'flex',
-  alignItems: 'center'
+  alignItems: 'center',
+  paddingLeft: 10
 });
 
 export const UserMenuLogoutButtonText = styled('div')({});
