@@ -268,8 +268,6 @@ export class WalletListItem extends Component<WalletListItemProps> {
     const IconComponent = this.props.iconComponent;
     const icon = connecting ? (
       <SpinnerIcon size={24} />
-    ) : error ? (
-      <IoIosLock />
     ) : IconComponent ? (
       <IconComponent />
     ) : (
