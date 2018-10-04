@@ -1,8 +1,8 @@
 import React from 'react';
 import { Subscribe } from 'unstated';
+import { NoContent } from '../shared/NoContent';
 import { WalletList } from '../shared/wallets/WalletList';
 import SessionStateContainer from './SessionStateContainer';
-import { NoContent } from 'shared/NoContent';
 
 export function AvailableWalletList() {
   return (
@@ -14,7 +14,7 @@ export function AvailableWalletList() {
           return <WalletList wallets={availableWallets} />;
         }
 
-        return <NoContent message="No Wallet Providers available" />;
+        return <NoContent message="No available wallet providers" />;
       }}
     </Subscribe>
   );
