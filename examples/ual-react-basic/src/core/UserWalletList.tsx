@@ -11,7 +11,14 @@ export function UserWalletList() {
         const activeWallets = sessionStateContainer.getActiveWallets();
 
         if (activeWallets.length) {
-          return <WalletList wallets={activeWallets} />;
+          return (
+            <WalletList
+              wallets={activeWallets}
+              onItemDismissClick={sessionStateContainer.dismissWallet}
+              onItemLogoutClick={sessionStateContainer.logoutWallet}
+              onItemReconnectClick={sessionStateContainer.connectToWallet}
+            />
+          );
         }
 
         return (

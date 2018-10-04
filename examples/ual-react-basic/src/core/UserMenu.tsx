@@ -41,7 +41,6 @@ export interface UserMenuProps {
   // TODO
 }
 
-// tslint:disable-next-line:no-empty-interface
 export interface UserMenuState {
   isAddWalletViewShown: boolean;
 }
@@ -98,7 +97,7 @@ export class UserMenu extends Component<UserMenuProps, UserMenuState> {
                 onClick={showDefaultView}
               />
             </UserMenuSectionHeader>
-            <AvailableWalletList />
+            <AvailableWalletList onItemSelect={showDefaultView} />
           </>
         )}
       </UserMenuRoot>
