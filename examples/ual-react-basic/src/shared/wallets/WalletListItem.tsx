@@ -108,13 +108,13 @@ const WalletListItemTitle = styled('div')({
   color: 'white',
 
   '&:not(:last-child)': {
-    marginBottom: 4
+    marginBottom: 6
   }
 });
 
 const WalletListItemLabel = styled('div')({
   fontSize: 12,
-  color: 'rgba(255, 255, 255, 0.5)'
+  color: 'rgba(255, 255, 255, 0.4)'
 });
 
 export const WalletListItemConnectButton = styled('button')({

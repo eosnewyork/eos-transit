@@ -11,8 +11,8 @@ interface WalletListItemStatusLabelProps {
 
 const WalletListItemStatusLabel = styled('div')(
   {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)'
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.45)'
   },
   ({ success, error }: WalletListItemStatusLabelProps) => {
     if (error) return { color: '#e84a75' };
