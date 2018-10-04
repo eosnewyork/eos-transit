@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { IoIosAddCircleOutline, IoIosCloseCircleOutline } from 'react-icons/io';
-import { UserWalletList } from './UserWalletList';
 import { UserMenuLogoutButton } from './UserMenuLogoutButton';
-import { UserMenuAddWalletButton } from './UserMenuAddWalletButton';
 import { MenuSectionHeaderButton } from './MenuSectionHeaderButton';
+import { UserWalletList } from './UserWalletList';
+import { AvailableWalletList } from './AvailableWalletList';
 
 // Visual components
 
@@ -98,7 +98,7 @@ export class UserMenu extends Component<UserMenuProps, UserMenuState> {
                 onClick={showDefaultView}
               />
             </UserMenuSectionHeader>
-            <UserWalletList />
+            <AvailableWalletList />
           </>
         )}
       </UserMenuRoot>
