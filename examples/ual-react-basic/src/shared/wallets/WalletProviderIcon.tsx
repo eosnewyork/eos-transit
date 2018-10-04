@@ -1,12 +1,15 @@
 import React from 'react';
-import { IoIosLock } from 'react-icons/io';
+import { IoIosUnlock } from 'react-icons/io';
+import { FiCopy } from 'react-icons/fi';
+import { ScatterLogo } from '../ScatterLogo';
+import { MetroLogo } from '../MetroLogo';
 
-const defaultIcon = IoIosLock;
+const defaultIcon = IoIosUnlock;
 
 const providerIcons = {
-  'scatter-dektop': IoIosLock,
-  'eos-metro': IoIosLock,
-  'paste-the-private-key': IoIosLock
+  'eos-metro': MetroLogo,
+  'scatter-desktop': ScatterLogo,
+  'paste-the-private-key': FiCopy
 };
 
 interface WalletProviderIconProps {
