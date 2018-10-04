@@ -23,16 +23,16 @@ const walletProviders = [
       'Scatter Desktop application that keeps your private keys secure'
   },
   {
-    id: 'paste-the-private-key',
-    name: 'Paste-The-Private-Key™',
-    description:
-      'Forget about security and just paste your private key directly to sign your transactions'
-  },
-  {
     id: 'eos-metro',
     name: 'METRO™ Hardware Wallet',
     description:
       'Use secure hardware private key vault to sign your transactions'
+  },
+  {
+    id: 'paste-the-private-key',
+    name: 'Paste-The-Private-Key™',
+    description:
+      'Forget about security and just paste your private key directly to sign your transactions'
   }
 ];
 
