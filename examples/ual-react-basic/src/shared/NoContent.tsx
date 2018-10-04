@@ -6,7 +6,7 @@ const NoContentRoot = styled('div')({
   display: 'flex',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: '10px'
+  // padding: '10px'
 });
 
 const NoContentFrame = styled('div')({
@@ -16,7 +16,7 @@ const NoContentFrame = styled('div')({
   alignItems: 'center',
   justifyContent: 'center',
   padding: '50px 20px',
-  border: '1px dotted rgba(255, 255, 255, 0.3)',
+  border: '1px dashed rgba(255, 255, 255, 0.3)',
   textAlign: 'center'
 });
 
