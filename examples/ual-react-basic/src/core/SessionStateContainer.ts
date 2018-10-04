@@ -3,7 +3,6 @@ import { WalletModel } from '../shared/wallets/types';
 
 export interface SessionState {
   activeWallets: WalletModel[];
-  // availableWallets: WalletModel[];
 }
 
 const tempWalletInfo = {
@@ -37,7 +36,7 @@ const walletProviders = [
   }
 ];
 
-const activeWallets = [
+const tempActiveWallets = [
   {
     providerInfo: {
       id: 'scatter-desktop',
@@ -55,7 +54,7 @@ const activeWallets = [
 ];
 
 export const DEFAULT_SESSION_STATE = {
-  activeWallets
+  activeWallets: tempActiveWallets
 };
 
 export class SessionStateContainer extends Container<SessionState> {
@@ -163,6 +162,12 @@ export class SessionStateContainer extends Container<SessionState> {
     return this.dismissWallet(wallet);
   };
 
+  getDefaultWalletInfo = () => {
+    const { activeWallets } = this.state;
+    if (!activeWallets || !activeWallets.length) return void 0;
+    return activeWallets[0].walletInfo;
+  };
+
   getWalletInfo = (providerId: string) => {
     // TODO
   };
@@ -175,7 +180,7 @@ export class SessionStateContainer extends Container<SessionState> {
     this.setState({
       activeWallets: []
     });
-  }
+  };
 }
 
 export default SessionStateContainer;
