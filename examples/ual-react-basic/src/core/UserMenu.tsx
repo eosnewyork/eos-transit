@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { IoIosAddCircleOutline, IoIosCloseCircleOutline } from 'react-icons/io';
-import { UserMenuLogoutButton } from './UserMenuLogoutButton';
 import { MenuSectionHeaderButton } from './MenuSectionHeaderButton';
 import { UserWalletList } from './UserWalletList';
 import { AvailableWalletList } from './AvailableWalletList';
+import UserMenuLogoutButton from './UserMenuLogoutButton';
 
 // Visual components
 
