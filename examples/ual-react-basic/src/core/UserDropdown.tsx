@@ -7,7 +7,11 @@ import {
 import UserMedia from './UserMedia';
 import { UserMenu } from './UserMenu';
 
-export function UserDropdown() {
+export interface UserDropdownProps {
+  username?: string;
+}
+
+export function UserDropdown({ username }: UserDropdownProps) {
   return (
     <Dropdown>
       {({ isExpanded, toggle }) => (
@@ -15,8 +19,9 @@ export function UserDropdown() {
           <UserMedia
             caret={true}
             isActive={isExpanded}
+            isAnonymous={!username}
             onClick={toggle}
-            username="bob123451234"
+            username={username || 'unknown'}
           />
 
           <DropdownContent visible={isExpanded} alignRight={true}>
