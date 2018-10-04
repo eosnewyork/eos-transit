@@ -91,7 +91,7 @@ export class UserMenu extends Component<UserMenuProps, UserMenuState> {
         {isAddWalletViewShown && (
           <>
             <UserMenuSectionHeader>
-              <UserMenuSectionHeading>Available Options</UserMenuSectionHeading>
+              <UserMenuSectionHeading>Available Wallets</UserMenuSectionHeading>
               <MenuSectionHeaderButton
                 icon={IoIosCloseCircleOutline}
                 iconOnly={true}
