@@ -51,31 +51,6 @@ const activeWallets = [
     walletInfo: {
       ...tempWalletInfo
     }
-  },
-  {
-    providerInfo: {
-      id: 'paste-the-private-key',
-      name: 'Paste-The-Private-Key™',
-      description:
-        'Forget about security and just paste your private key directly to sign your transactions'
-    },
-    connectionStatus: {
-      connected: false,
-      error: true,
-      errorMessage: 'Connection error, please try again'
-    }
-  },
-  {
-    providerInfo: {
-      id: 'eos-metro',
-      name: 'METRO™ Hardware Wallet',
-      description:
-        'Use secure hardware private key vault to sign your transactions'
-    },
-    connectionStatus: {
-      connected: false,
-      connecting: true
-    }
   }
 ];
 
