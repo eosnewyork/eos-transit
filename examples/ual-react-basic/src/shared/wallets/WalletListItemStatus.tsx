@@ -26,11 +26,13 @@ const WalletListItemStatusLabel = styled('div')(
 interface WalletListItemStatusProps {
   connectionStatus: WalletConnectionStatus;
   username?: string;
+  providerDescription?: string;
 }
 
 export function WalletListItemStatus({
   connectionStatus,
-  username
+  username,
+  providerDescription
 }: WalletListItemStatusProps) {
   const { connecting, connected, error, errorMessage } = connectionStatus;
 
@@ -46,7 +48,9 @@ export function WalletListItemStatus({
     <WalletListItemStatusLabel>
       Connecting to wallet, please stand by...
     </WalletListItemStatusLabel>
-  ) : null;
+  ) : (
+    <WalletListItemStatusLabel>{providerDescription}</WalletListItemStatusLabel>
+  );
 }
 
 export default WalletListItemStatus;
