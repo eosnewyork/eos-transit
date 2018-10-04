@@ -14,16 +14,33 @@ const WalletListRoot = styled('div')({
 
 export interface WalletListProps {
   wallets: WalletModel[];
+  onItemSelect?: (item: WalletModel) => void;
+  onItemDismissClick?: (item: WalletModel) => void;
+  onItemLogoutClick?: (item: WalletModel) => void;
+  onItemReconnectClick?: (item: WalletModel) => void;
 }
 
 export class WalletList extends Component<WalletListProps> {
   render() {
-    const { wallets } = this.props;
+    const {
+      wallets,
+      onItemSelect,
+      onItemDismissClick,
+      onItemLogoutClick,
+      onItemReconnectClick
+    } = this.props;
 
     return (
       <WalletListRoot>
         {wallets.map(wallet => (
-          <WalletSelectItem key={wallet.providerInfo.id} data={wallet} />
+          <WalletSelectItem
+            key={wallet.providerInfo.id}
+            data={wallet}
+            onSelect={onItemSelect}
+            onDismissClick={onItemDismissClick}
+            onLogoutClick={onItemLogoutClick}
+            onReconnectClick={onItemReconnectClick}
+          />
         ))}
       </WalletListRoot>
     );

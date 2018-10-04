@@ -10,7 +10,7 @@ import { WalletListItemInfo } from './WalletListItemInfo';
 // Visual components
 
 interface WalletListItemRootProps {
-  disabled?: boolean;
+  active?: boolean;
   hasError?: boolean;
 }
 
@@ -28,29 +28,33 @@ const WalletListItemRoot = styled('div')(
       marginBottom: 5
     }
   },
-  ({ disabled, hasError }: WalletListItemRootProps) => {
+  ({ active, hasError }: WalletListItemRootProps) => {
     // TODO: Organize this mess better
     if (hasError) {
-      return !disabled
+      return active
         ? {
-            backgroundColor: '#582a30'
+            backgroundColor: '#582a30',
 
-            // '&:hover': {
-            //   backgroundColor: '#802e38',
-            //   cursor: 'pointer'
-            // }
+            '&:hover': {
+              backgroundColor: '#802e38',
+              cursor: 'pointer'
+            }
           }
         : {
             backgroundColor: '#582a30'
           };
     }
 
-    if (!disabled) {
+    if (active) {
       return {
-        // '&:hover': {
-        //   backgroundColor: '#40495a',
-        //   cursor: 'pointer'
-        // }
+        '&:hover': {
+          backgroundColor: '#40495a',
+          cursor: 'pointer'
+        },
+
+        '&:active': {
+          backgroundColor: '#3a576b'
+        }
       };
     }
 
@@ -196,14 +200,65 @@ export interface WalletListItemProps {
   isConnecting?: boolean;
   hasError?: boolean;
   onConnect?: () => void;
-  onLogin?: (accountName: string) => void;
+  onLogin?: (accountName: string) => void; // ???
+  onSelect?: (item: WalletModel) => void;
+  onReconnectClick?: (item: WalletModel) => void;
+  onDismissClick?: (item: WalletModel) => void;
+  onLogoutClick?: (item: WalletModel) => void;
 }
 
 export class WalletListItem extends Component<WalletListItemProps> {
+  handleSelect = () => {
+    const { isActive } = this;
+    if (!isActive()) return;
+
+    const { onSelect, data } = this.props;
+    if (typeof onSelect === 'function') {
+      onSelect(data);
+    }
+  };
+
+  handleReconnectClick = () => {
+    const { onReconnectClick, data } = this.props;
+    if (typeof onReconnectClick === 'function') {
+      onReconnectClick(data);
+    }
+  };
+
+  handleLogoutClick = () => {
+    const { onLogoutClick, data } = this.props;
+    if (typeof onLogoutClick === 'function') {
+      onLogoutClick(data);
+    }
+  };
+
+  handleDismissClick = () => {
+    const { onDismissClick, data } = this.props;
+    if (typeof onDismissClick === 'function') {
+      onDismissClick(data);
+    }
+  };
+
+  isActive = () => {
+    const { data } = this.props;
+    const { connectionStatus } = data;
+    const { connecting, connected, error } = connectionStatus;
+
+    return !connecting && !connected && !error;
+  };
+
   render() {
+    const {
+      isActive,
+      handleSelect,
+      handleReconnectClick,
+      handleDismissClick,
+      handleLogoutClick
+    } = this;
     const { data } = this.props;
     const { providerInfo, walletInfo, connectionStatus } = data;
     const { connecting, connected, error } = connectionStatus;
+    const { description } = providerInfo;
     const username =
       (walletInfo &&
         `${walletInfo.accountName}@${walletInfo.accountAuthority}`) ||
@@ -213,7 +268,11 @@ export class WalletListItem extends Component<WalletListItemProps> {
     const icon = connecting ? <SpinnerIcon size={24} /> : <IconComponent />;
 
     return (
-      <WalletListItemRoot hasError={error} disabled={connecting}>
+      <WalletListItemRoot
+        hasError={error}
+        active={isActive()}
+        onClick={handleSelect}
+      >
         <WalletListItemContent>
           <WalletListItemIcon hasError={error}>{icon}</WalletListItemIcon>
 
@@ -224,18 +283,19 @@ export class WalletListItem extends Component<WalletListItemProps> {
                 <WalletListItemStatus
                   connectionStatus={connectionStatus}
                   username={username}
+                  providerDescription={description}
                 />
               </WalletListItemBodyTopMain>
               {connected && (
                 <WalletListItemBodyTopActions>
-                  <WalletListItemDismissButton>
+                  <WalletListItemDismissButton onClick={handleLogoutClick}>
                     <IoIosLogOut />
                   </WalletListItemDismissButton>
                 </WalletListItemBodyTopActions>
               )}
               {error && (
                 <WalletListItemBodyTopActions>
-                  <WalletListItemDismissButton>
+                  <WalletListItemDismissButton onClick={handleDismissClick}>
                     <IoMdClose />
                   </WalletListItemDismissButton>
                 </WalletListItemBodyTopActions>
@@ -249,7 +309,9 @@ export class WalletListItem extends Component<WalletListItemProps> {
 
         <WalletListItemProgress active={connecting} indeterminate={true} />
         {error && (
-          <WalletListItemConnectButton>Reconnect</WalletListItemConnectButton>
+          <WalletListItemConnectButton onClick={handleReconnectClick}>
+            Reconnect
+          </WalletListItemConnectButton>
         )}
       </WalletListItemRoot>
     );
