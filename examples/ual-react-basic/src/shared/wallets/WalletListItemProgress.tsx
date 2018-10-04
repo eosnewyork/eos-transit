@@ -83,12 +83,12 @@ export function WalletListItemProgress({
   percentComplete
 }: WalletListItemProgressProps) {
   return (
-    <WalletListItemProgress active={active}>
+    <WalletListItemProgressRoot active={active}>
       <WalletListItemProgressBar
-        indeterminate={true}
+        indeterminate={indeterminate}
         percentComplete={percentComplete}
       />
-    </WalletListItemProgress>
+    </WalletListItemProgressRoot>
   );
 }
 

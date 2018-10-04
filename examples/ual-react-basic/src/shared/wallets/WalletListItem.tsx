@@ -1,5 +1,5 @@
 import React, { Component, ComponentType } from 'react';
-import styled, { keyframes } from 'react-emotion';
+import styled from 'react-emotion';
 import { IoIosLock, IoMdClose, IoIosLogOut } from 'react-icons/io';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { WalletModel } from './types';
@@ -203,7 +203,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
   render() {
     const { data } = this.props;
     const { providerInfo, walletInfo, connectionStatus } = data;
-    const { connecting, connected, error, errorMessage } = connectionStatus;
+    const { connecting, connected, error } = connectionStatus;
     const username =
       (walletInfo &&
         `${walletInfo.accountName}@${walletInfo.accountAuthority}`) ||
@@ -248,7 +248,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
         </WalletListItemContent>
         <WalletListItemProgress active={connecting} indeterminate={true} />
         {error && (
-          <WalletListItemConnectButton>Connect</WalletListItemConnectButton>
+          <WalletListItemConnectButton>Reconnect</WalletListItemConnectButton>
         )}
       </WalletListItemRoot>
     );
