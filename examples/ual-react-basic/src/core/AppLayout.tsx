@@ -7,7 +7,7 @@ import {
   ScreenContentHeaderMain
 } from '../shared/screen';
 import { LogoLink } from '../shared/LogoLink';
-import { UserBlock } from './UserBlock';
+import UserBlock from './UserBlock';
 
 export interface AppLayoutProps {
   children?: ReactNode;
