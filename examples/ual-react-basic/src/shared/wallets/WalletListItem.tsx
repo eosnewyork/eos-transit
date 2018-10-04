@@ -1,6 +1,6 @@
 import React, { Component, ComponentType } from 'react';
 import styled from 'react-emotion';
-import { IoMdClose, IoIosLogOut } from 'react-icons/io';
+import { IoMdClose, IoIosLogOut, IoIosLock } from 'react-icons/io';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { WalletModel } from './types';
 import { WalletListItemProgress } from './WalletListItemProgress';
@@ -268,6 +268,8 @@ export class WalletListItem extends Component<WalletListItemProps> {
     const IconComponent = this.props.iconComponent;
     const icon = connecting ? (
       <SpinnerIcon size={24} />
+    ) : error ? (
+      <IoIosLock />
     ) : IconComponent ? (
       <IconComponent />
     ) : (
