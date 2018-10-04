@@ -2,7 +2,9 @@ import React, { Component, ComponentType } from 'react';
 import styled, { keyframes } from 'react-emotion';
 import { IoIosLock, IoMdClose, IoIosLogOut } from 'react-icons/io';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
-import { WalletModel, WalletConnectionStatus } from './types';
+import { WalletModel } from './types';
+import { WalletListItemProgress } from './WalletListItemProgress';
+import { WalletListItemStatus } from './WalletListItemStatus';
 import { WalletListItemInfo } from './WalletListItemInfo';
 
 // Visual components
@@ -111,89 +113,6 @@ const WalletListItemLabel = styled('div')({
   color: 'rgba(255, 255, 255, 0.5)'
 });
 
-interface WalletListItemStatusLabelProps {
-  success?: boolean;
-  error?: boolean;
-}
-
-const WalletListItemStatusLabel = styled('div')(
-  {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)'
-  },
-  ({ success, error }: WalletListItemStatusLabelProps) => {
-    if (error) return { color: '#e84a75' };
-    if (success) return { color: '#26c5df' };
-    return {};
-  }
-);
-
-interface WalletListItemProgressProps {
-  active?: boolean;
-}
-
-const WalletListItemProgress = styled('div')(
-  {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'stretch',
-    height: 2,
-    backgroundColor: 'transparent',
-    overflow: 'hidden',
-    transform: 'scaleY(0)',
-    transition: 'all 0.2s',
-
-    '&:last-child': {
-      borderBottomLeftRadius: 1,
-      borderBottomRightRadius: 1
-    }
-  },
-  ({ active }: WalletListItemProgressProps) => {
-    if (active) {
-      return {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        transform: 'scaleY(1)'
-      };
-    }
-
-    return {};
-  }
-);
-
-const progressIndeterminateAnimation = keyframes({
-  from: { left: '-100%' },
-  to: { left: '100%' }
-});
-
-interface WalletListItemProgressBarProps {
-  indeterminate?: boolean;
-  percentComplete?: number;
-}
-
-const WalletListItemProgressBar = styled('div')(
-  {
-    position: 'absolute',
-    height: 2,
-    backgroundColor: '#26c5df',
-    transition: 'all 0.1s'
-  },
-  ({ indeterminate, percentComplete }: WalletListItemProgressBarProps) => {
-    if (indeterminate) {
-      return {
-        width: '70%',
-        animation: `${progressIndeterminateAnimation} 2s ease-in-out infinite`
-      };
-    }
-
-    if (typeof percentComplete !== 'undefined') {
-      return { width: `${percentComplete}%` };
-    }
-
-    return {};
-  }
-);
-
 export const WalletListItemConnectButton = styled('button')({
   display: 'flex',
   alignItems: 'center',
@@ -280,27 +199,6 @@ export interface WalletListItemProps {
   onLogin?: (accountName: string) => void;
 }
 
-function renderStatusLabel(
-  connectionStatus: WalletConnectionStatus,
-  username?: string
-) {
-  const { connecting, connected, error, errorMessage } = connectionStatus;
-
-  return error ? (
-    <WalletListItemStatusLabel error={true}>
-      {errorMessage}
-    </WalletListItemStatusLabel>
-  ) : connected ? (
-    <WalletListItemStatusLabel success={true}>
-      Connected {username ? <span>as {username}</span> : null}
-    </WalletListItemStatusLabel>
-  ) : connecting ? (
-    <WalletListItemStatusLabel>
-      Connecting to wallet, please stand by...
-    </WalletListItemStatusLabel>
-  ) : null;
-}
-
 export class WalletListItem extends Component<WalletListItemProps> {
   render() {
     const { data } = this.props;
@@ -323,7 +221,10 @@ export class WalletListItem extends Component<WalletListItemProps> {
             <WalletListItemBodyTop>
               <WalletListItemBodyTopMain>
                 <WalletListItemTitle>{providerInfo.name}</WalletListItemTitle>
-                {renderStatusLabel(connectionStatus, username)}
+                <WalletListItemStatus
+                  connectionStatus={connectionStatus}
+                  username={username}
+                />
               </WalletListItemBodyTopMain>
               {connected && (
                 <WalletListItemBodyTopActions>
@@ -345,9 +246,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
             )}
           </WalletListItemBody>
         </WalletListItemContent>
-        <WalletListItemProgress active={connecting}>
-          <WalletListItemProgressBar indeterminate={true} />
-        </WalletListItemProgress>
+        <WalletListItemProgress active={connecting} indeterminate={true} />
         {error && (
           <WalletListItemConnectButton>Connect</WalletListItemConnectButton>
         )}
