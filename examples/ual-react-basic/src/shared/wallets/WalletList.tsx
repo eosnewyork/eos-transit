@@ -6,7 +6,8 @@ import { WalletModel } from './types';
 // Visual components
 
 const WalletListRoot = styled('div')({
-  width: '100%'
+  width: '100%',
+  marginBottom: 4
 });
 
 // Exported component

@@ -1,15 +1,6 @@
 import React from 'react';
-import styled from 'react-emotion';
 import { WalletList } from 'shared/wallets/WalletList';
 import { WalletModel } from 'shared/wallets/types';
-
-// Visual components
-
-const UserWalletListRoot = styled('div')({
-  marginBottom: 4
-});
-
-// Exported / behavior components
 
 // tslint:disable-next-line:no-empty-interface
 export interface UserWalletListProps {
@@ -30,7 +21,7 @@ const wallets: WalletModel[] = [
     walletInfo: {
       accountName: 'bob123451234',
       accountAuthority: 'active',
-      eosBalance: 99963.0000,
+      eosBalance: 99963.0,
       ram: 1020241, // Kb
       cpu: 10793253535, // ms
       net: 56587736535 // KiB
@@ -64,11 +55,7 @@ const wallets: WalletModel[] = [
 ];
 
 export function UserWalletList({  }: UserWalletListProps) {
-  return (
-    <UserWalletListRoot>
-      <WalletList wallets={wallets} />
-    </UserWalletListRoot>
-  );
+  return <WalletList wallets={wallets} />;
 }
 
 export default UserWalletList;
