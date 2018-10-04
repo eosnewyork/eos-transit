@@ -6,7 +6,7 @@ import { WalletModel } from 'shared/wallets/types';
 // Visual components
 
 const UserWalletListRoot = styled('div')({
-  marginBottom: 15
+  marginBottom: 4
 });
 
 // Exported / behavior components
