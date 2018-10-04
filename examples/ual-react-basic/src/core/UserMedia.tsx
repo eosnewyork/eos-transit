@@ -82,6 +82,7 @@ const UserMediaUsername = styled('div')(
   {
     fontSize: 16,
     lineHeight: 1.2,
+    transition: 'all 0.2s',
 
     '&:not(:last-child)': {
       marginBottom: 4
