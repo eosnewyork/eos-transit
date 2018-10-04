@@ -165,7 +165,11 @@ export class SessionStateContainer extends Container<SessionState> {
   getDefaultWalletInfo = () => {
     const { activeWallets } = this.state;
     if (!activeWallets || !activeWallets.length) return void 0;
-    return activeWallets[0].walletInfo;
+    const connectedWallets = activeWallets.filter(
+      w => w.connectionStatus.connected
+    );
+    if (!connectedWallets.length) return void 0;
+    return connectedWallets[0].walletInfo;
   };
 
   getWalletInfo = (providerId: string) => {
