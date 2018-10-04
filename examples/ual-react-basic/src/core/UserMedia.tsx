@@ -6,6 +6,7 @@ import UserAvatar from './UserAvatar';
 
 export interface UserMediaRootProps {
   isActive?: boolean;
+  faded?: boolean;
 }
 
 const UserMediaRoot = styled('div')(
@@ -23,18 +24,26 @@ const UserMediaRoot = styled('div')(
       backgroundColor: 'rgba(0, 0, 0, 0.15)'
     }
   },
-  ({ isActive }: UserMediaRootProps) => {
+  ({ isActive, faded }: UserMediaRootProps) => {
+    const style = {};
+
     if (isActive) {
-      return {
+      Object.assign(style, {
         backgroundColor: 'rgba(0, 0, 0, 0.15)',
 
         '&:hover': {
           backgroundColor: 'rgba(0, 0, 0, 0.25)'
         }
-      };
+      });
     }
 
-    return {};
+    if (faded) {
+      Object.assign(style, {
+        color: 'rgba(255, 255, 255, 0.3)'
+      });
+    }
+
+    return style;
   }
 );
 
@@ -65,15 +74,23 @@ const UserMediaCaret = styled('span')({
   paddingLeft: 8
 });
 
-const UserMediaUsername = styled('div')({
-  fontSize: 16,
-  lineHeight: 1.2,
-  color: '#26c5df',
+interface UserMediaUsernameProps {
+  faded?: boolean;
+}
 
-  '&:not(:last-child)': {
-    marginBottom: 4
-  }
-});
+const UserMediaUsername = styled('div')(
+  {
+    fontSize: 16,
+    lineHeight: 1.2,
+
+    '&:not(:last-child)': {
+      marginBottom: 4
+    }
+  },
+  ({ faded }: UserMediaUsernameProps) => ({
+    color: faded ? 'rgba(255, 255, 255, 0.3)' : '#26c5df'
+  })
+);
 
 const UserMediaLoadingText = styled(UserMediaUsername)({
   color: 'white'
@@ -90,6 +107,7 @@ export interface Props {
   children?: any;
   className?: string;
   isActive?: boolean;
+  isAnonymous?: boolean;
   isLoading?: boolean;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   username?: string;
@@ -100,6 +118,7 @@ export interface Props {
 export function UserMedia(props: Props) {
   const {
     isActive,
+    isAnonymous,
     isLoading,
     onClick,
     username,
@@ -109,7 +128,12 @@ export function UserMedia(props: Props) {
   } = props;
 
   return (
-    <UserMediaRoot onClick={onClick} isActive={isActive} className={className}>
+    <UserMediaRoot
+      onClick={onClick}
+      isActive={isActive}
+      faded={isAnonymous}
+      className={className}
+    >
       <UserMediaFigure>
         {isLoading ? (
           <UserMediaSpinner>
@@ -127,7 +151,9 @@ export function UserMedia(props: Props) {
         </UserMediaBody>
       ) : (
         <UserMediaBody>
-          <UserMediaUsername>{username || 'unknown'}</UserMediaUsername>
+          <UserMediaUsername faded={isAnonymous}>
+            {username || 'unknown'}
+          </UserMediaUsername>
           {sublabel ? <UserMediaSublabel>{sublabel}</UserMediaSublabel> : null}
         </UserMediaBody>
       )}
