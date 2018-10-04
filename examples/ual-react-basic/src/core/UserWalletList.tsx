@@ -1,61 +1,16 @@
 import React from 'react';
-import { WalletList } from 'shared/wallets/WalletList';
-import { WalletModel } from 'shared/wallets/types';
+import { Subscribe } from 'unstated';
+import { WalletList } from '../shared/wallets/WalletList';
+import { SessionStateContainer } from './SessionStateContainer';
 
-// tslint:disable-next-line:no-empty-interface
-export interface UserWalletListProps {
-  // TODO
-}
-
-const wallets: WalletModel[] = [
-  {
-    providerInfo: {
-      id: 'scatter-desktop',
-      name: 'Scatter Desktop',
-      description:
-        'Scatter Desktop application that keeps your private keys secure'
-    },
-    connectionStatus: {
-      connected: true
-    },
-    walletInfo: {
-      accountName: 'bob123451234',
-      accountAuthority: 'active',
-      eosBalance: 99963.0,
-      ram: 1020241, // Kb
-      cpu: 10793253535, // ms
-      net: 56587736535 // KiB
-    }
-  },
-  {
-    providerInfo: {
-      id: 'paste-the-private-key',
-      name: 'Paste-The-Private-Key™',
-      description:
-        'Forget about security and just paste your private key directly to sign your transactions'
-    },
-    connectionStatus: {
-      connected: false,
-      error: true,
-      errorMessage: 'Connection error, please try again'
-    }
-  },
-  {
-    providerInfo: {
-      id: 'eos-metro',
-      name: 'METRO™ Hardware Wallet',
-      description:
-        'Use secure hardware private key vault to sign your transactions'
-    },
-    connectionStatus: {
-      connected: false,
-      connecting: true
-    }
-  }
-];
-
-export function UserWalletList({  }: UserWalletListProps) {
-  return <WalletList wallets={wallets} />;
+export function UserWalletList() {
+  return (
+    <Subscribe to={[SessionStateContainer]}>
+      {(sessionStateContainer: SessionStateContainer) => (
+        <WalletList wallets={sessionStateContainer.getActiveWallets()} />
+      )}
+    </Subscribe>
+  );
 }
 
 export default UserWalletList;

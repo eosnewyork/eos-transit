@@ -1,39 +1,23 @@
 import React from 'react';
-import { WalletList } from 'shared/wallets/WalletList';
-import { WalletModel } from 'shared/wallets/types';
+import { Subscribe } from 'unstated';
+import { WalletList } from '../shared/wallets/WalletList';
+import SessionStateContainer from './SessionStateContainer';
+import { NoContent } from 'shared/NoContent';
 
-// tslint:disable-next-line:no-empty-interface
-export interface AvailableWalletListProps {
-  // TODO
-}
+export function AvailableWalletList() {
+  return (
+    <Subscribe to={[SessionStateContainer]}>
+      {(sessionStateContainer: SessionStateContainer) => {
+        const availableWallets = sessionStateContainer.getAvailableWallets();
 
-const wallets: WalletModel[] = [
-  {
-    providerInfo: {
-      id: 'paste-the-private-key',
-      name: 'Paste-The-Private-Key™',
-      description:
-        'Forget about security and just paste your private key directly to sign your transactions'
-    },
-    connectionStatus: {
-      connected: false
-    }
-  },
-  {
-    providerInfo: {
-      id: 'eos-metro',
-      name: 'METRO™ Hardware Wallet',
-      description:
-        'Use secure hardware private key vault to sign your transactions'
-    },
-    connectionStatus: {
-      connected: false
-    }
-  }
-];
+        if (availableWallets.length) {
+          return <WalletList wallets={availableWallets} />;
+        }
 
-export function AvailableWalletList({  }: AvailableWalletListProps) {
-  return <WalletList wallets={wallets} />;
+        return <NoContent message="No Wallet Providers available" />;
+      }}
+    </Subscribe>
+  );
 }
 
 export default AvailableWalletList;
