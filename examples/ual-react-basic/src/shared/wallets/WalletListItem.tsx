@@ -1,8 +1,9 @@
 import React, { Component, ComponentType } from 'react';
 import styled, { keyframes } from 'react-emotion';
-import { IoIosLock } from 'react-icons/io';
+import { IoIosLock, IoMdClose, IoIosLogOut } from 'react-icons/io';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
-import { WalletModel, WalletConnectionStatus, WalletInfo } from './types';
+import { WalletModel, WalletConnectionStatus } from './types';
+import { WalletListItemInfo } from './WalletListItemInfo';
 
 // Visual components
 
@@ -79,11 +80,24 @@ const WalletListItemIcon = styled('div')(
 
 const WalletListItemBody = styled('div')({
   flex: 1,
-  padding: '15px 15px 12px 0'
+  padding: '13px 13px 12px 0'
+});
+
+const WalletListItemBodyTop = styled('div')({
+  display: 'flex'
+});
+
+const WalletListItemBodyTopMain = styled('div')({
+  flex: 1
+});
+
+const WalletListItemBodyTopActions = styled('div')({
+  paddingLeft: 10
 });
 
 const WalletListItemTitle = styled('div')({
   padding: 0,
+  paddingTop: 2,
   fontSize: 14,
   color: 'white',
 
@@ -215,97 +229,39 @@ export const WalletListItemConnectButton = styled('button')({
   }
 });
 
-// TODO: Extract to a separate component
-
-export const WalletListItemWalletInfoRoot = styled('div')({
-  // display: 'flex',
-  // alignItems: 'flex-start',
-  width: '100%',
-  paddingTop: 12,
-  // borderTop: '1px solid rgba(0, 0, 0, 0.2)'
-});
-
-export const WalletListItemWalletInfoMain = styled('div')({
-  marginBottom: 8,
-  fontSize: 14
-});
-
-export const WalletListItemWalletInfoParams = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  marginTop: 8,
-  paddingTop: 8,
-  borderTop: '1px solid rgba(0, 0, 0, 0.2)'
-});
-
-export const WalletListItemWalletInfoParam = styled('div')({
+export const WalletListItemDismissButton = styled('button')({
   display: 'flex',
   alignItems: 'center',
-  minWidth: 60,
-  padding: '0 10px 4px 0',
-  fontSize: 11
-});
-
-export const WalletListItemWalletInfoParamHeading = styled('div')({
-  width: 27,
-  fontSize: 9,
+  justifyContent: 'center',
+  width: 19,
+  height: 19,
+  border: 'none',
+  borderRadius: 1,
+  padding: 0,
+  fontSize: 19,
   fontWeight: 300,
-  // color: 'rgba(255, 255, 255, 0.8)',
+  lineHeight: 1,
+  textAlign: 'center',
+  // backgroundColor: '#98243f',
+  backgroundColor: 'transparent',
   color: 'white',
-  textTransform: 'uppercase'
+  opacity: 0.5,
+  outline: 'none',
+  transition: 'all 0.2s',
+
+  '&:hover': {
+    // backgroundColor: '#2e3542',
+    // backgroundColor: '#ab2847',
+    color: 'white',
+    opacity: 1,
+    cursor: 'pointer'
+  },
+
+  '&:active': {
+    // backgroundColor: '#2e3542',
+    // backgroundColor: '#c3173f'
+  }
 });
-
-export const WalletListItemWalletInfoParamContent = styled('div')({
-  flex: 1,
-  fontSize: 11,
-  fontWeight: 600,
-  color: '#26c5df'
-});
-
-interface WalletListItemWalletInfoProps {
-  walletInfo: WalletInfo;
-}
-
-function WalletListItemWalletInfo({
-  walletInfo
-}: WalletListItemWalletInfoProps) {
-  return (
-    <WalletListItemWalletInfoRoot>
-      <WalletListItemWalletInfoMain>
-        {`${walletInfo.eosBalance} EOS`}
-      </WalletListItemWalletInfoMain>
-      <WalletListItemWalletInfoParams>
-        <WalletListItemWalletInfoParam>
-          <WalletListItemWalletInfoParamHeading>
-            RAM
-          </WalletListItemWalletInfoParamHeading>
-          <WalletListItemWalletInfoParamContent>
-            {`${walletInfo.ram} Kb`}
-          </WalletListItemWalletInfoParamContent>
-        </WalletListItemWalletInfoParam>
-
-        <WalletListItemWalletInfoParam>
-          <WalletListItemWalletInfoParamHeading>
-            CPU
-          </WalletListItemWalletInfoParamHeading>
-          <WalletListItemWalletInfoParamContent>
-            {`${walletInfo.cpu} ms`}
-          </WalletListItemWalletInfoParamContent>
-        </WalletListItemWalletInfoParam>
-
-        <WalletListItemWalletInfoParam>
-          <WalletListItemWalletInfoParamHeading>
-            NET
-          </WalletListItemWalletInfoParamHeading>
-          <WalletListItemWalletInfoParamContent>
-            {`${walletInfo.net} KiB`}
-          </WalletListItemWalletInfoParamContent>
-        </WalletListItemWalletInfoParam>
-      </WalletListItemWalletInfoParams>
-    </WalletListItemWalletInfoRoot>
-  );
-}
 
 // Exported / behavior component
 
@@ -364,9 +320,29 @@ export class WalletListItem extends Component<WalletListItemProps> {
           <WalletListItemIcon hasError={error}>{icon}</WalletListItemIcon>
 
           <WalletListItemBody>
-            <WalletListItemTitle>{providerInfo.name}</WalletListItemTitle>
-            {renderStatusLabel(connectionStatus, username)}
-            {walletInfo && <WalletListItemWalletInfo walletInfo={walletInfo} />}
+            <WalletListItemBodyTop>
+              <WalletListItemBodyTopMain>
+                <WalletListItemTitle>{providerInfo.name}</WalletListItemTitle>
+                {renderStatusLabel(connectionStatus, username)}
+              </WalletListItemBodyTopMain>
+              {connected && (
+                <WalletListItemBodyTopActions>
+                  <WalletListItemDismissButton>
+                    <IoIosLogOut />
+                  </WalletListItemDismissButton>
+                </WalletListItemBodyTopActions>
+              )}
+              {error && (
+                <WalletListItemBodyTopActions>
+                  <WalletListItemDismissButton>
+                    <IoMdClose />
+                  </WalletListItemDismissButton>
+                </WalletListItemBodyTopActions>
+              )}
+            </WalletListItemBodyTop>
+            {walletInfo && (
+              <WalletListItemInfo walletInfo={walletInfo} compact={true} />
+            )}
           </WalletListItemBody>
         </WalletListItemContent>
         <WalletListItemProgress active={connecting}>
