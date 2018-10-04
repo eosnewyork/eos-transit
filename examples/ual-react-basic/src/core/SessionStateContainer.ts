@@ -6,6 +6,16 @@ export interface SessionState {
   // availableWallets: WalletModel[];
 }
 
+const tempWalletInfo = {
+  accountName: 'bob123451234',
+  accountAuthority: 'active',
+  eosBalance: 99963.0,
+  ram: 1020241, // Kb
+  cpu: 10793253535, // ms
+  net: 56587736535 // KiB
+};
+
+// TODO: Will be taken from configured UAL instance directly
 const walletProviders = [
   {
     id: 'scatter-desktop',
@@ -39,12 +49,7 @@ const activeWallets = [
       connected: true
     },
     walletInfo: {
-      accountName: 'bob123451234',
-      accountAuthority: 'active',
-      eosBalance: 99963.0,
-      ram: 1020241, // Kb
-      cpu: 10793253535, // ms
-      net: 56587736535 // KiB
+      ...tempWalletInfo
     }
   },
   {
@@ -74,34 +79,8 @@ const activeWallets = [
   }
 ];
 
-// const availableWallets = [
-//   {
-//     providerInfo: {
-//       id: 'paste-the-private-key',
-//       name: 'Paste-The-Private-Key™',
-//       description:
-//         'Forget about security and just paste your private key directly to sign your transactions'
-//     },
-//     connectionStatus: {
-//       connected: false
-//     }
-//   },
-//   {
-//     providerInfo: {
-//       id: 'eos-metro',
-//       name: 'METRO™ Hardware Wallet',
-//       description:
-//         'Use secure hardware private key vault to sign your transactions'
-//     },
-//     connectionStatus: {
-//       connected: false
-//     }
-//   }
-// ];
-
 export const DEFAULT_SESSION_STATE = {
-  activeWallets,
-  // availableWallets
+  activeWallets
 };
 
 export class SessionStateContainer extends Container<SessionState> {
@@ -113,33 +92,95 @@ export class SessionStateContainer extends Container<SessionState> {
     // this.state = this.sessionStateStorage.load() || DEFAULT_SESSION_STATE;
   }
 
-  getActiveWallets() {
+  getActiveWallets = () => {
     return this.state.activeWallets;
-  }
+  };
 
-  getAvailableWallets() {
+  getAvailableWallets = () => {
     const activeWalletProviderIds = this.state.activeWallets.map(
       w => w.providerInfo.id
     );
 
     return walletProviders
-      .filter(walletProvider =>
-        !activeWalletProviderIds.includes(walletProvider.id)
+      .filter(
+        walletProvider => !activeWalletProviderIds.includes(walletProvider.id)
       )
       .map(providerInfo => ({
         providerInfo,
         connectionStatus: { connected: false }
       }));
-  }
+  };
 
-  addWallet = (wallet: WalletModel) => {
-    this.state.activeWallets = [...this.state.activeWallets, wallet];
+  addWallet = async (wallet: WalletModel) => {
+    await this.setState(state => ({
+      activeWallets: [...state.activeWallets, wallet]
+    }));
+
+    this.connectToWallet(wallet);
   };
 
   dismissWallet = (wallet: WalletModel) => {
-    this.state.activeWallets = this.state.activeWallets.filter(
-      w => w.providerInfo.id !== wallet.providerInfo.id
-    );
+    this.setState(state => ({
+      activeWallets: state.activeWallets.filter(
+        w => w.providerInfo.id !== wallet.providerInfo.id
+      )
+    }));
+  };
+
+  connectToWallet = async (wallet: WalletModel) => {
+    await this.setState(state => ({
+      activeWallets: state.activeWallets.map(w => {
+        if (w.providerInfo.id !== wallet.providerInfo.id) return w;
+        return {
+          ...w,
+          connectionStatus: {
+            connected: false,
+            connecting: true
+          }
+        };
+      })
+    }));
+
+    const _this = this;
+
+    function imitateConnected() {
+      return _this.setState(state => ({
+        activeWallets: state.activeWallets.map(w => {
+          if (w.providerInfo.id !== wallet.providerInfo.id) return w;
+          return {
+            ...w,
+            connectionStatus: {
+              connected: true,
+              connecting: false
+            },
+            walletInfo: { ...tempWalletInfo }
+          };
+        })
+      }));
+    }
+
+    function imitateConnectionError() {
+      return _this.setState(state => ({
+        activeWallets: state.activeWallets.map(w => {
+          if (w.providerInfo.id !== wallet.providerInfo.id) return w;
+          return {
+            ...w,
+            connectionStatus: {
+              connected: false,
+              connecting: false,
+              error: true,
+              errorMessage: 'Connection error, please try again'
+            }
+          };
+        })
+      }));
+    }
+
+    setTimeout(() => {
+      return Math.round(Math.random()) > 0.25
+        ? imitateConnected()
+        : imitateConnectionError();
+    }, 2500);
   };
 
   logoutWallet = (wallet: WalletModel) => {
@@ -155,8 +196,10 @@ export class SessionStateContainer extends Container<SessionState> {
     // TODO
   };
 
-  async logout() {
-    // TODO: Logout all wallets and destroy the entire session
+  logout = async () => {
+    this.setState({
+      activeWallets: []
+    });
   }
 }
 
