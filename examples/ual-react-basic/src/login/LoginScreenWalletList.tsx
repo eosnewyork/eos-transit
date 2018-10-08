@@ -19,17 +19,15 @@ interface LoginScreenWalletListProps {
   onWalletSelect?: (wallet: WalletModel) => void;
 }
 
-interface LoginScreenWalletListState {
-  wallets: WalletModel[];
-}
+// interface LoginScreenWalletListState {
+//   wallets: WalletModel[];
+// }
 
 export class LoginScreenWalletList extends Component<
-  LoginScreenWalletListProps,
-  LoginScreenWalletListState
+  LoginScreenWalletListProps
 > {
   constructor(props: LoginScreenWalletListProps) {
     super(props);
-    this.state = { wallets: props.wallets };
   }
 
   handleWalletSelect = (wallet: WalletModel) => {
@@ -37,11 +35,11 @@ export class LoginScreenWalletList extends Component<
     if (typeof onWalletSelect === 'function') {
       onWalletSelect(wallet);
     }
-  }
+  };
 
   render() {
     const { handleWalletSelect } = this;
-    const { wallets } = this.state;
+    const { wallets } = this.props;
 
     return (
       <LoginScreenWalletListRoot>
