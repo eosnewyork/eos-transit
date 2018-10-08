@@ -7,18 +7,14 @@ import { WalletConnectionStatus } from './types';
 interface WalletListItemStatusLabelProps {
   success?: boolean;
   error?: boolean;
+  large?: boolean;
 }
 
 const WalletListItemStatusLabel = styled('div')(
-  {
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.45)'
-  },
-  ({ success, error }: WalletListItemStatusLabelProps) => {
-    if (error) return { color: '#e84a75' };
-    if (success) return { color: '#26c5df' };
-    return {};
-  }
+  ({ large, success, error }: WalletListItemStatusLabelProps) => ({
+    fontSize: large ? 13 : 11,
+    color: error ? '#e84a75' : success ? '#26c5df' : 'rgba(255, 255, 255, 0.45)'
+  })
 );
 
 // Exported components
@@ -27,29 +23,33 @@ interface WalletListItemStatusProps {
   connectionStatus: WalletConnectionStatus;
   username?: string;
   providerDescription?: string;
+  large?: boolean;
 }
 
 export function WalletListItemStatus({
   connectionStatus,
   username,
-  providerDescription
+  providerDescription,
+  large
 }: WalletListItemStatusProps) {
   const { connecting, connected, error, errorMessage } = connectionStatus;
 
   return error ? (
-    <WalletListItemStatusLabel error={true}>
+    <WalletListItemStatusLabel error={true} large={large}>
       {errorMessage}
     </WalletListItemStatusLabel>
   ) : connected ? (
-    <WalletListItemStatusLabel success={true}>
+    <WalletListItemStatusLabel success={true} large={large}>
       Connected {username ? <span>as {username}</span> : null}
     </WalletListItemStatusLabel>
   ) : connecting ? (
-    <WalletListItemStatusLabel>
+    <WalletListItemStatusLabel large={large}>
       Connecting to wallet, please stand by...
     </WalletListItemStatusLabel>
   ) : (
-    <WalletListItemStatusLabel>{providerDescription}</WalletListItemStatusLabel>
+    <WalletListItemStatusLabel large={large}>
+      {providerDescription}
+    </WalletListItemStatusLabel>
   );
 }
 
