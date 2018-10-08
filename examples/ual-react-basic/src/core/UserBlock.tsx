@@ -16,6 +16,8 @@ export function UserBlockConnected({ children }: UserBlockProps) {
   return (
     <Subscribe to={[SessionStateContainer]}>
       {(sessionStateContainer: SessionStateContainer) => {
+        if (!sessionStateContainer.isLoggedIn()) return null;
+
         const walletInfo = sessionStateContainer.getDefaultWalletInfo();
         const username =
           (walletInfo &&
