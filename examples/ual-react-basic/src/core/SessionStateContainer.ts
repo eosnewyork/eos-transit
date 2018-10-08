@@ -66,6 +66,14 @@ export class SessionStateContainer extends Container<SessionState> {
     // this.state = this.sessionStateStorage.load() || DEFAULT_SESSION_STATE;
   }
 
+  isLoggedIn = () => {
+    return !!this.getDefaultWalletInfo();
+  };
+
+  getAllWallets = () => {
+    return [...this.getActiveWallets(), ...this.getAvailableWallets()];
+  };
+
   getActiveWallets = () => {
     return this.state.activeWallets;
   };
