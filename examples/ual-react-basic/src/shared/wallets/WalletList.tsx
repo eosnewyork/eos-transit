@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import WalletSelectItem from './WalletListItem';
+import WalletListItem from './WalletListItem';
 import { WalletModel } from './types';
 
 // Visual components
@@ -33,7 +33,7 @@ export class WalletList extends Component<WalletListProps> {
     return (
       <WalletListRoot>
         {wallets.map(wallet => (
-          <WalletSelectItem
+          <WalletListItem
             key={wallet.providerInfo.id}
             data={wallet}
             onSelect={onItemSelect}
