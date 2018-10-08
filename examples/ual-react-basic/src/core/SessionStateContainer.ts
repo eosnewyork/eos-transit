@@ -93,7 +93,18 @@ export class SessionStateContainer extends Container<SessionState> {
       }));
   };
 
+  isProviderAdded = (providerId: string) => {
+    return (
+      providerId &&
+      this.getActiveWallets().some(
+        wallet => wallet.providerInfo.id === providerId
+      )
+    );
+  };
+
   addWallet = async (wallet: WalletModel) => {
+    if (this.isProviderAdded(wallet.providerInfo.id)) return;
+
     await this.setState(state => ({
       activeWallets: [...state.activeWallets, wallet]
     }));
