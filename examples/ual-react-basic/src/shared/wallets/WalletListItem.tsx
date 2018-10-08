@@ -10,7 +10,11 @@ import { WalletProviderIcon } from './WalletProviderIcon';
 
 // Visual components
 
-interface WalletListItemRootProps {
+interface WalletListItemStyleProps {
+  large?: boolean;
+}
+
+interface WalletListItemRootProps extends WalletListItemStyleProps {
   active?: boolean;
   hasError?: boolean;
 }
@@ -29,25 +33,37 @@ const WalletListItemRoot = styled('div')(
       marginBottom: 5
     }
   },
-  ({ active, hasError }: WalletListItemRootProps) => {
+  ({ large, active, hasError }: WalletListItemRootProps) => {
     // TODO: Organize this mess better
-    if (hasError) {
-      return active
-        ? {
-            backgroundColor: '#582a30',
+    const style = {};
 
-            '&:hover': {
-              backgroundColor: '#802e38',
-              cursor: 'pointer'
-            }
-          }
-        : {
-            backgroundColor: '#582a30'
-          };
+    if (large) {
+      Object.assign(style, {
+        '&:not(:last-child)': {
+          marginBottom: 15
+        }
+      });
     }
 
-    if (active) {
-      return {
+    if (hasError) {
+      if (active) {
+        Object.assign(
+          active
+            ? {
+                backgroundColor: '#582a30',
+
+                '&:hover': {
+                  backgroundColor: '#802e38',
+                  cursor: 'pointer'
+                }
+              }
+            : {
+                backgroundColor: '#582a30'
+              }
+        );
+      }
+    } else if (active) {
+      Object.assign(style, {
         '&:hover': {
           backgroundColor: '#40495a',
           cursor: 'pointer'
@@ -56,10 +72,10 @@ const WalletListItemRoot = styled('div')(
         '&:active': {
           backgroundColor: '#3a576b'
         }
-      };
+      });
     }
 
-    return {};
+    return style;
   }
 );
 
@@ -68,27 +84,29 @@ const WalletListItemContent = styled('div')({
   display: 'flex'
 });
 
-interface WalletListItemIconProps {
+interface WalletListItemIconProps extends WalletListItemStyleProps {
   hasError?: boolean;
 }
 
 const WalletListItemIcon = styled('div')(
-  ({ hasError }: WalletListItemIconProps) => ({
+  ({ large, hasError }: WalletListItemIconProps) => ({
     flexShrink: 0,
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    width: 50,
-    padding: 13,
-    fontSize: 20,
+    width: large ? 80 : 50,
+    padding: large ? 18 : 13,
+    fontSize: large ? 30 : 20,
     color: hasError ? '#d42543' : '#26c5df'
   })
 );
 
-const WalletListItemBody = styled('div')({
-  flex: 1,
-  padding: '13px 13px 12px 0'
-});
+const WalletListItemBody = styled('div')(
+  ({ large }: WalletListItemStyleProps) => ({
+    flex: 1,
+    padding: large ? '22px 30px 20px 0' : '13px 13px 12px 0'
+  })
+);
 
 const WalletListItemBodyTop = styled('div')({
   display: 'flex'
@@ -102,21 +120,25 @@ const WalletListItemBodyTopActions = styled('div')({
   paddingLeft: 10
 });
 
-const WalletListItemTitle = styled('div')({
-  padding: 0,
-  paddingTop: 2,
-  fontSize: 14,
-  color: 'white',
+const WalletListItemTitle = styled('div')(
+  ({ large }: WalletListItemStyleProps) => ({
+    padding: 0,
+    paddingTop: 2,
+    fontSize: large ? 16 : 14,
+    color: 'white',
 
-  '&:not(:last-child)': {
-    marginBottom: 6
-  }
-});
+    '&:not(:last-child)': {
+      marginBottom: large ? 8 : 6
+    }
+  })
+);
 
-const WalletListItemLabel = styled('div')({
-  fontSize: 12,
-  color: 'rgba(255, 255, 255, 0.4)'
-});
+const WalletListItemLabel = styled('div')(
+  ({ large }: WalletListItemStyleProps) => ({
+    fontSize: large ? 16 : 12,
+    color: 'rgba(255, 255, 255, 0.4)'
+  })
+);
 
 export const WalletListItemConnectButton = styled('button')({
   display: 'flex',
@@ -200,6 +222,7 @@ export interface WalletListItemProps {
   iconComponent?: ComponentType;
   isConnecting?: boolean;
   hasError?: boolean;
+  large?: boolean;
   onConnect?: () => void;
   onLogin?: (accountName: string) => void; // ???
   onSelect?: (item: WalletModel) => void;
@@ -249,6 +272,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
   };
 
   render() {
+    const { large } = this.props;
     const {
       isActive,
       handleSelect,
@@ -267,7 +291,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
 
     const IconComponent = this.props.iconComponent;
     const icon = connecting ? (
-      <SpinnerIcon size={24} />
+      <SpinnerIcon size={large ? 26 : 24} />
     ) : IconComponent ? (
       <IconComponent />
     ) : (
@@ -278,19 +302,25 @@ export class WalletListItem extends Component<WalletListItemProps> {
       <WalletListItemRoot
         hasError={error}
         active={isActive()}
+        large={large}
         onClick={handleSelect}
       >
         <WalletListItemContent>
-          <WalletListItemIcon hasError={error}>{icon}</WalletListItemIcon>
+          <WalletListItemIcon hasError={error} large={large}>
+            {icon}
+          </WalletListItemIcon>
 
-          <WalletListItemBody>
+          <WalletListItemBody large={large}>
             <WalletListItemBodyTop>
               <WalletListItemBodyTopMain>
-                <WalletListItemTitle>{providerInfo.name}</WalletListItemTitle>
+                <WalletListItemTitle large={large}>
+                  {providerInfo.name}
+                </WalletListItemTitle>
                 <WalletListItemStatus
                   connectionStatus={connectionStatus}
                   username={username}
                   providerDescription={description}
+                  large={large}
                 />
               </WalletListItemBodyTopMain>
               {connected && (
