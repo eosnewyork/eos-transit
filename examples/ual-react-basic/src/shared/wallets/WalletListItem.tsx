@@ -101,7 +101,7 @@ const WalletListItemIcon = styled('div')(
 const WalletListItemBody = styled('div')(
   ({ large }: WalletListItemStyleProps) => ({
     flex: 1,
-    padding: large ? '22px 30px 22px 0' : '13px 13px 12px 0'
+    padding: large ? '22px 22px 22px 0' : '13px 13px 12px 0'
   })
 );
 
@@ -220,6 +220,7 @@ export interface WalletListItemProps {
   isConnecting?: boolean;
   hasError?: boolean;
   large?: boolean;
+  dismissable?: boolean;
   onConnect?: () => void;
   onLogin?: (accountName: string) => void; // ???
   onSelect?: (item: WalletModel) => void;
@@ -269,7 +270,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
   };
 
   render() {
-    const { large } = this.props;
+    const { large, dismissable } = this.props;
     const {
       isActive,
       handleSelect,
@@ -320,19 +321,23 @@ export class WalletListItem extends Component<WalletListItemProps> {
                   large={large}
                 />
               </WalletListItemBodyTopMain>
-              {connected && (
-                <WalletListItemBodyTopActions>
-                  <WalletListItemDismissButton onClick={handleLogoutClick}>
-                    <IoIosLogOut />
-                  </WalletListItemDismissButton>
-                </WalletListItemBodyTopActions>
-              )}
-              {error && (
-                <WalletListItemBodyTopActions>
-                  <WalletListItemDismissButton onClick={handleDismissClick}>
-                    <IoMdClose />
-                  </WalletListItemDismissButton>
-                </WalletListItemBodyTopActions>
+              {dismissable !== false && (
+                <>
+                  {connected && (
+                    <WalletListItemBodyTopActions>
+                      <WalletListItemDismissButton onClick={handleLogoutClick}>
+                        <IoIosLogOut />
+                      </WalletListItemDismissButton>
+                    </WalletListItemBodyTopActions>
+                  )}
+                  {error && (
+                    <WalletListItemBodyTopActions>
+                      <WalletListItemDismissButton onClick={handleDismissClick}>
+                        <IoMdClose />
+                      </WalletListItemDismissButton>
+                    </WalletListItemBodyTopActions>
+                  )}
+                </>
               )}
             </WalletListItemBodyTop>
             {walletInfo && (

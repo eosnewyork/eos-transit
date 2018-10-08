@@ -49,6 +49,7 @@ export class LoginScreenWalletList extends Component<
             onSelect={handleWalletSelect}
             data={wallet}
             large={true}
+            dismissable={false}
           />
         ))}
       </LoginScreenWalletListRoot>
