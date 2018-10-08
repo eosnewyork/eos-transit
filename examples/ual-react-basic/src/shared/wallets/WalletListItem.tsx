@@ -104,7 +104,7 @@ const WalletListItemIcon = styled('div')(
 const WalletListItemBody = styled('div')(
   ({ large }: WalletListItemStyleProps) => ({
     flex: 1,
-    padding: large ? '22px 30px 20px 0' : '13px 13px 12px 0'
+    padding: large ? '22px 30px 22px 0' : '13px 13px 12px 0'
   })
 );
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled, { keyframes } from 'react-emotion';
 
+// Note: Nice success color: #00ca7a
+
 // Visual components
 
 interface WalletListItemProgressRootProps {
