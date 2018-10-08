@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
+import { Subscribe } from 'unstated';
 import { Redirect } from 'react-router';
-// import { Subscribe } from 'unstated';
 import { CloseButton } from '../shared/buttons/CloseButton';
-import WalletListItem from '../shared/wallets/WalletListItem';
-import { WalletSelect } from './WalletSelect';
+import { WalletModel } from '../shared/wallets/types';
+import { SessionStateContainer } from '../core/SessionStateContainer';
 import { LoginButton } from './LoginButton';
-import { LoginScreenWalletProviders } from './LoginScreenWalletProviders';
+import { LoginScreenWalletList } from './LoginScreenWalletList';
 
 // Visual components
 
@@ -79,9 +79,8 @@ const walletProviders = [
   }
 ];
 
-// tslint:disable-next-line:no-empty-interface
 export interface LoginScreenProps {
-  // sessionStateContainer: SessionStateContainer;
+  sessionStateContainer: SessionStateContainer;
 }
 
 export interface LoginScreenState {
@@ -97,9 +96,9 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
     this.setState(state => ({ showLoginOptions: !state.showLoginOptions }));
   };
 
-  handleWalletSelect = (selectedWallet: any) => {
-    // TODO
-    // return this.props.sessionStateContainer.login(loginFormModel);
+  handleWalletSelect = (wallet: WalletModel) => {
+    const { sessionStateContainer } = this.props;
+    sessionStateContainer.addWallet(wallet);
   };
 
   getAvailableWalletProviders = () => {
@@ -108,16 +107,13 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
   };
 
   render() {
-    const {
-      switchScreen,
-      getAvailableWalletProviders,
-      handleWalletSelect
-    } = this;
+    const { switchScreen, handleWalletSelect } = this;
+    const { sessionStateContainer } = this.props;
     const { showLoginOptions } = this.state;
-    // const { state, isAuthenticated } = props.sessionStateContainer;
+    const { state, isLoggedIn } = sessionStateContainer;
     // const { isAuthenticating } = state;
 
-    // if (isAuthenticated()) return <Redirect to="/" />;
+    if (isLoggedIn()) return <Redirect to="/" />;
 
     return (
       <LoginScreenRoot>
@@ -131,8 +127,9 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
                 <CloseButton onClick={switchScreen} size={40} />
               </ContentPanelHeaderItem>
             </ContentPanelHeader>
-            <LoginScreenWalletProviders
-              walletProviders={getAvailableWalletProviders()}
+            <LoginScreenWalletList
+              wallets={sessionStateContainer.getAllWallets()}
+              onWalletSelect={handleWalletSelect}
             />
           </>
         ) : (
@@ -143,14 +140,12 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
   }
 }
 
-export default LoginScreen;
-
-// export default function LoginScreenConnected() {
-//   return (
-//     <Subscribe to={[SessionStateContainer]}>
-//       {(sessionStateContainer: SessionStateContainer) => (
-//         <LoginScreen sessionStateContainer={sessionStateContainer} />
-//       )}
-//     </Subscribe>
-//   );
-// }
+export default function LoginScreenConnected() {
+  return (
+    <Subscribe to={[SessionStateContainer]}>
+      {(sessionStateContainer: SessionStateContainer) => (
+        <LoginScreen sessionStateContainer={sessionStateContainer} />
+      )}
+    </Subscribe>
+  );
+}
