@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { LoginScreen } from './login/LoginScreen';
+import LoginScreen from './login/LoginScreen';
+import AuthenticatedRoute from './core/AuthenticatedRoute';
 import { AppLayout } from './core/AppLayout';
 import { HomeScreen } from './HomeScreen';
 
@@ -9,14 +10,13 @@ export function AppRoutes() {
     <AppLayout>
       <Switch>
         <Route path="/login" exact={true} component={LoginScreen} />
-        <Route path="/" exact={true} component={HomeScreen} />
-        {/* <AuthenticatedRoute>
-        {() => (
-          <Switch>
-            <Route path="/" exact={true} component={App} />
-          </Switch>
-        )}
-      </AuthenticatedRoute> */}
+        <AuthenticatedRoute>
+          {() => (
+            <Switch>
+              <Route path="/" exact={true} component={HomeScreen} />
+            </Switch>
+          )}
+        </AuthenticatedRoute>
         />
         {/* <Route component={NotFoundScreen} /> */}
       </Switch>
