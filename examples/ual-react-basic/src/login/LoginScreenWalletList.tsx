@@ -17,6 +17,7 @@ const LoginScreenWalletListRoot = styled('div')({
 interface LoginScreenWalletListProps {
   wallets: WalletModel[];
   onWalletSelect?: (wallet: WalletModel) => void;
+  onWalletReconnectClick?: (wallet: WalletModel) => void;
 }
 
 // interface LoginScreenWalletListState {
@@ -37,8 +38,15 @@ export class LoginScreenWalletList extends Component<
     }
   };
 
+  handleReconnectClick = (wallet: WalletModel) => {
+    const { onWalletReconnectClick } = this.props;
+    if (typeof onWalletReconnectClick === 'function') {
+      onWalletReconnectClick(wallet);
+    }
+  };
+
   render() {
-    const { handleWalletSelect } = this;
+    const { handleWalletSelect, handleReconnectClick } = this;
     const { wallets } = this.props;
 
     return (
@@ -47,6 +55,7 @@ export class LoginScreenWalletList extends Component<
           <WalletListItem
             key={wallet.providerInfo.id}
             onSelect={handleWalletSelect}
+            onReconnectClick={handleReconnectClick}
             data={wallet}
             large={true}
             dismissable={false}

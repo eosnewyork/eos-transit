@@ -101,17 +101,25 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
     sessionStateContainer.addWallet(wallet);
   };
 
+  handleWalletReconnectClick = (wallet: WalletModel) => {
+    const { sessionStateContainer } = this.props;
+    sessionStateContainer.connectToWallet(wallet);
+  };
+
   getAvailableWalletProviders = () => {
     // TODO: Will be taken from configured UAL instance directly
     return walletProviders;
   };
 
   render() {
-    const { switchScreen, handleWalletSelect } = this;
+    const {
+      switchScreen,
+      handleWalletSelect,
+      handleWalletReconnectClick
+    } = this;
     const { sessionStateContainer } = this.props;
     const { showLoginOptions } = this.state;
     const { state, isLoggedIn } = sessionStateContainer;
-    // const { isAuthenticating } = state;
 
     if (isLoggedIn()) return <Redirect to="/" />;
 
@@ -130,6 +138,7 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
             <LoginScreenWalletList
               wallets={sessionStateContainer.getAllWallets()}
               onWalletSelect={handleWalletSelect}
+              onWalletReconnectClick={handleWalletReconnectClick}
             />
           </>
         ) : (
