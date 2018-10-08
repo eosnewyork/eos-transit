@@ -46,22 +46,19 @@ const WalletListItemRoot = styled('div')(
     }
 
     if (hasError) {
-      if (active) {
-        Object.assign(
-          active
-            ? {
-                backgroundColor: '#582a30',
-
-                '&:hover': {
-                  backgroundColor: '#802e38',
-                  cursor: 'pointer'
-                }
-              }
-            : {
-                backgroundColor: '#582a30'
-              }
-        );
-      }
+      Object.assign(
+        style,
+        {
+          backgroundColor: '#582a30'
+        },
+        (active && {
+          '&:hover': {
+            backgroundColor: '#802e38',
+            cursor: 'pointer'
+          }
+        }) ||
+          void 0
+      );
     } else if (active) {
       Object.assign(style, {
         '&:hover': {
