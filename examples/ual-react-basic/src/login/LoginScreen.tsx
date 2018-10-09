@@ -57,27 +57,7 @@ const ContentPanelHeading = styled('span')({
   fontWeight: 300
 });
 
-// TEMP
-const walletProviders = [
-  {
-    id: 'scatter-desktop',
-    name: 'Scatter Desktop',
-    description:
-      'Scatter Desktop application that keeps your private keys secure'
-  },
-  {
-    id: 'eos-metro',
-    name: 'METRO™ Hardware Wallet',
-    description:
-      'Use secure hardware private key vault to sign your transactions'
-  },
-  {
-    id: 'paste-the-private-key',
-    name: 'Paste-The-Private-Key™',
-    description:
-      'Forget about security and just paste your private key directly to sign your transactions'
-  }
-];
+// Exported components
 
 export interface LoginScreenProps {
   sessionStateContainer: SessionStateContainer;
@@ -105,10 +85,11 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
     const { sessionStateContainer } = this.props;
     sessionStateContainer.connectToWallet(wallet);
   };
-
+  
   getAvailableWalletProviders = () => {
     // TODO: Will be taken from configured UAL instance directly
-    return walletProviders;
+    const { sessionStateContainer } = this.props;
+    return sessionStateContainer.getWalletProviders();
   };
 
   render() {
@@ -119,7 +100,7 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
     } = this;
     const { sessionStateContainer } = this.props;
     const { showLoginOptions } = this.state;
-    const { state, isLoggedIn } = sessionStateContainer;
+    const { isLoggedIn } = sessionStateContainer;
 
     if (isLoggedIn()) return <Redirect to="/" />;
 

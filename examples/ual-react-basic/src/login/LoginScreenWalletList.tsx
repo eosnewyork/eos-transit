@@ -20,10 +20,6 @@ interface LoginScreenWalletListProps {
   onWalletReconnectClick?: (wallet: WalletModel) => void;
 }
 
-// interface LoginScreenWalletListState {
-//   wallets: WalletModel[];
-// }
-
 export class LoginScreenWalletList extends Component<
   LoginScreenWalletListProps
 > {
