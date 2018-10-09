@@ -10,7 +10,7 @@ export function EosLogo() {
         <g
           transform="translate(-2610.000000, -1236.000000)"
           // fill="#443F54"
-          fill="white"
+          fill="currentColor"
           fillRule="nonzero"
         >
           <g transform="translate(2610.000000, 1236.000000)">
