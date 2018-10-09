@@ -8,40 +8,12 @@ import { TransactionAddonBlock } from './TransactionAddonBlock';
 
 // Visual components
 
-interface TransactionButtonBlockRootProps {
-  keepUnpressed?: boolean;
-}
-
-// TODO: Probable move shadow/transform to some kind of "buttons container"
-// and preserve the root clean, to also contain "status label"
-
-const TransactionButtonBlockRoot = styled('div')(
-  {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    boxShadow: '0 7px 25px -4px rgba(0, 0, 0, 0.4)',
-    transition: 'all 0.2s, transform 0.1s',
-
-    '&:active': {
-      boxShadow: '0 3px 15px -4px rgba(0, 0, 0, 0.8)',
-      transform: 'translateY(1px) scale(0.99)'
-    }
-  },
-  ({ keepUnpressed }: TransactionButtonBlockRootProps) => {
-    if (keepUnpressed) {
-      return {
-        '&, &:active': {
-          boxShadow: '0 3px 15px -4px rgba(0, 0, 0, 0.4)',
-          transform: 'translateY(0px) scale(1)'
-        }
-      };
-    }
-
-    return {};
-  }
-);
+const TransactionButtonBlockRoot = styled('div')({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'all 0.2s, transform 0.1s'
+});
 
 // Exported component
 
@@ -69,9 +41,7 @@ export class TransactionButtonBlock extends Component<
     const success = false;
 
     return (
-      <TransactionButtonBlockRoot
-        keepUnpressed={disabled || inProgress || success}
-      >
+      <TransactionButtonBlockRoot>
         <TransactionButton
           onClick={handleTransactionButtonClick}
           inProgress={inProgress}

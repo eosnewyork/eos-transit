@@ -12,6 +12,7 @@ const TransactionAddonMenuItemRoot = styled('div')({
   fontSize: 12,
   borderRadius: 1,
   backgroundColor: '#2e3542',
+  transition: 'all 0.2s',
 
   '&:not(:last-child)': {
     marginBottom: 2
