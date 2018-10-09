@@ -1,5 +1,5 @@
 import { Container } from 'unstated';
-import { WalletModel } from '../shared/wallets/types';
+import { WalletModel, WalletProviderInfo } from '../shared/wallets/types';
 
 export interface SessionState {
   activeWallets: WalletModel[];
@@ -15,22 +15,25 @@ const tempWalletInfo = {
 };
 
 // TODO: Will be taken from configured UAL instance directly
-const walletProviders = [
+const walletProviders: WalletProviderInfo[] = [
   {
     id: 'scatter-desktop',
     name: 'Scatter Desktop',
+    shortName: 'Scatter',
     description:
       'Scatter Desktop application that keeps your private keys secure'
   },
   {
     id: 'eos-metro',
     name: 'METRO™ Hardware Wallet',
+    shortName: 'METRO™',
     description:
       'Use secure hardware private key vault to sign your transactions'
   },
   {
     id: 'paste-the-private-key',
     name: 'Paste-The-Private-Key™',
+    shortName: 'Insecure Private Key',
     description:
       'Forget about security and just paste your private key directly to sign your transactions'
   }
@@ -38,12 +41,7 @@ const walletProviders = [
 
 const tempActiveWallets = [
   {
-    providerInfo: {
-      id: 'scatter-desktop',
-      name: 'Scatter Desktop',
-      description:
-        'Scatter Desktop application that keeps your private keys secure'
-    },
+    providerInfo: walletProviders[0],
     connectionStatus: {
       connected: true
     },
@@ -70,12 +68,20 @@ export class SessionStateContainer extends Container<SessionState> {
     return !!this.getDefaultWalletInfo();
   };
 
+  getWalletProviders = () => {
+    return walletProviders;
+  };
+
   getAllWallets = () => {
     return [...this.getActiveWallets(), ...this.getAvailableWallets()];
   };
 
   getActiveWallets = () => {
     return this.state.activeWallets;
+  };
+
+  getConnectedWallets = () => {
+    return this.getActiveWallets().filter(w => w.connectionStatus.connected);
   };
 
   getAvailableWallets = () => {
@@ -181,14 +187,20 @@ export class SessionStateContainer extends Container<SessionState> {
     return this.dismissWallet(wallet);
   };
 
-  getDefaultWalletInfo = () => {
+  getDefaultWallet = () => {
     const { activeWallets } = this.state;
     if (!activeWallets || !activeWallets.length) return void 0;
     const connectedWallets = activeWallets.filter(
       w => w.connectionStatus.connected
     );
     if (!connectedWallets.length) return void 0;
-    return connectedWallets[0].walletInfo;
+    return connectedWallets[0];
+  };
+
+  getDefaultWalletInfo = () => {
+    const defaultWallet = this.getDefaultWallet();
+    if (!defaultWallet) return void 0;
+    return defaultWallet.walletInfo;
   };
 
   getWalletInfo = (providerId: string) => {
