@@ -10,6 +10,7 @@ interface TransactionButtonStyleProps {
   disabled?: boolean;
   inProgress?: boolean;
   success?: boolean;
+  danger?: boolean;
 }
 
 const TransactionButtonRoot = styled('button')(
@@ -46,20 +47,11 @@ const TransactionButtonRoot = styled('button')(
       transform: 'translateY(1px) scale(1)'
     }
   },
-  ({ disabled, inProgress, success }: TransactionButtonStyleProps) => {
-    if (success) {
-      return {
-        '&, &:hover': {
-          backgroundColor: '#11a067',
-          boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
-          transform: 'translateY(0px) scale(1)',
-          color: 'white',
-          cursor: 'default'
-        }
-      };
-    }
+  ({ disabled, inProgress, success, danger }: TransactionButtonStyleProps) => {
+    const style = {};
+
     if (disabled || inProgress) {
-      return {
+      Object.assign(style, {
         '&, &:hover': {
           backgroundColor: '#2e3542',
           boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
@@ -67,10 +59,35 @@ const TransactionButtonRoot = styled('button')(
           color: disabled ? '#576b7d' : 'white',
           cursor: 'default'
         }
-      };
+      });
     }
 
-    return {};
+    if (danger) {
+      Object.assign(style, {
+        backgroundColor: '#582a30',
+        borderColor: 'rgba(0, 0, 0, 0.3)',
+        color: '#e87494',
+
+        '&:hover, &:active': {
+          backgroundColor: disabled ? '#582a30' : '#802e38',
+          cursor: disabled ? 'default' : 'pointer'
+        }
+      });
+    }
+
+    if (success) {
+      Object.assign(style, {
+        '&, &:hover': {
+          backgroundColor: '#11a067',
+          boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
+          transform: 'translateY(0px) scale(1)',
+          color: 'white',
+          cursor: 'default'
+        }
+      });
+    }
+
+    return style;
   }
 );
 
@@ -102,13 +119,14 @@ export interface TransactionButtonProps {
   inProgress?: boolean;
   disabled?: boolean;
   success?: boolean;
+  danger?: boolean;
   onClick?: (event: any) => void;
   onWalletSelect?: (selectedWallet: any) => void;
 }
 
 export class TransactionButton extends Component<TransactionButtonProps> {
   render() {
-    const { onClick, inProgress, disabled, success } = this.props;
+    const { onClick, inProgress, disabled, success, danger } = this.props;
 
     return (
       <TransactionButtonRoot
@@ -116,6 +134,7 @@ export class TransactionButton extends Component<TransactionButtonProps> {
         inProgress={inProgress}
         disabled={disabled}
         success={success}
+        danger={danger}
       >
         <TransactionButtonIcon>
           {inProgress ? (

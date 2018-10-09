@@ -39,6 +39,7 @@ export class TransactionButtonBlock extends Component<
     const inProgress = false;
     const disabled = false;
     const success = false;
+    const hasError = false;
 
     return (
       <TransactionButtonBlockRoot>
@@ -47,10 +48,12 @@ export class TransactionButtonBlock extends Component<
           inProgress={inProgress}
           success={success}
           disabled={disabled}
+          danger={hasError}
         />
         <TransactionAddonBlock
           disabled={disabled || inProgress || success}
           success={success}
+          danger={hasError}
         />
       </TransactionButtonBlockRoot>
     );

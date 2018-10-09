@@ -4,6 +4,7 @@ import styled from 'react-emotion';
 export interface TransactionAddonButtonProps {
   disabled?: boolean;
   success?: boolean;
+  danger?: boolean;
 }
 
 export const TransactionAddonButton = styled('button')(
@@ -43,21 +44,11 @@ export const TransactionAddonButton = styled('button')(
       transform: 'translateY(1px)'
     }
   },
-  ({ disabled, success }: TransactionAddonButtonProps) => {
-    if (success) {
-      return {
-        '&, &:hover': {
-          backgroundColor: '#11a067',
-          borderColor: 'rgba(0, 0, 0, 0.3)',
-          boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
-          color: 'white',
-          cursor: 'default'
-        }
-      };
-    }
+  ({ disabled, success, danger }: TransactionAddonButtonProps) => {
+    const style = {};
 
     if (disabled) {
-      return {
+      Object.assign(style, {
         '&, &:hover': {
           borderLeft: '1px solid rgba(0, 0, 0, 0.2)',
           backgroundColor: '#2e3542',
@@ -65,9 +56,35 @@ export const TransactionAddonButton = styled('button')(
           color: '#576b7d',
           cursor: 'default'
         }
-      };
+      });
     }
-    return {};
+
+    if (danger) {
+      Object.assign(style, {
+        backgroundColor: '#582a30',
+        borderColor: 'rgba(0, 0, 0, 0.3)',
+        color: '#e87494',
+
+        '&:hover, &:active': {
+          backgroundColor: disabled ? '#582a30' : '#802e38',
+          cursor: disabled ? 'default' : 'pointer'
+        }
+      });
+    }
+
+    if (success) {
+      Object.assign(style, {
+        '&, &:hover': {
+          backgroundColor: '#11a067',
+          borderColor: 'rgba(0, 0, 0, 0.3)',
+          boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
+          color: 'white',
+          cursor: 'default'
+        }
+      });
+    }
+
+    return style;
   }
 );
 

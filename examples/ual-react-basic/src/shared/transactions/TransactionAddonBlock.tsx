@@ -7,23 +7,25 @@ import TransactionAddonMenu from './TransactionAddonMenu';
 export interface TransactionAddonBlockProps {
   disabled?: boolean;
   success?: boolean;
+  danger?: boolean;
   onWalletSelect?: (selectedWallet: any) => void;
 }
 
 export function TransactionAddonBlock({
   disabled,
   success,
+  danger,
   onWalletSelect
 }: TransactionAddonBlockProps) {
   return disabled ? (
-    <TransactionAddonButton disabled={true} success={success}>
+    <TransactionAddonButton disabled={true} success={success} danger={danger}>
       <IoIosArrowDown />
     </TransactionAddonButton>
   ) : (
     <Dropdown>
       {({ isExpanded, toggle }) => (
         <DropdownContainer>
-          <TransactionAddonButton onClick={toggle}>
+          <TransactionAddonButton onClick={toggle} danger={danger}>
             <IoIosArrowDown />
           </TransactionAddonButton>
 
