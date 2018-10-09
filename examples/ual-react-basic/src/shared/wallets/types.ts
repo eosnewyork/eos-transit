@@ -8,6 +8,7 @@ export interface WalletConnectionStatus {
 export interface WalletProviderInfo {
   id: string;
   name?: string;
+  shortName?: string;
   description?: string;
 }
 
