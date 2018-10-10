@@ -19,6 +19,9 @@
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types", "./src/typings"]
   },
-  "files": ["src/index.ts", "src/integrations/scatter-desktop/index.ts"],
+  "files": [
+    "src/index.ts",
+    "src/integrations/scatter-desktop/index.ts"
+  ],
   "include": ["src/typings/*"]
 }
