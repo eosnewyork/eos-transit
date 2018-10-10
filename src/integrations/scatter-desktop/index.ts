@@ -23,12 +23,8 @@ function connectToScatter(appName: string = 'some_app') {
   });
 }
 
-async function ensureConnected(appName: string) {
-  let scatter;
-  if (scatter) return scatter;
-
-  scatter = await connectToScatter(appName);
-  return scatter;
+async function ensureConnected(appName: string): Promise<any> {
+  return connectToScatter(appName);
 }
 
 export function makeScatterSignProvider(
@@ -68,8 +64,26 @@ export function makeScatterDesktopIntegration(
 ): Integration {
   const asyncScatter = ensureConnected(appName);
 
+  async function connect(accountName?: string): Promise<any> {
+    const scatter = await asyncScatter;
+    const account =
+      (scatter.identity.accounts && scatter.identity.accounts[0]) || void 0;
+
+    if (!account) {
+      return Promise.reject('No account data passed by the wallet provider');
+    }
+
+    // Should be walletInfo (needs typing on the UAL level)
+    return {
+      accountName: account.name,
+      accountAuthority: account.authority,
+      accountPublicKey: account.publicKey
+    };
+  }
+
   return {
     name: 'scatter-desktop',
-    signProvider: makeScatterSignProvider(asyncScatter, networkConfig)
+    signProvider: makeScatterSignProvider(asyncScatter, networkConfig),
+    connect
   };
 }
