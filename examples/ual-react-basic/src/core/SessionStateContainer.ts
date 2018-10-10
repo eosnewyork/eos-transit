@@ -193,7 +193,6 @@ export class SessionStateContainer extends Container<SessionState> {
       // to be rebuilt completely. Sorry for this mess :)
       try {
         const connectionInfo = await this.ual.connect();
-        console.log(connectionInfo);
         const walletInfo = await this.getWalletInfo(
           wallet.providerInfo.id,
           connectionInfo.accountName
