@@ -11,6 +11,7 @@ export type EosSignProvider = (
 export interface Integration {
   name: string;
   signProvider?: EosSignProvider;
+  connect: (accountName?: string) => Promise<any>;
 }
 
 export interface IntegrationInstance {
@@ -36,7 +37,8 @@ export interface UALOptions {
 // Instance and public APIs
 
 export interface UALInstance {
-  getAccount: (accountName: string) => Promise<string>;
+  connect: (accountName?: string) => Promise<any>;
+  getAccount: (accountName: string) => Promise<any>;
   transfer: (
     from: string,
     to: string,
