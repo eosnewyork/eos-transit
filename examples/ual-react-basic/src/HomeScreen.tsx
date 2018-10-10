@@ -1,23 +1,8 @@
 import React from 'react';
-import { TiThSmall } from 'react-icons/ti';
-import { NoContent } from './shared/NoContent';
-import TransactionButtonBlock from './shared/transactions/TransactionButtonBlock';
+import PaymentForm from 'PaymentForm';
 
 export function HomeScreen() {
-  return (
-    <div>
-      <TransactionButtonBlock />
-      <br />
-      <br />
-      <br />
-
-      <NoContent
-        message="Some app content will be here soon"
-        note="Under construction, hang tight!"
-        icon={TiThSmall}
-      />
-    </div>
-  );
+  return <PaymentForm />;
 }
 
 export default HomeScreen;
