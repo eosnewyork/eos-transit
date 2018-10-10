@@ -1,5 +1,12 @@
+import { UALInstance } from 'eos-ual';
 import { Container } from 'unstated';
-import { WalletModel, WalletProviderInfo } from '../shared/wallets/types';
+import {
+  WalletModel,
+  WalletProviderInfo,
+  WalletInfo
+} from '../shared/wallets/types';
+
+// BEWARE! There be dragons!
 
 export interface SessionState {
   activeWallets: WalletModel[];
@@ -39,24 +46,25 @@ const walletProviders: WalletProviderInfo[] = [
   }
 ];
 
-const tempActiveWallets = [
-  {
-    providerInfo: walletProviders[0],
-    connectionStatus: {
-      connected: true
-    },
-    walletInfo: {
-      ...tempWalletInfo
-    }
-  }
-];
+// const tempActiveWallets = [
+//   {
+//     providerInfo: walletProviders[0],
+//     connectionStatus: {
+//       connected: true
+//     },
+//     walletInfo: {
+//       ...tempWalletInfo
+//     }
+//   }
+// ];
 
 export const DEFAULT_SESSION_STATE = {
-  activeWallets: tempActiveWallets
+  // activeWallets: tempActiveWallets
+  activeWallets: []
 };
 
 export class SessionStateContainer extends Container<SessionState> {
-  constructor() {
+  constructor(private ual: UALInstance, private appName: string) {
     super();
     this.state = DEFAULT_SESSION_STATE;
 
@@ -109,13 +117,15 @@ export class SessionStateContainer extends Container<SessionState> {
   };
 
   addWallet = async (wallet: WalletModel) => {
-    if (this.isProviderAdded(wallet.providerInfo.id)) return;
+    if (this.isProviderAdded(wallet.providerInfo.id)) {
+      return Promise.resolve(wallet);
+    }
 
     await this.setState(state => ({
       activeWallets: [...state.activeWallets, wallet]
     }));
 
-    this.connectToWallet(wallet);
+    return this.connectToWallet(wallet);
   };
 
   dismissWallet = (wallet: WalletModel) => {
@@ -127,6 +137,8 @@ export class SessionStateContainer extends Container<SessionState> {
   };
 
   connectToWallet = async (wallet: WalletModel) => {
+    const _this = this;
+
     await this.setState(state => ({
       activeWallets: state.activeWallets.map(w => {
         if (w.providerInfo.id !== wallet.providerInfo.id) return w;
@@ -140,9 +152,7 @@ export class SessionStateContainer extends Container<SessionState> {
       })
     }));
 
-    const _this = this;
-
-    function imitateConnected() {
+    function onConnected(walletInfo: WalletInfo) {
       return _this.setState(state => ({
         activeWallets: state.activeWallets.map(w => {
           if (w.providerInfo.id !== wallet.providerInfo.id) return w;
@@ -152,13 +162,13 @@ export class SessionStateContainer extends Container<SessionState> {
               connected: true,
               connecting: false
             },
-            walletInfo: { ...tempWalletInfo }
+            walletInfo
           };
         })
       }));
     }
 
-    function imitateConnectionError() {
+    function onConnectionError() {
       return _this.setState(state => ({
         activeWallets: state.activeWallets.map(w => {
           if (w.providerInfo.id !== wallet.providerInfo.id) return w;
@@ -175,11 +185,41 @@ export class SessionStateContainer extends Container<SessionState> {
       }));
     }
 
-    setTimeout(() => {
-      return Math.round(Math.random()) > 0.25
-        ? imitateConnected()
-        : imitateConnectionError();
-    }, 2500);
+    // TEMP: Using real connection for Scatter but
+    // hardcoding the imitation for everything else
+
+    if (wallet.providerInfo.id === 'scatter-desktop') {
+      // NOTE: This is rather hackery now, the UAL is about
+      // to be rebuilt completely. Sorry for this mess :)
+      const connectionInfo = await this.ual.connect();
+      const walletInfo = await this.getWalletInfo(
+        wallet.providerInfo.id,
+        connectionInfo.accountName
+      );
+      if (!walletInfo) {
+        return Promise.reject('No wallet info has been obtained');
+      }
+      return onConnected(walletInfo);
+    }
+
+    return new Promise((resolve, reject) => {
+      setTimeout(reject, 2500);
+    }).catch(error => {
+      onConnectionError();
+    });
+
+    // Just a temp hackery, might still be useful for demoing
+    // return new Promise((resolve, reject) => {
+    //   setTimeout(() => {
+    //     return Math.round(Math.random()) > 0.25 ? resolve() : reject();
+    //   }, 2500);
+    // })
+    //   .then(result => {
+    //     return onConnected();
+    //   })
+    //   .catch(error => {
+    //     return onConnectionError();
+    //   });
   };
 
   logoutWallet = (wallet: WalletModel) => {
@@ -203,8 +243,24 @@ export class SessionStateContainer extends Container<SessionState> {
     return defaultWallet.walletInfo;
   };
 
-  getWalletInfo = (providerId: string) => {
-    // TODO
+  getWalletInfo = async (
+    providerId: string,
+    accountName: string
+  ): Promise<WalletInfo | undefined> => {
+    // TODO: providerId will be taken into account
+    // here once UAL is capable of that
+    const accountData = await this.ual.getAccount(accountName);
+    if (!accountData) return Promise.reject('No account data has been fetched');
+
+    return {
+      accountName: accountData.account_name,
+      accountAuthority: 'active',
+      publicKey: accountData.publicKey,
+      eosBalance: Number.parseFloat(accountData.core_liquid_balance || '0'),
+      ram: accountData.ram_quota,
+      cpu: Number.parseFloat(accountData.cpu_limit.available),
+      net: Number.parseFloat(accountData.net_limit.available)
+    };
   };
 
   getUserInfo = (sessionState: SessionState) => {
