@@ -2,39 +2,39 @@ import { EosSignArgs } from 'eosjs';
 import ScatterJS, { Blockchains, SocketService } from 'scatterjs-core';
 import { Integration } from '../../types';
 
-function connectToScatter(appName: string = 'some_app') {
+function connectToScatter(appName: string) {
   return new Promise((resolve, reject) => {
-    const scatter = (ScatterJS as any).scatter;
+    const scatter = ScatterJS.scatter;
 
     // Note: This actually tries to connect to Scatter Desktop explicitly
     // and logs out the console error if its not running.
     scatter
       .connect(
         appName,
-        { initTimeout: 10000 }
+        { initTimeout: 5000 }
       )
       .then((connected: boolean) => {
         if (connected) {
           resolve(scatter);
         } else {
-          reject(new Error('Cannot connect to Scatter'));
+          reject('Cannot connect to Scatter');
         }
+      })
+      .catch((error: any) => {
+        reject(error);
       });
   });
 }
 
-async function ensureConnected(appName: string): Promise<any> {
+function ensureConnected(appName: string): Promise<any> {
   return connectToScatter(appName);
 }
 
-export function makeScatterSignProvider(
-  asyncScatter: Promise<any>,
-  networkConfig: any
-) {
+export function makeScatterSignProvider(appName: string, networkConfig: any) {
   return async function scatterDesktopSignProvider(
     eosSignArgs: EosSignArgs
   ): Promise<any[] | null> {
-    const scatter = await asyncScatter;
+    const scatter = await ensureConnected(appName);
     const identity = await scatter.getIdentity({
       accounts: [networkConfig]
     });
@@ -62,10 +62,8 @@ export function makeScatterDesktopIntegration(
   appName: string,
   networkConfig: any
 ): Integration {
-  const asyncScatter = ensureConnected(appName);
-
   async function connect(accountName?: string): Promise<any> {
-    const scatter = await asyncScatter;
+    const scatter = await ensureConnected(appName);
     const account =
       (scatter &&
         scatter.identity &&
@@ -87,7 +85,7 @@ export function makeScatterDesktopIntegration(
 
   return {
     name: 'scatter-desktop',
-    signProvider: makeScatterSignProvider(asyncScatter, networkConfig),
+    signProvider: makeScatterSignProvider(appName, networkConfig),
     connect
   };
 }
