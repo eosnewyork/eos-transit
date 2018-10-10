@@ -1,5 +1,9 @@
+// tslint:disable-next-line:no-reference
+/// <reference path="./typings/eosjs.d.ts" />
+
 import Eos from 'eosjs';
 import { UALOptions, UALInstance } from './types';
+export * from './types';
 
 function transfer(
   eosInstance: any,
@@ -44,6 +48,10 @@ export function makeUAL(options: UALOptions): UALInstance {
   });
 
   return {
+    connect(accountName?: string) {
+      return selectedIntegration.connect(accountName);
+    },
+
     getAccount(accountName: string) {
       return eosInstance.getAccount(accountName);
     },
