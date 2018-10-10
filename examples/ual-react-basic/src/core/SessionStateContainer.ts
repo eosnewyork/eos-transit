@@ -191,15 +191,23 @@ export class SessionStateContainer extends Container<SessionState> {
     if (wallet.providerInfo.id === 'scatter-desktop') {
       // NOTE: This is rather hackery now, the UAL is about
       // to be rebuilt completely. Sorry for this mess :)
-      const connectionInfo = await this.ual.connect();
-      const walletInfo = await this.getWalletInfo(
-        wallet.providerInfo.id,
-        connectionInfo.accountName
-      );
-      if (!walletInfo) {
-        return Promise.reject('No wallet info has been obtained');
+      try {
+        const connectionInfo = await this.ual.connect();
+        console.log(connectionInfo);
+        const walletInfo = await this.getWalletInfo(
+          wallet.providerInfo.id,
+          connectionInfo.accountName
+        );
+        if (!walletInfo) {
+          return Promise.reject('No wallet info has been obtained');
+        }
+        return onConnected(walletInfo);
+      } catch (error) {
+        await onConnectionError();
+        return Promise.reject(
+          'Connection error or no wallet info has been obtained'
+        );
       }
-      return onConnected(walletInfo);
     }
 
     return new Promise((resolve, reject) => {
