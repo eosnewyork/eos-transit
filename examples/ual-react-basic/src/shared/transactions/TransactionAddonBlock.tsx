@@ -25,7 +25,11 @@ export function TransactionAddonBlock({
     <Dropdown>
       {({ isExpanded, toggle }) => (
         <DropdownContainer>
-          <TransactionAddonButton onClick={toggle} danger={danger}>
+          <TransactionAddonButton
+            onClick={toggle}
+            danger={danger}
+            success={success}
+          >
             <IoIosArrowDown />
           </TransactionAddonButton>
 

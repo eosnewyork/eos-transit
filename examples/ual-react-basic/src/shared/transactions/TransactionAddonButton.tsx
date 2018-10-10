@@ -7,7 +7,7 @@ export interface TransactionAddonButtonProps {
   danger?: boolean;
 }
 
-export const TransactionAddonButton = styled('button')(
+export const TransactionAddonButton = styled('div')(
   {
     display: 'flex',
     alignItems: 'center',
@@ -55,6 +55,11 @@ export const TransactionAddonButton = styled('button')(
           boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
           color: '#576b7d',
           cursor: 'default'
+        },
+        
+        '&:active': {
+          transform: 'translateY(0)',
+          boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
         }
       });
     }
@@ -77,7 +82,6 @@ export const TransactionAddonButton = styled('button')(
         '&, &:hover': {
           backgroundColor: '#11a067',
           borderColor: 'rgba(0, 0, 0, 0.3)',
-          boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
           color: 'white',
           cursor: 'default'
         }

@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import styled from 'react-emotion';
-import { IoMdCheckmark } from 'react-icons/io';
+import { IoMdCheckmark, IoIosCloseCircle } from 'react-icons/io';
 import { EosLogo } from '../EosLogo';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 
@@ -15,6 +15,7 @@ interface TransactionButtonStyleProps {
 
 const TransactionButtonRoot = styled('button')(
   {
+    flex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -56,7 +57,7 @@ const TransactionButtonRoot = styled('button')(
           backgroundColor: '#2e3542',
           boxShadow: '0 7px 15px -4px rgba(0, 0, 0, 0.4)',
           transform: 'translateY(0px) scale(1)',
-          color: disabled ? '#576b7d' : 'white',
+          color: inProgress ? 'white' : '#576b7d',
           cursor: 'default'
         }
       });
@@ -130,6 +131,7 @@ export class TransactionButton extends Component<TransactionButtonProps> {
 
     return (
       <TransactionButtonRoot
+        type="button"
         onClick={onClick}
         inProgress={inProgress}
         disabled={disabled}
@@ -139,6 +141,8 @@ export class TransactionButton extends Component<TransactionButtonProps> {
         <TransactionButtonIcon>
           {inProgress ? (
             <SpinnerIcon size={20} />
+          ) : danger ? (
+            <IoIosCloseCircle />
           ) : success ? (
             <IoMdCheckmark />
           ) : (
@@ -148,9 +152,11 @@ export class TransactionButton extends Component<TransactionButtonProps> {
         <TransactionButtonText>
           {inProgress
             ? 'Processing...'
-            : success
-              ? 'Successful!'
-              : 'Run transaction'}
+            : danger
+              ? 'Failed. Try again'
+              : success
+                ? 'Successful!'
+                : 'Run transaction'}
         </TransactionButtonText>
       </TransactionButtonRoot>
     );
