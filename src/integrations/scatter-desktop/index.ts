@@ -67,7 +67,11 @@ export function makeScatterDesktopIntegration(
   async function connect(accountName?: string): Promise<any> {
     const scatter = await asyncScatter;
     const account =
-      (scatter.identity.accounts && scatter.identity.accounts[0]) || void 0;
+      (scatter &&
+        scatter.identity &&
+        scatter.identity.accounts &&
+        scatter.identity.accounts[0]) ||
+      void 0;
 
     if (!account) {
       return Promise.reject('No account data passed by the wallet provider');
