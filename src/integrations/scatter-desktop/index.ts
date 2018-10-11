@@ -6,12 +6,10 @@ function connectToScatter(appName: string) {
   return new Promise((resolve, reject) => {
     const scatter = ScatterJS.scatter;
 
-    // Note: This actually tries to connect to Scatter Desktop explicitly
-    // and logs out the console error if its not running.
     scatter
       .connect(
         appName,
-        { initTimeout: 5000 }
+        { initTimeout: 10000 }
       )
       .then((connected: boolean) => {
         if (connected) {
@@ -35,9 +33,6 @@ export function makeScatterSignProvider(appName: string, networkConfig: any) {
     eosSignArgs: EosSignArgs
   ): Promise<any[] | null> {
     const scatter = await ensureConnected(appName);
-    const identity = await scatter.getIdentity({
-      accounts: [networkConfig]
-    });
 
     const signatureRequestPayload = {
       ...eosSignArgs,
@@ -63,26 +58,36 @@ export function makeScatterDesktopIntegration(
   networkConfig: any
 ): Integration {
   async function connect(accountName?: string): Promise<any> {
-    const scatter = await ensureConnected(appName);
-    const account =
-      (scatter &&
-        scatter.identity &&
-        scatter.identity.accounts &&
-        (scatter.identity.accounts as any[]).find(
-          x => x.blockchain === 'eos'
-        )) ||
-      void 0;
+    try {
+      const scatter = await ensureConnected(appName);
+      const identity = await scatter.getIdentity({
+        accounts: [networkConfig]
+      });
 
-    if (!account) {
-      return Promise.reject('No account data passed by the wallet provider');
+      if (!identity) {
+        return Promise.reject('No identity obtained from Scatter');
+      }
+
+      const account =
+        (identity &&
+          identity.accounts &&
+          (identity.accounts as any[]).find(x => x.blockchain === 'eos')) ||
+        void 0;
+
+      if (!account) {
+        return Promise.reject('No account data obtained from Scatter identity');
+      }
+
+      // Should be walletInfo (needs typing on the UAL level)
+      return {
+        accountName: account.name,
+        accountAuthority: account.authority,
+        accountPublicKey: account.publicKey
+      };
+    } catch (error) {
+      console.log('[scatter-desktop]', error);
+      return Promise.reject(error);
     }
-
-    // Should be walletInfo (needs typing on the UAL level)
-    return {
-      accountName: account.name,
-      accountAuthority: account.authority,
-      accountPublicKey: account.publicKey
-    };
   }
 
   return {
