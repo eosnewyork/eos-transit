@@ -68,7 +68,9 @@ export function makeScatterDesktopIntegration(
       (scatter &&
         scatter.identity &&
         scatter.identity.accounts &&
-        scatter.identity.accounts[0]) ||
+        (scatter.identity.accounts as any[]).find(
+          x => x.blockchain === 'eos'
+        )) ||
       void 0;
 
     if (!account) {
