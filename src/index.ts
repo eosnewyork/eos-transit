@@ -68,9 +68,7 @@ export function makeUAL(options: UALOptions): UALInstance {
     },
 
     getAccount(accountName: string) {
-      return fetch(`${options.eosRpcUrl}/v1/chain/get_account`).then(response =>
-        response.json()
-      );
+      return eosApi.rpc.get_account(accountName);
     },
 
     transfer(from: string, to: string, amount: number, memo?: string) {
