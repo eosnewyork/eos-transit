@@ -1,22 +1,18 @@
-import { EosSignArgs, EosSignature } from 'eosjs';
+import { ApiInterfaces } from 'eosjs';
 
-export type TransactionSignature = any;
+// Wallet Providers
 
-export type EosSignProvider = (
-  eosSignArgs: EosSignArgs
-) => Promise<EosSignature[] | null>;
-
-// Intergrations
-
-export interface Integration {
+export interface WalletProvider {
   name: string;
-  signProvider?: EosSignProvider;
-  connect: (accountName?: string) => Promise<any>;
+  signatureProvider: ApiInterfaces.SignatureProvider;
+  connect: (accountName?: string, permission?: string) => Promise<any>;
 }
 
-export interface IntegrationInstance {
+export interface WalletProviderInstance {
   name: string;
-  signProvider?: (eosSignArgs: EosSignArgs) => Promise<EosSignature[] | null>;
+  sign: (
+    signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
+  ) => Promise<string[]>;
 }
 
 // Transactions
@@ -27,11 +23,11 @@ export type TransactionResult = any;
 
 export interface UALOptions {
   appName: string;
+  eosRpcUrl: string;
   network?: string;
   chainId?: string;
-  httpEndpoint?: string;
   expireInSeconds?: number;
-  integrations: Integration[];
+  walletProviders: WalletProvider[];
 }
 
 // Instance and public APIs
