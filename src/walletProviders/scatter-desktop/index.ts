@@ -1,6 +1,6 @@
-import { EosSignArgs } from 'eosjs';
+import { ApiInterfaces } from 'eosjs';
 import ScatterJS, { Blockchains, SocketService } from 'scatterjs-core';
-import { Integration } from '../../types';
+import { WalletProvider } from '../../types';
 
 function connectToScatter(appName: string) {
   return new Promise((resolve, reject) => {
@@ -28,35 +28,53 @@ function ensureConnected(appName: string): Promise<any> {
   return connectToScatter(appName);
 }
 
-export function makeScatterSignProvider(appName: string, networkConfig: any) {
-  return async function scatterDesktopSignProvider(
-    eosSignArgs: EosSignArgs
-  ): Promise<any[] | null> {
-    const scatter = await ensureConnected(appName);
+export function makeScatterSignatureProvider(
+  appName: string,
+  networkConfig: any
+) {
+  return {
+    async getAvailableKeys() {
+      return SocketService.sendApiRequest({
+        type: 'identityFromPermissions',
+        payload: {}
+      }).then((identity: any) => {
+        if (!identity) return [];
 
-    const signatureRequestPayload = {
-      ...eosSignArgs,
-      blockchain: Blockchains.EOS,
-      network: networkConfig,
-      requiredFields: {}
-    };
+        return identity.accounts
+          .filter((account: any) => account.blockchain === 'eos')
+          .map((account: any) => account.publicKey);
+      });
+    },
 
-    const result = await SocketService.sendApiRequest({
-      type: 'requestSignature',
-      payload: signatureRequestPayload
-    });
+    async sign(
+      signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
+    ): Promise<string[]> {
+      const scatter = await ensureConnected(appName);
 
-    if (!result) return null;
-    return typeof result.signatures !== 'undefined'
-      ? result.signatures
-      : result;
+      const signatureRequestPayload = {
+        ...signatureProviderArgs,
+        blockchain: Blockchains.EOS,
+        network: networkConfig,
+        requiredFields: {}
+      };
+
+      const result = await SocketService.sendApiRequest({
+        type: 'requestSignature',
+        payload: signatureRequestPayload
+      });
+
+      if (!result) return [];
+      return typeof result.signatures !== 'undefined'
+        ? result.signatures
+        : result;
+    }
   };
 }
 
-export function makeScatterDesktopIntegration(
+export function makeScatterDesktopWalletProvider(
   appName: string,
   networkConfig: any
-): Integration {
+): WalletProvider {
   async function connect(accountName?: string): Promise<any> {
     try {
       const scatter = await ensureConnected(appName);
@@ -92,7 +110,7 @@ export function makeScatterDesktopIntegration(
 
   return {
     name: 'scatter-desktop',
-    signProvider: makeScatterSignProvider(appName, networkConfig),
+    signatureProvider: makeScatterSignatureProvider(appName, networkConfig),
     connect
   };
 }
