@@ -18,7 +18,6 @@
     "eosjs": "20.0.0-beta2"
   },
   "devDependencies": {
-    "@types/text-encoding": "^0.0.34",
     "prettier": "^1.14.3",
     "scatterjs-core": "^2.3.7",
     "shx": "^0.3.2",
