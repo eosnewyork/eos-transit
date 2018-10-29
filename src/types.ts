@@ -1,18 +1,135 @@
-import { ApiInterfaces } from 'eosjs';
+import { ApiInterfaces, JsonRpc, Api } from 'eosjs';
+
+// Core types
+
+export interface AccountInfo {
+  name: string;
+  // TODO: permissions and more
+}
+
+// State management
+
+// State
+
+export type StateUpdaterFn<TState> = (
+  prevState: TState | undefined
+) => TState | undefined;
+
+export type StateUpdater<TState> = StateUpdaterFn<TState> | TState | undefined;
+
+export type UpdateStateFn<TState> = (updater: StateUpdater<TState>) => void;
+
+export type StateListener<TState> = (newState: TState | undefined) => void;
+
+export type StateUnsubscribeFn = () => void;
+
+export interface StateContainer<TState = any> {
+  getState: () => TState | undefined;
+  updateState: UpdateStateFn<TState>;
+  subscribe: (listener: StateListener<TState>) => StateUnsubscribeFn;
+}
+
+// Network
+
+export interface NetworkConfig {
+  name?: string;
+  protocol?: string;
+  host: string;
+  port?: number;
+  chainId: string;
+}
 
 // Wallet Providers
 
-export interface WalletProvider {
-  name: string;
-  signatureProvider: ApiInterfaces.SignatureProvider;
-  connect: (accountName?: string, permission?: string) => Promise<any>;
+export interface WalletProviderMetadata {
+  name?: string;
+  description?: string;
 }
 
-export interface WalletProviderInstance {
-  name: string;
-  sign: (
-    signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
-  ) => Promise<string[]>;
+export interface WalletProvider {
+  id: string;
+  meta?: WalletProviderMetadata;
+  signatureProvider: ApiInterfaces.SignatureProvider;
+  connect(): Promise<boolean>;
+  disconnect(): Promise<boolean>;
+  login(accountName?: string): Promise<boolean>;
+  logout(): Promise<boolean>;
+}
+
+// export interface WalletProviderInstance {
+//   id: string;
+//   connect(): Promise<boolean>;
+//   disconnect(): Promise<boolean>;
+//   login(): Promise<boolean>;
+//   logout(): Promise<boolean>;
+//   sign(
+//     signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
+//   ): Promise<string[]>;
+// }
+
+// Session
+
+export interface WalletAccessSessionState {
+  connecting?: boolean;
+  connected?: boolean;
+  connectionError?: boolean;
+  connectionErrorMessage?: string;
+  authenticating?: boolean;
+  authenticated?: boolean;
+  authenticationConfirmed?: boolean;
+  authenticationError?: boolean;
+  authenticationErrorMessage?: string;
+  accountInfo?: AccountInfo;
+  accountFetching?: boolean;
+  accountFetchError?: boolean;
+  accountFetchErrorMessage?: string;
+}
+
+export interface WalletAccessSession {
+  appName: string;
+  state: WalletAccessSessionState;
+  provider: WalletProvider;
+  eosApi: Api;
+  accountInfo?: AccountInfo;
+  connected: boolean;
+  authenticated: boolean;
+  connect(): Promise<boolean>;
+  disconnect(): Promise<boolean>;
+  login(accountName?: string): Promise<AccountInfo>;
+  logout(accountName?: string): Promise<boolean>;
+  fetchAccountInfo(accountName: string): Promise<AccountInfo>;
+  terminate(): Promise<boolean>;
+  subscribeToState(
+    listener: StateListener<WalletAccessSessionState>
+  ): StateUnsubscribeFn;
+}
+
+// Wallet access context
+
+export interface WalletAccessContextOptions {
+  appName: string;
+  network: NetworkConfig;
+  walletProviders: WalletProvider[];
+}
+
+export interface WalletAccessContextState {
+  sessions: WalletAccessSession[];
+}
+
+export interface WalletAccessContext {
+  eosRpc: JsonRpc;
+  network: NetworkConfig;
+  initSession(walletProvider: WalletProvider | string): WalletAccessSession;
+  getWalletProviders(): WalletProvider[];
+  getSessions(): WalletAccessSession[];
+  getActiveSessions(): WalletAccessSession[];
+  detachSession(session: WalletAccessSession): void;
+  logoutAll(): Promise<boolean>;
+  disconnectAll(): Promise<boolean>;
+  terminateAll(): Promise<boolean>;
+  subscribe(
+    listener: StateListener<WalletAccessContextState>
+  ): StateUnsubscribeFn;
 }
 
 // Transactions
@@ -21,6 +138,7 @@ export type TransactionResult = any;
 
 // Configuration
 
+// [DEPRECATED]
 export interface UALOptions {
   appName: string;
   eosRpcUrl: string;
@@ -32,6 +150,7 @@ export interface UALOptions {
 
 // Instance and public APIs
 
+// [DEPRECATED]
 export interface UALInstance {
   connect: (accountName?: string) => Promise<any>;
   getAccount: (accountName: string) => Promise<any>;
