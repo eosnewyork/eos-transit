@@ -4,6 +4,16 @@ import { ApiInterfaces, JsonRpc, Api } from 'eosjs';
 
 export interface AccountInfo {
   name: string;
+  publicKey: string;
+  core_liquid_balance?: string;
+  ram_quota?: number;
+  cpu_limit: {
+    available: number;
+  };
+  net_limit: {
+    available: number;
+  };
+
   // TODO: permissions and more
 }
 
