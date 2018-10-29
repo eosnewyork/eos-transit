@@ -103,6 +103,7 @@ export function makeScatterWalletProvider(
     id: 'scatter',
     meta: {
       name: 'Scatter Desktop',
+      shortName: 'Scatter',
       description:
         'Scatter Desktop application that keeps your private keys secure'
     },

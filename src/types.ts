@@ -51,6 +51,7 @@ export interface NetworkConfig {
 
 export interface WalletProviderMetadata {
   name?: string;
+  shortName?: string;
   description?: string;
 }
 
