@@ -27,7 +27,7 @@
       "no-empty": true,
       "no-eval": true,
       "no-implicit-dependencies": false,
-      "no-shadowed-variable": true,
+      "no-shadowed-variable": false,
       "no-string-literal": true,
       "no-submodule-imports": false,
       "no-switch-case-fall-through": true,
