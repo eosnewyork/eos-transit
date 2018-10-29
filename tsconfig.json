@@ -21,7 +21,7 @@
   },
   "files": [
     "src/index.ts",
-    "src/walletProviders/scatter-desktop/index.ts"
+    "src/walletProviders/scatter/index.ts"
   ],
   "include": ["src/typings/*"]
 }
