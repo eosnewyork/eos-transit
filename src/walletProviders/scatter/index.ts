@@ -1,37 +1,10 @@
 import { ApiInterfaces } from 'eosjs';
 import ScatterJS, { Blockchains, SocketService } from 'scatterjs-core';
-import { WalletProvider } from '../../types';
+import { WalletProvider, NetworkConfig } from '../../types';
 
-function connectToScatter(appName: string) {
-  return new Promise((resolve, reject) => {
-    const scatter = ScatterJS.scatter;
+const { scatter } = ScatterJS;
 
-    scatter
-      .connect(
-        appName,
-        { initTimeout: 10000 }
-      )
-      .then((connected: boolean) => {
-        if (connected) {
-          resolve(scatter);
-        } else {
-          reject('Cannot connect to Scatter');
-        }
-      })
-      .catch((error: any) => {
-        reject(error);
-      });
-  });
-}
-
-function ensureConnected(appName: string): Promise<any> {
-  return connectToScatter(appName);
-}
-
-export function makeScatterSignatureProvider(
-  appName: string,
-  networkConfig: any
-) {
+export function makeScatterSignatureProvider(network: NetworkConfig) {
   return {
     async getAvailableKeys() {
       return SocketService.sendApiRequest({
@@ -49,12 +22,10 @@ export function makeScatterSignatureProvider(
     async sign(
       signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
     ): Promise<string[]> {
-      const scatter = await ensureConnected(appName);
-
       const signatureRequestPayload = {
         ...signatureProviderArgs,
         blockchain: Blockchains.EOS,
-        network: networkConfig,
+        network,
         requiredFields: {}
       };
 
@@ -71,15 +42,36 @@ export function makeScatterSignatureProvider(
   };
 }
 
-export function makeScatterDesktopWalletProvider(
-  appName: string,
-  networkConfig: any
+export function makeScatterWalletProvider(
+  network: NetworkConfig
 ): WalletProvider {
-  async function connect(accountName?: string): Promise<any> {
+  // Connection
+
+  function connect(appName: string) {
+    return scatter
+      .connect(
+        appName,
+        { initTimeout: 10000 }
+      )
+      .then((connected: boolean) => {
+        if (connected) {
+          return true;
+        }
+
+        return Promise.reject('Cannot connect to Scatter');
+      });
+  }
+
+  function disconnect(): Promise<any> {
+    return scatter.disconnect();
+  }
+
+  // Authentication
+
+  async function login(accountName?: string): Promise<boolean> {
     try {
-      const scatter = await ensureConnected(appName);
       const identity = await scatter.getIdentity({
-        accounts: [networkConfig]
+        accounts: [network]
       });
 
       if (!identity) {
@@ -96,21 +88,30 @@ export function makeScatterDesktopWalletProvider(
         return Promise.reject('No account data obtained from Scatter identity');
       }
 
-      // Should be walletInfo (needs typing on the UAL level)
-      return {
-        accountName: account.name,
-        accountAuthority: account.authority,
-        accountPublicKey: account.publicKey
-      };
+      return true;
     } catch (error) {
-      console.log('[scatter-desktop]', error);
+      console.log('[scatter]', error);
       return Promise.reject(error);
     }
   }
 
-  return {
-    name: 'scatter-desktop',
-    signatureProvider: makeScatterSignatureProvider(appName, networkConfig),
-    connect
+  function logout(accountName?: string): Promise<boolean> {
+    return scatter.forgetIdentity();
+  }
+
+  const walletProvider: WalletProvider = {
+    id: 'scatter',
+    meta: {
+      name: 'Scatter Desktop',
+      description:
+        'Scatter Desktop application that keeps your private keys secure'
+    },
+    signatureProvider: makeScatterSignatureProvider(network),
+    connect,
+    disconnect,
+    login,
+    logout
   };
+
+  return walletProvider;
 }
