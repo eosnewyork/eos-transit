@@ -9,8 +9,6 @@ export interface AccountInfo {
 
 // State management
 
-// State
-
 export type StateUpdaterFn<TState> = (
   prevState: TState | undefined
 ) => TState | undefined;
@@ -50,10 +48,10 @@ export interface WalletProvider {
   id: string;
   meta?: WalletProviderMetadata;
   signatureProvider: ApiInterfaces.SignatureProvider;
-  connect(): Promise<boolean>;
-  disconnect(): Promise<boolean>;
-  login(accountName?: string): Promise<boolean>;
-  logout(): Promise<boolean>;
+  connect(appName: string): Promise<any>;
+  disconnect(): Promise<any>;
+  login(accountName?: string): Promise<any>;
+  logout(accountName?: string): Promise<any>;
 }
 
 // export interface WalletProviderInstance {
@@ -86,17 +84,17 @@ export interface WalletAccessSessionState {
 }
 
 export interface WalletAccessSession {
-  appName: string;
+  ctx: WalletAccessContext;
   state: WalletAccessSessionState;
   provider: WalletProvider;
   eosApi: Api;
   accountInfo?: AccountInfo;
   connected: boolean;
   authenticated: boolean;
-  connect(): Promise<boolean>;
-  disconnect(): Promise<boolean>;
+  connect(): Promise<any>;
+  disconnect(): Promise<any>;
   login(accountName?: string): Promise<AccountInfo>;
-  logout(accountName?: string): Promise<boolean>;
+  logout(accountName?: string): Promise<any>;
   fetchAccountInfo(accountName: string): Promise<AccountInfo>;
   terminate(): Promise<boolean>;
   subscribeToState(
@@ -117,6 +115,7 @@ export interface WalletAccessContextState {
 }
 
 export interface WalletAccessContext {
+  appName: string;
   eosRpc: JsonRpc;
   network: NetworkConfig;
   initSession(walletProvider: WalletProvider | string): WalletAccessSession;

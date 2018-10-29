@@ -1,5 +1,4 @@
 import { Api, JsonRpc } from 'eosjs';
-import { TextEncoder, TextDecoder } from 'text-encoding';
 import {
   WalletAccessContextOptions,
   WalletAccessContext,
@@ -28,13 +27,14 @@ function findProviderById(
 export function initAccessContext(
   options: WalletAccessContextOptions
 ): WalletAccessContext {
-  const { walletProviders, network } = options;
+  const { appName, network, walletProviders } = options;
   const _stateContainer = makeStateContainer(DEFAULT_CONTEXT_STATE);
 
   const eosRpcUrl = getNetworkUrl(network);
   const eosRpc = new JsonRpc(eosRpcUrl, { fetch });
 
   const ctx: WalletAccessContext = {
+    appName,
     eosRpc,
     network,
 
@@ -52,11 +52,7 @@ export function initAccessContext(
       }
 
       // TODO: Consider also having generated session IDs
-      const newSession = initAccessSession(
-        options.appName,
-        _walletProvider,
-        ctx
-      );
+      const newSession = initAccessSession(_walletProvider, ctx);
 
       _stateContainer.updateState(state => ({
         sessions: [...((state && state.sessions) || []), newSession]

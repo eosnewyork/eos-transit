@@ -28,7 +28,6 @@ const DEFAULT_SESSION_STATE: WalletAccessSessionState = {
 };
 
 export function initAccessSession(
-  appName: string,
   walletProvider: WalletProvider,
   ctx: WalletAccessContext
 ): WalletAccessSession {
@@ -94,7 +93,7 @@ export function initAccessSession(
     });
 
     return walletProvider
-      .connect()
+      .connect(ctx.appName)
       .then(() => {
         _stateContainer.updateState({
           connecting: false,
@@ -187,13 +186,15 @@ export function initAccessSession(
   }
 
   const session: WalletAccessSession = {
-    appName,
+    ctx,
     provider: walletProvider,
     eosApi,
 
     get state() {
       return getState() || { ...DEFAULT_SESSION_STATE };
     },
+
+    // Shortcut state accessors
 
     get accountInfo() {
       const state = getState();
