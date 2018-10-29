@@ -101,6 +101,10 @@ export interface WalletAccessSession {
   accountInfo?: AccountInfo;
   connected: boolean;
   authenticated: boolean;
+  inProgress: boolean;
+  active: boolean;
+  hasError: boolean;
+  errorMessage: string | undefined;
   connect(): Promise<any>;
   disconnect(): Promise<any>;
   login(accountName?: string): Promise<AccountInfo>;

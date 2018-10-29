@@ -211,6 +211,44 @@ export function initAccessSession(
       return (state && state.authenticated) || false;
     },
 
+    get inProgress(): boolean {
+      const state = getState();
+      if (!state) return false;
+      const { connecting, authenticating, accountFetching } = state;
+      return !!(connecting || authenticating || accountFetching);
+    },
+
+    get active(): boolean {
+      const state = getState();
+      if (!state) return false;
+      const { connected, authenticated, accountInfo } = state;
+      return !!(connected && authenticated && accountInfo);
+    },
+
+    get hasError(): boolean {
+      const state = getState();
+      if (!state) return false;
+      const { connectionError, authenticationError, accountFetchError } = state;
+      return !!(connectionError || authenticationError || accountFetchError);
+    },
+
+    get errorMessage(): string | undefined {
+      const state = getState();
+      if (!state) return void 0;
+      if (!session.hasError) return void 0;
+      const {
+        connectionErrorMessage,
+        authenticationErrorMessage,
+        accountFetchErrorMessage
+      } = state;
+      return (
+        connectionErrorMessage ||
+        authenticationErrorMessage ||
+        accountFetchErrorMessage ||
+        'Wallet connection error'
+      );
+    },
+
     connect,
     disconnect,
     login,
