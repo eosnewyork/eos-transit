@@ -6,7 +6,8 @@ import {
   WalletAccessSession,
   WalletAccessContextState,
   StateListener,
-  StateUnsubscribeFn
+  StateUnsubscribeFn,
+  WalletAccessSessionOptions
 } from './types';
 import { makeStateContainer } from './stateContainer';
 import { initAccessSession } from './walletAccessSession';
@@ -38,7 +39,10 @@ export function initAccessContext(
     eosRpc,
     network,
 
-    initSession(walletProvider: WalletProvider | string): WalletAccessSession {
+    initSession(
+      walletProvider: WalletProvider | string,
+      { attachToContext }: WalletAccessSessionOptions = {}
+    ): WalletAccessSession {
       const _walletProvider =
         typeof walletProvider === 'string'
           ? findProviderById(walletProviders, walletProvider)
@@ -54,9 +58,11 @@ export function initAccessContext(
       // TODO: Consider also having generated session IDs
       const newSession = initAccessSession(_walletProvider, ctx);
 
-      _stateContainer.updateState(state => ({
-        sessions: [...((state && state.sessions) || []), newSession]
-      }));
+      if (attachToContext !== false) {
+        _stateContainer.updateState(state => ({
+          sessions: [...((state && state.sessions) || []), newSession]
+        }));
+      }
 
       return newSession;
     },

@@ -94,6 +94,10 @@ export interface WalletAccessSessionState {
   accountFetchErrorMessage?: string;
 }
 
+export interface WalletAccessSessionOptions {
+  attachToContext?: boolean;
+}
+
 export interface WalletAccessSession {
   ctx: WalletAccessContext;
   state: WalletAccessSessionState;
@@ -133,7 +137,10 @@ export interface WalletAccessContext {
   appName: string;
   eosRpc: JsonRpc;
   network: NetworkConfig;
-  initSession(walletProvider: WalletProvider | string): WalletAccessSession;
+  initSession(
+    walletProvider: WalletProvider | string,
+    options?: WalletAccessSessionOptions
+  ): WalletAccessSession;
   getWalletProviders(): WalletProvider[];
   getSessions(): WalletAccessSession[];
   getActiveSessions(): WalletAccessSession[];
