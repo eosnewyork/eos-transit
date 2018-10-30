@@ -156,29 +156,3 @@ export interface WalletAccessContext {
 // Transactions
 
 export type TransactionResult = any;
-
-// Configuration
-
-// [DEPRECATED]
-export interface UALOptions {
-  appName: string;
-  eosRpcUrl: string;
-  network?: string;
-  chainId?: string;
-  expireInSeconds?: number;
-  walletProviders: WalletProvider[];
-}
-
-// Instance and public APIs
-
-// [DEPRECATED]
-export interface UALInstance {
-  connect: (accountName?: string) => Promise<any>;
-  getAccount: (accountName: string) => Promise<any>;
-  transfer: (
-    from: string,
-    to: string,
-    amount: number,
-    memo?: string
-  ) => Promise<TransactionResult>;
-}
