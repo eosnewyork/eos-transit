@@ -2,7 +2,7 @@ import { WalletAccessContext, WalletAccessContextOptions } from './types';
 import { initAccessContext } from './walletAccessContext';
 
 export * from './types';
-export { initAccessSession } from './walletAccessSession';
+export { initWallet } from './wallet';
 export { initAccessContext };
 
 export let defaultAccessContext: WalletAccessContext;
@@ -15,6 +15,8 @@ export function initDefaultAccessContext(
 }
 
 export default {
+  initDefaultAccessContext,
+
   get accessContext() {
     if (!defaultAccessContext) {
       throw new Error(`
