@@ -4,7 +4,7 @@ import {
   WalletProvider,
   WalletAccessSession,
   WalletAccessSessionState
-} from 'eos-ual';
+} from 'wal-eos';
 import { IoMdClose, IoIosLogOut } from 'react-icons/io';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { WalletListItemProgress } from './WalletListItemProgress';

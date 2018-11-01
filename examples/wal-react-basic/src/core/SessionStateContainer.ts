@@ -3,7 +3,7 @@ import {
   WalletAccessSession,
   WalletProvider,
   initAccessSession
-} from 'eos-ual';
+} from 'wal-eos';
 import { Container } from 'unstated';
 import { WalletProviderInfo, WalletInfo } from '../shared/wallets/types';
 

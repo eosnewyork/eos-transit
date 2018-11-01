@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import styled from 'react-emotion';
-import { WalletAccessSession } from 'eos-ual';
+import { WalletAccessSession } from 'wal-eos';
 import TransactionButton from './TransactionButton';
 import { TransactionAddonBlock } from './TransactionAddonBlock';
 

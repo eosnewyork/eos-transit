@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import { WalletAccessSession, WalletProvider } from 'eos-ual';
+import { WalletAccessSession, WalletProvider } from 'wal-eos';
 import WalletListItem from '../shared/wallets/WalletListItem';
 
 // Visual components

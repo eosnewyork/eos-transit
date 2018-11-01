@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
-import { WalletAccessSession } from 'eos-ual';
+import { WalletAccessSession } from 'wal-eos';
 import { Dropdown, DropdownContainer, DropdownContent } from '../dropdown';
 import { TransactionAddonButton } from './TransactionAddonButton';
 import TransactionAddonMenu from './TransactionAddonMenu';

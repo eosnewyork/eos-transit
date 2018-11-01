@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Redirect } from 'react-router';
-import WAL, { WalletProvider, WalletAccessSession } from 'eos-ual';
+import WAL, { WalletProvider, WalletAccessSession } from 'wal-eos';
 import { CloseButton } from '../shared/buttons/CloseButton';
 import { SessionStateContainer } from '../core/SessionStateContainer';
 import { LoginButton } from './LoginButton';

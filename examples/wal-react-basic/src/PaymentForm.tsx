@@ -1,7 +1,7 @@
 import React, { Component, FormEvent } from 'react';
 import styled from 'react-emotion';
 import { Subscribe } from 'unstated';
-import { WalletAccessSession } from 'eos-ual';
+import { WalletAccessSession } from 'wal-eos';
 import { SessionStateContainer } from './core/SessionStateContainer';
 import { TransactionButtonBlock } from './shared/transactions/TransactionButtonBlock';
 import { FormElement, Input, FormActions, FieldLabel } from './shared/forms';

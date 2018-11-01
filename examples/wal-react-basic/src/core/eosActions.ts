@@ -1,4 +1,4 @@
-import { WalletAccessSession } from 'eos-ual';
+import { WalletAccessSession } from 'wal-eos';
 
 // TODO: Consider moving to WAL in a generic and convenient way
 

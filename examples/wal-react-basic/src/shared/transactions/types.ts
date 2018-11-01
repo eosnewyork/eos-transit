@@ -1,4 +1,4 @@
-import { WalletAccessSession } from 'eos-ual';
+import { WalletAccessSession } from 'wal-eos';
 
 export interface TransactionStatus {
   inProgress?: boolean;

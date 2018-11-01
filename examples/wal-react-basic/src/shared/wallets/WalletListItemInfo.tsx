@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'react-emotion';
-import { AccountInfo } from 'eos-ual';
+import { AccountInfo } from 'wal-eos';
 
 // TODO: Make expandable
 

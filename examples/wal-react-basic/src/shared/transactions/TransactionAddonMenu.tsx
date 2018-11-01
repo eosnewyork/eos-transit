@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Subscribe } from 'unstated';
 import styled from 'react-emotion';
-import { WalletAccessSession } from 'eos-ual';
+import { WalletAccessSession } from 'wal-eos';
 import { SessionStateContainer } from '../../core/SessionStateContainer';
 import { TransactionAddonMenuItem } from './TransactionAddonMenuItem';
 
