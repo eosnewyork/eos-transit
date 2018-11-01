@@ -1,20 +1,20 @@
 import { Api, JsonRpc } from 'eosjs';
 import {
-  WalletAccessContextOptions,
   WalletAccessContext,
-  WalletProvider,
-  WalletAccessSession,
   WalletAccessContextState,
+  WalletAccessContextOptions,
+  WalletProvider,
+  Wallet,
+  WalletOptions,
   StateListener,
-  StateUnsubscribeFn,
-  WalletAccessSessionOptions
+  StateUnsubscribeFn
 } from './types';
 import { makeStateContainer } from './stateContainer';
-import { initAccessSession } from './walletAccessSession';
+import { initWallet } from './wallet';
 import { getNetworkUrl } from './util';
 
 const DEFAULT_CONTEXT_STATE: WalletAccessContextState = {
-  sessions: []
+  wallets: []
 };
 
 function findProviderById(
@@ -39,10 +39,10 @@ export function initAccessContext(
     eosRpc,
     network,
 
-    initSession(
+    initWallet(
       walletProvider: WalletProvider | string,
-      { attachToContext }: WalletAccessSessionOptions = {}
-    ): WalletAccessSession {
+      { attachToContext }: WalletOptions = {}
+    ): Wallet {
       const _walletProvider =
         typeof walletProvider === 'string'
           ? findProviderById(walletProviders, walletProvider)
@@ -56,54 +56,54 @@ export function initAccessContext(
       }
 
       // TODO: Consider also having generated session IDs
-      const newSession = initAccessSession(_walletProvider, ctx);
+      const newWallet = initWallet(_walletProvider, ctx);
 
       if (attachToContext !== false) {
         _stateContainer.updateState(state => ({
-          sessions: [...((state && state.sessions) || []), newSession]
+          wallets: [...((state && state.wallets) || []), newWallet]
         }));
       }
 
-      return newSession;
+      return newWallet;
     },
 
     getWalletProviders(): WalletProvider[] {
       return walletProviders;
     },
 
-    getSessions(): WalletAccessSession[] {
+    getWallets(): Wallet[] {
       const state = _stateContainer.getState();
       if (!state) return [];
-      return state.sessions || [];
+      return state.wallets || [];
     },
 
-    getActiveSessions(): WalletAccessSession[] {
+    getActiveWallets(): Wallet[] {
       return ctx
-        .getSessions()
-        .filter(session => session.connected && session.authenticated);
+        .getWallets()
+        .filter(wallet => wallet.connected && wallet.authenticated);
     },
 
-    detachSession(session: WalletAccessSession) {
+    detachWallet(wallet: Wallet) {
       _stateContainer.updateState(state => ({
-        sessions: ((state && state.sessions) || []).filter(s => s !== session)
+        wallets: ((state && state.wallets) || []).filter(w => w !== wallet)
       }));
     },
 
     logoutAll(): Promise<boolean> {
-      return Promise.all(
-        ctx.getSessions().map(session => session.logout())
-      ).then(() => true);
+      return Promise.all(ctx.getWallets().map(wallet => wallet.logout())).then(
+        () => true
+      );
     },
 
     disconnectAll(): Promise<boolean> {
       return Promise.all(
-        ctx.getSessions().map(session => session.disconnect())
+        ctx.getWallets().map(wallet => wallet.disconnect())
       ).then(() => true);
     },
 
     terminateAll(): Promise<boolean> {
       return Promise.all(
-        ctx.getSessions().map(session => session.terminate())
+        ctx.getWallets().map(wallet => wallet.terminate())
       ).then(() => true);
     },
 
