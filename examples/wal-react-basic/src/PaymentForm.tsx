@@ -115,7 +115,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
     });
 
     return transfer(walletSession, receiverName, amount)
-      .then(result => {
+      .then((result: any) => {
         this.setState({
           inProgress: false,
           hasError: false,
@@ -123,7 +123,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
           successMessage: defaultSuccessMessage
         });
       })
-      .catch(error => {
+      .catch((error: any) => {
         this.setState({
           inProgress: false,
           hasError: true,
