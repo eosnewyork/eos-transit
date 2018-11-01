@@ -1,6 +1,6 @@
 import { ApiInterfaces, JsonRpc, Api } from 'eosjs';
 
-// Core types
+// Core helper types
 
 export interface AccountInfo {
   name: string;
@@ -15,6 +15,12 @@ export interface AccountInfo {
   };
 
   // TODO: permissions and more
+}
+
+export interface WalletAuth {
+  accountName: string;
+  permission: string;
+  publicKey: string;
 }
 
 // State management
@@ -61,7 +67,7 @@ export interface WalletProvider {
   signatureProvider: ApiInterfaces.SignatureProvider;
   connect(appName: string): Promise<any>;
   disconnect(): Promise<any>;
-  login(accountName?: string): Promise<any>;
+  login(accountName?: string): Promise<WalletAuth>;
   logout(accountName?: string): Promise<any>;
 }
 
@@ -74,6 +80,7 @@ export interface WalletState {
   connected?: boolean;
   connectionError?: boolean;
   connectionErrorMessage?: string;
+  auth?: WalletAuth;
   authenticating?: boolean;
   authenticated?: boolean;
   authenticationConfirmed?: boolean;
@@ -90,6 +97,7 @@ export interface Wallet {
   state: WalletState;
   provider: WalletProvider;
   eosApi: Api;
+  auth?: WalletAuth;
   accountInfo?: AccountInfo;
   connected: boolean;
   authenticated: boolean;
