@@ -99,7 +99,7 @@ export class TransactionAddonMenuItem extends Component<
   render() {
     const { handleClick } = this;
     const { wallet } = this.props;
-    const { accountInfo } = wallet;
+    const { auth, accountInfo } = wallet;
 
     return (
       <TransactionAddonMenuItemRoot onClick={handleClick}>
@@ -107,28 +107,27 @@ export class TransactionAddonMenuItem extends Component<
           <WalletProviderIcon providerId={wallet.provider.id} />
         </TransactionAddonMenuItemIcon>
 
+        {auth && (
+          <TransactionAddonMenuItemBody>
+            <TransactionAddonMenuItemLabel>
+              {auth.accountName}@{auth.permission}
+            </TransactionAddonMenuItemLabel>
+
+            {wallet.provider.meta &&
+              wallet.provider.meta.shortName && (
+                <TransactionAddonMenuItemSublabel>
+                  using {wallet.provider.meta.shortName}
+                </TransactionAddonMenuItemSublabel>
+              )}
+          </TransactionAddonMenuItemBody>
+        )}
         {accountInfo && (
-          <>
-            <TransactionAddonMenuItemBody>
-              <>
-                <TransactionAddonMenuItemLabel>
-                  {accountInfo.name}@{'active'}
-                </TransactionAddonMenuItemLabel>
-                {wallet.provider.meta &&
-                  wallet.provider.meta.shortName && (
-                    <TransactionAddonMenuItemSublabel>
-                      using {wallet.provider.meta.shortName}
-                    </TransactionAddonMenuItemSublabel>
-                  )}
-              </>
-            </TransactionAddonMenuItemBody>
-            <TransactionAddonMenuItemBalance>
-              <strong>
-                {Number(accountInfo.core_liquid_balance).toFixed(4)}
-              </strong>{' '}
-              <small>EOS</small>
-            </TransactionAddonMenuItemBalance>
-          </>
+          <TransactionAddonMenuItemBalance>
+            <strong>
+              {Number(accountInfo.core_liquid_balance).toFixed(4)}
+            </strong>{' '}
+            <small>EOS</small>
+          </TransactionAddonMenuItemBalance>
         )}
       </TransactionAddonMenuItemRoot>
     );

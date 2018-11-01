@@ -17,8 +17,8 @@ export function UserBlockConnected({ children }: UserBlockProps) {
   const isLoggedIn = !!accessContext.getActiveWallets().length;
   if (!isLoggedIn) return null;
 
-  const accountInfo = accessContext.getActiveWallets()[0].accountInfo;
-  const username = (accountInfo && `${accountInfo.name}@${'active'}`) || void 0;
+  const auth = accessContext.getActiveWallets()[0].auth;
+  const username = (auth && `${auth.accountName}@${auth.permission}`) || void 0;
 
   return <UserBlock username={username}>{children}</UserBlock>;
 }

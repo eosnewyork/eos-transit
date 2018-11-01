@@ -49,9 +49,15 @@ export function WalletListItemStatus({
     return renderProviderDescription(walletProvider, large);
   }
 
-  const { hasError, errorMessage, inProgress, active, accountInfo } = wallet;
+  const {
+    hasError,
+    errorMessage,
+    inProgress,
+    active,
+    auth
+  } = wallet;
   const username =
-    (accountInfo && `${accountInfo.name}@${'active'}`) || 'unknown';
+    (auth && `${auth.accountName}@${auth.permission}`) || 'unknown';
 
   return hasError ? (
     <WalletListItemStatusLabel error={true} large={large}>
