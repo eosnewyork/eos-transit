@@ -144,6 +144,7 @@ export function initWallet(
       .then(walletAuth => {
         _stateContainer.updateState(state => ({
           ...state,
+          auth: walletAuth,
           authenticated: true,
           authenticating: false
         }));
