@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import { Subscribe } from 'unstated';
 import { Redirect } from 'react-router';
 import WAL, { WalletProvider, WalletAccessSession } from 'eos-ual';
 import { CloseButton } from '../shared/buttons/CloseButton';
@@ -59,15 +58,11 @@ const ContentPanelHeading = styled('span')({
 
 // Exported components
 
-export interface LoginScreenProps {
-  sessionStateContainer: SessionStateContainer;
-}
-
 export interface LoginScreenState {
   showLoginOptions: boolean;
 }
 
-export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
+export class LoginScreen extends Component<any, LoginScreenState> {
   state = {
     showLoginOptions: false
   };
@@ -77,22 +72,24 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
   };
 
   handleWalletProviderSelect = (walletProvider: WalletProvider) => {
-    WAL.accessContext.initSession(walletProvider);
+    const walletSession = WAL.accessContext.initSession(walletProvider);
+    walletSession.connect().then(walletSession.login);
   };
 
   handleWalletReconnectClick = (walletSession: WalletAccessSession) => {
     walletSession.connect().then(walletSession.login);
   };
 
+  isLoggedIn = () => WAL.accessContext.getActiveSessions().length;
+
   render() {
     const {
       switchScreen,
       handleWalletProviderSelect,
-      handleWalletReconnectClick
+      handleWalletReconnectClick,
+      isLoggedIn
     } = this;
-    const { sessionStateContainer } = this.props;
     const { showLoginOptions } = this.state;
-    const { isLoggedIn } = sessionStateContainer;
     const { getSessions, getWalletProviders } = WAL.accessContext;
 
     if (isLoggedIn()) return <Redirect to="/" />;
@@ -124,12 +121,4 @@ export class LoginScreen extends Component<LoginScreenProps, LoginScreenState> {
   }
 }
 
-export default function LoginScreenConnected() {
-  return (
-    <Subscribe to={[SessionStateContainer]}>
-      {(sessionStateContainer: SessionStateContainer) => (
-        <LoginScreen sessionStateContainer={sessionStateContainer} />
-      )}
-    </Subscribe>
-  );
-}
+export default LoginScreen;
