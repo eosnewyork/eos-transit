@@ -1,8 +1,8 @@
 {
-  "name": "eos-ual",
+  "name": "wal-eos",
   "version": "0.0.1",
   "private": true,
-  "description": "Universal Access Layer for EOS Blockchain Networks",
+  "description": "Wallet Access Layer for EOS Blockchain Networks",
   "license": "UNLICENSED",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -19,12 +19,12 @@
   },
   "devDependencies": {
     "prettier": "^1.14.3",
-    "scatterjs-core": "^2.3.7",
+    "scatterjs-core": "^2.3.8",
     "shx": "^0.3.2",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-react": "^3.6.0",
-    "typescript": "3.1.3"
+    "typescript": "3.1.5"
   },
   "prettier": {
     "singleQuote": true,
