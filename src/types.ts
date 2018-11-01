@@ -65,20 +65,9 @@ export interface WalletProvider {
   logout(accountName?: string): Promise<any>;
 }
 
-// export interface WalletProviderInstance {
-//   id: string;
-//   connect(): Promise<boolean>;
-//   disconnect(): Promise<boolean>;
-//   login(): Promise<boolean>;
-//   logout(): Promise<boolean>;
-//   sign(
-//     signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
-//   ): Promise<string[]>;
-// }
+// State-tracket Wallet instance
 
-// Session
-
-export interface WalletAccessSessionState {
+export interface WalletState {
   connecting?: boolean;
   connected?: boolean;
   connectionError?: boolean;
@@ -94,13 +83,13 @@ export interface WalletAccessSessionState {
   accountFetchErrorMessage?: string;
 }
 
-export interface WalletAccessSessionOptions {
+export interface WalletOptions {
   attachToContext?: boolean;
 }
 
-export interface WalletAccessSession {
+export interface Wallet {
   ctx: WalletAccessContext;
-  state: WalletAccessSessionState;
+  state: WalletState;
   provider: WalletProvider;
   eosApi: Api;
   accountInfo?: AccountInfo;
@@ -109,16 +98,14 @@ export interface WalletAccessSession {
   inProgress: boolean;
   active: boolean;
   hasError: boolean;
-  errorMessage: string | undefined;
+  errorMessage?: string;
   connect(): Promise<any>;
   disconnect(): Promise<any>;
   login(accountName?: string): Promise<AccountInfo>;
   logout(accountName?: string): Promise<any>;
   fetchAccountInfo(accountName: string): Promise<AccountInfo>;
   terminate(): Promise<boolean>;
-  subscribeToState(
-    listener: StateListener<WalletAccessSessionState>
-  ): StateUnsubscribeFn;
+  subscribe(listener: StateListener<WalletState>): StateUnsubscribeFn;
 }
 
 // Wallet access context
@@ -130,21 +117,21 @@ export interface WalletAccessContextOptions {
 }
 
 export interface WalletAccessContextState {
-  sessions: WalletAccessSession[];
+  wallets: Wallet[];
 }
 
 export interface WalletAccessContext {
   appName: string;
   eosRpc: JsonRpc;
   network: NetworkConfig;
-  initSession(
+  initWallet(
     walletProvider: WalletProvider | string,
-    options?: WalletAccessSessionOptions
-  ): WalletAccessSession;
+    options?: WalletOptions
+  ): Wallet;
   getWalletProviders(): WalletProvider[];
-  getSessions(): WalletAccessSession[];
-  getActiveSessions(): WalletAccessSession[];
-  detachSession(session: WalletAccessSession): void;
+  getWallets(): Wallet[];
+  getActiveWallets(): Wallet[];
+  detachWallet(wallet: Wallet): void;
   logoutAll(): Promise<boolean>;
   disconnectAll(): Promise<boolean>;
   terminateAll(): Promise<boolean>;
