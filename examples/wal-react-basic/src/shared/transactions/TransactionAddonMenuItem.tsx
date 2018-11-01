@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import { WalletAccessSession } from 'wal-eos';
+import { Wallet } from 'wal-eos';
 import { WalletProviderIcon } from '../wallets/WalletProviderIcon';
 
 // Visual components
@@ -83,28 +83,28 @@ const TransactionAddonMenuItemBalance = styled('div')({
 // Exported component
 
 export interface TransactionAddonMenuItemProps {
-  walletSession: WalletAccessSession;
-  onSelect?: (walletSession: WalletAccessSession) => void;
+  wallet: Wallet;
+  onSelect?: (wallet: Wallet) => void;
 }
 
 export class TransactionAddonMenuItem extends Component<
   TransactionAddonMenuItemProps
 > {
   handleClick = () => {
-    const { onSelect, walletSession } = this.props;
+    const { onSelect, wallet } = this.props;
     if (typeof onSelect === 'function') {
-      onSelect(walletSession);
+      onSelect(wallet);
     }
   };
   render() {
     const { handleClick } = this;
-    const { walletSession } = this.props;
-    const { accountInfo } = walletSession;
+    const { wallet } = this.props;
+    const { accountInfo } = wallet;
 
     return (
       <TransactionAddonMenuItemRoot onClick={handleClick}>
         <TransactionAddonMenuItemIcon>
-          <WalletProviderIcon providerId={walletSession.provider.id} />
+          <WalletProviderIcon providerId={wallet.provider.id} />
         </TransactionAddonMenuItemIcon>
 
         {accountInfo && (
@@ -114,10 +114,10 @@ export class TransactionAddonMenuItem extends Component<
                 <TransactionAddonMenuItemLabel>
                   {accountInfo.name}@{'active'}
                 </TransactionAddonMenuItemLabel>
-                {walletSession.provider.meta &&
-                  walletSession.provider.meta.shortName && (
+                {wallet.provider.meta &&
+                  wallet.provider.meta.shortName && (
                     <TransactionAddonMenuItemSublabel>
-                      using {walletSession.provider.meta.shortName}
+                      using {wallet.provider.meta.shortName}
                     </TransactionAddonMenuItemSublabel>
                   )}
               </>

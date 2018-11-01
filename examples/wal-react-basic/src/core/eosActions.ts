@@ -1,14 +1,14 @@
-import { WalletAccessSession } from 'wal-eos';
+import { Wallet } from 'wal-eos';
 
 // TODO: Consider moving to WAL in a generic and convenient way
 
 export function transfer(
-  walletSession: WalletAccessSession,
+  wallet: Wallet,
   receiverName: string,
   amount: number,
   memo: string = ''
 ) {
-  const { accountInfo } = walletSession.state;
+  const { accountInfo } = wallet.state;
   if (!accountInfo) {
     return Promise.reject(
       'No account information has been passed with transaction'
@@ -31,7 +31,7 @@ export function transfer(
 
   if (!amount) return Promise.reject(new Error('Amount not specified'));
 
-  return walletSession.eosApi.transact({
+  return wallet.eosApi.transact({
     actions: [
       {
         account: senderName,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import { WalletAccessSession, WalletProvider } from 'wal-eos';
+import { WalletProvider, Wallet } from 'wal-eos';
 import WalletListItem from './WalletListItem';
 
 // Visual components
@@ -14,18 +14,18 @@ const WalletListRoot = styled('div')({
 
 export interface WalletListProps {
   walletProviders?: WalletProvider[];
-  walletSessions?: WalletAccessSession[];
+  wallets?: Wallet[];
   onItemSelect?: (item: WalletProvider) => void;
-  onItemDismissClick?: (item: WalletAccessSession) => void;
-  onItemLogoutClick?: (item: WalletAccessSession) => void;
-  onItemReconnectClick?: (item: WalletAccessSession) => void;
+  onItemDismissClick?: (item: Wallet) => void;
+  onItemLogoutClick?: (item: Wallet) => void;
+  onItemReconnectClick?: (item: Wallet) => void;
 }
 
 export class WalletList extends Component<WalletListProps> {
   render() {
     const {
       walletProviders,
-      walletSessions,
+      wallets,
       onItemSelect,
       onItemDismissClick,
       onItemLogoutClick,
@@ -45,12 +45,12 @@ export class WalletList extends Component<WalletListProps> {
               onReconnectClick={onItemReconnectClick}
             />
           ))}
-        {walletSessions &&
-          walletSessions.map(walletSession => (
+        {wallets &&
+          wallets.map(wallet => (
             <WalletListItem
-              key={walletSession.provider.id}
-              walletProvider={walletSession.provider}
-              walletSession={walletSession}
+              key={wallet.provider.id}
+              walletProvider={wallet.provider}
+              wallet={wallet}
               onSelect={onItemSelect}
               onDismissClick={onItemDismissClick}
               onLogoutClick={onItemLogoutClick}

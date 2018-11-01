@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import { WalletAccessSession, WalletProvider } from 'wal-eos';
+import { Wallet, WalletProvider } from 'wal-eos';
 import WalletListItem from '../shared/wallets/WalletListItem';
 
 // Visual components
@@ -16,9 +16,9 @@ const LoginScreenWalletListRoot = styled('div')({
 
 interface LoginScreenWalletListProps {
   walletProviders: WalletProvider[];
-  walletSessions: WalletAccessSession[];
+  wallets: Wallet[];
   onWalletProviderSelect?: (walletProvider: WalletProvider) => void;
-  onWalletReconnectClick?: (walletSession: WalletAccessSession) => void;
+  onWalletReconnectClick?: (wallets: Wallet) => void;
 }
 
 export class LoginScreenWalletList extends Component<
@@ -35,7 +35,7 @@ export class LoginScreenWalletList extends Component<
     }
   };
 
-  handleReconnectClick = (walletSession: WalletAccessSession) => {
+  handleReconnectClick = (walletSession: Wallet) => {
     const { onWalletReconnectClick } = this.props;
     if (walletSession && typeof onWalletReconnectClick === 'function') {
       onWalletReconnectClick(walletSession);
@@ -44,17 +44,17 @@ export class LoginScreenWalletList extends Component<
 
   render() {
     const { handleWalletProviderSelect, handleReconnectClick } = this;
-    const { walletProviders, walletSessions } = this.props;
+    const { walletProviders, wallets } = this.props;
 
     return (
       <LoginScreenWalletListRoot>
-        {walletSessions.map(walletSession => (
+        {wallets.map(wallet => (
           <WalletListItem
-            key={walletSession.provider.id}
+            key={wallet.provider.id}
             onSelect={handleWalletProviderSelect}
             onReconnectClick={handleReconnectClick}
-            walletProvider={walletSession.provider}
-            walletSession={walletSession}
+            walletProvider={wallet.provider}
+            wallet={wallet}
             large={true}
             dismissable={false}
           />
@@ -62,7 +62,7 @@ export class LoginScreenWalletList extends Component<
         {walletProviders
           .filter(
             walletProvider =>
-              !walletSessions.some(s => s.provider.id === walletProvider.id)
+              !wallets.some(w => w.provider.id === walletProvider.id)
           )
           .map(walletProvider => (
             <WalletListItem

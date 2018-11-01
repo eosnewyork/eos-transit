@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import styled from 'react-emotion';
-import { WalletAccessSession } from 'wal-eos';
+import { Wallet } from 'wal-eos';
 import TransactionButton from './TransactionButton';
 import { TransactionAddonBlock } from './TransactionAddonBlock';
 
@@ -33,9 +33,9 @@ const TransactionButtonStatusLabel = styled('div')(
 // Exported component
 
 export interface TransactionButtonBlockProps {
-  defaultWalletSession?: WalletAccessSession;
-  onTransactionRequested?: (walletSession: WalletAccessSession) => void;
-  onWalletSessionSelect?: (selectedWalletSession: WalletAccessSession) => void;
+  defaultWallet?: Wallet;
+  onTransactionRequested?: (wallet: Wallet) => void;
+  onWalletSelect?: (selectedWallet: Wallet) => void;
   disabled?: boolean;
   inProgress?: boolean;
   progressMessage?: string;
@@ -49,20 +49,20 @@ export class TransactionButtonBlock extends Component<
   TransactionButtonBlockProps
 > {
   handleTransactionButtonClick = () => {
-    const { defaultWalletSession } = this.props;
-    if (defaultWalletSession) {
-      this.requestTransaction(defaultWalletSession);
+    const { defaultWallet } = this.props;
+    if (defaultWallet) {
+      this.requestTransaction(defaultWallet);
     }
   };
 
-  handleWalletSelect = (walletSession: WalletAccessSession) => {
-    return this.requestTransaction(walletSession);
+  handleWalletSelect = (wallet: Wallet) => {
+    return this.requestTransaction(wallet);
   };
 
-  requestTransaction = (walletSession: WalletAccessSession) => {
+  requestTransaction = (wallet: Wallet) => {
     const { onTransactionRequested } = this.props;
-    if (walletSession && typeof onTransactionRequested === 'function') {
-      onTransactionRequested(walletSession);
+    if (wallet && typeof onTransactionRequested === 'function') {
+      onTransactionRequested(wallet);
     }
   };
 

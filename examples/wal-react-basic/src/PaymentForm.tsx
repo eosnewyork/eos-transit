@@ -1,7 +1,7 @@
 import React, { Component, FormEvent } from 'react';
 import styled from 'react-emotion';
 import { Subscribe } from 'unstated';
-import { WalletAccessSession } from 'wal-eos';
+import { Wallet } from 'wal-eos';
 import { SessionStateContainer } from './core/SessionStateContainer';
 import { TransactionButtonBlock } from './shared/transactions/TransactionButtonBlock';
 import { FormElement, Input, FormActions, FieldLabel } from './shared/forms';
@@ -100,9 +100,9 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
     this.setState({ amount: Number(event.currentTarget.value) });
   };
 
-  handleSubmit = (walletSession: WalletAccessSession) => {
+  handleSubmit = (wallet: Wallet) => {
     const { amount, receiverName } = this.state;
-    if (!walletSession) {
+    if (!wallet) {
       this.setState({ hasError: true, errorMessage: defaultErrorMessage });
       return;
     }
@@ -114,7 +114,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
       progressMessage: defaultProgressMessage
     });
 
-    return transfer(walletSession, receiverName, amount)
+    return transfer(wallet, receiverName, amount)
       .then((result: any) => {
         this.setState({
           inProgress: false,

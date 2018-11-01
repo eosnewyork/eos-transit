@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Redirect } from 'react-router';
-import WAL, { WalletProvider, WalletAccessSession } from 'wal-eos';
+import WAL, { WalletProvider, Wallet } from 'wal-eos';
 import { CloseButton } from '../shared/buttons/CloseButton';
-import { SessionStateContainer } from '../core/SessionStateContainer';
 import { LoginButton } from './LoginButton';
 import { LoginScreenWalletList } from './LoginScreenWalletList';
 
@@ -72,15 +71,15 @@ export class LoginScreen extends Component<any, LoginScreenState> {
   };
 
   handleWalletProviderSelect = (walletProvider: WalletProvider) => {
-    const walletSession = WAL.accessContext.initSession(walletProvider);
-    walletSession.connect().then(walletSession.login);
+    const wallet = WAL.accessContext.initWallet(walletProvider);
+    wallet.connect().then(wallet.login);
   };
 
-  handleWalletReconnectClick = (walletSession: WalletAccessSession) => {
-    walletSession.connect().then(walletSession.login);
+  handleWalletReconnectClick = (wallet: Wallet) => {
+    wallet.connect().then(wallet.login);
   };
 
-  isLoggedIn = () => WAL.accessContext.getActiveSessions().length;
+  isLoggedIn = () => WAL.accessContext.getActiveWallets().length;
 
   render() {
     const {
@@ -90,7 +89,7 @@ export class LoginScreen extends Component<any, LoginScreenState> {
       isLoggedIn
     } = this;
     const { showLoginOptions } = this.state;
-    const { getSessions, getWalletProviders } = WAL.accessContext;
+    const { getWallets, getWalletProviders } = WAL.accessContext;
 
     if (isLoggedIn()) return <Redirect to="/" />;
 
@@ -108,7 +107,7 @@ export class LoginScreen extends Component<any, LoginScreenState> {
             </ContentPanelHeader>
             <LoginScreenWalletList
               walletProviders={getWalletProviders()}
-              walletSessions={getSessions()}
+              wallets={getWallets()}
               onWalletProviderSelect={handleWalletProviderSelect}
               onWalletReconnectClick={handleWalletReconnectClick}
             />

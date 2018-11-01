@@ -1,4 +1,4 @@
-import { WalletAccessSession } from 'wal-eos';
+import { Wallet } from 'wal-eos';
 
 export interface TransactionStatus {
   inProgress?: boolean;
@@ -15,7 +15,7 @@ export interface TransactionInfo {
 }
 
 export interface TransactionModel {
-  walletSession: WalletAccessSession;
+  wallet: Wallet;
   amount: number;
   receiverName: string;
   currency: string;

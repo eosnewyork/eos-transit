@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
-import { WalletAccessSession } from 'wal-eos';
+import { Wallet } from 'wal-eos';
 import { Dropdown, DropdownContainer, DropdownContent } from '../dropdown';
 import { TransactionAddonButton } from './TransactionAddonButton';
 import TransactionAddonMenu from './TransactionAddonMenu';
@@ -9,7 +9,7 @@ export interface TransactionAddonBlockProps {
   disabled?: boolean;
   success?: boolean;
   danger?: boolean;
-  onWalletSelect?: (walletSession: WalletAccessSession) => void;
+  onWalletSelect?: (wallet: Wallet) => void;
 }
 
 export function TransactionAddonBlock({

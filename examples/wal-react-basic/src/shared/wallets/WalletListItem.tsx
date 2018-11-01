@@ -1,10 +1,6 @@
 import React, { Component, ComponentType } from 'react';
 import styled from 'react-emotion';
-import {
-  WalletProvider,
-  WalletAccessSession,
-  WalletAccessSessionState
-} from 'wal-eos';
+import { WalletProvider, Wallet, WalletState } from 'wal-eos';
 import { IoMdClose, IoIosLogOut } from 'react-icons/io';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { WalletListItemProgress } from './WalletListItemProgress';
@@ -220,7 +216,7 @@ export interface WalletListItemData {
 
 export interface WalletListItemProps {
   walletProvider: WalletProvider;
-  walletSession?: WalletAccessSession;
+  wallet?: Wallet;
   iconComponent?: ComponentType;
   hasError?: boolean;
   large?: boolean;
@@ -228,9 +224,9 @@ export interface WalletListItemProps {
   onConnect?: () => void;
   onLogin?: (accountName: string) => void; // ???
   onSelect?: (walletProvider: WalletProvider) => void;
-  onReconnectClick?: (walletSession: WalletAccessSession) => void;
-  onDismissClick?: (walletSession: WalletAccessSession) => void;
-  onLogoutClick?: (walletSession: WalletAccessSession) => void;
+  onReconnectClick?: (wallet: Wallet) => void;
+  onDismissClick?: (wallet: Wallet) => void;
+  onLogoutClick?: (wallet: Wallet) => void;
 }
 
 export class WalletListItem extends Component<WalletListItemProps> {
@@ -245,30 +241,30 @@ export class WalletListItem extends Component<WalletListItemProps> {
   };
 
   handleReconnectClick = () => {
-    const { onReconnectClick, walletSession } = this.props;
-    if (walletSession && typeof onReconnectClick === 'function') {
-      onReconnectClick(walletSession);
+    const { onReconnectClick, wallet } = this.props;
+    if (wallet && typeof onReconnectClick === 'function') {
+      onReconnectClick(wallet);
     }
   };
 
   handleLogoutClick = () => {
-    const { onLogoutClick, walletSession } = this.props;
-    if (walletSession && typeof onLogoutClick === 'function') {
-      onLogoutClick(walletSession);
+    const { onLogoutClick, wallet } = this.props;
+    if (wallet && typeof onLogoutClick === 'function') {
+      onLogoutClick(wallet);
     }
   };
 
   handleDismissClick = () => {
-    const { onDismissClick, walletSession } = this.props;
-    if (walletSession && typeof onDismissClick === 'function') {
-      onDismissClick(walletSession);
+    const { onDismissClick, wallet } = this.props;
+    if (wallet && typeof onDismissClick === 'function') {
+      onDismissClick(wallet);
     }
   };
 
   isActive = () => {
-    const { walletSession } = this.props;
-    if (!walletSession) return true;
-    return walletSession.active;
+    const { wallet } = this.props;
+    if (!wallet) return true;
+    return wallet.active;
   };
 
   render() {
@@ -280,9 +276,8 @@ export class WalletListItem extends Component<WalletListItemProps> {
       handleDismissClick,
       handleLogoutClick
     } = this;
-    const { walletProvider, walletSession } = this.props;
-    const walletSessionState: WalletAccessSessionState =
-      (walletSession && walletSession.state) || {};
+    const { walletProvider, wallet } = this.props;
+    const walletState: WalletState = (wallet && wallet.state) || {};
     const {
       connecting,
       connected,
@@ -293,7 +288,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
       accountInfo,
       accountFetching,
       accountFetchError
-    } = walletSessionState;
+    } = walletState;
     const error = connectionError || authenticationError || accountFetchError;
     const inProgress = connecting || authenticating || accountFetching;
     const success = connected && authenticated && !!accountInfo;
@@ -329,7 +324,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
                 </WalletListItemTitle>
                 <WalletListItemStatus
                   walletProvider={walletProvider}
-                  walletAccessSession={walletSession}
+                  wallet={wallet}
                   large={large}
                 />
               </WalletListItemBodyTopMain>

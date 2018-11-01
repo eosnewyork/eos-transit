@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'react-emotion';
-import { WalletAccessSession, WalletProvider } from 'wal-eos';
+import { WalletProvider, Wallet } from 'wal-eos';
 
 // Visual components
 
@@ -36,27 +36,20 @@ function renderProviderDescription(
 
 interface WalletListItemStatusProps {
   walletProvider: WalletProvider;
-  walletAccessSession?: WalletAccessSession;
+  wallet?: Wallet;
   large?: boolean;
 }
 
 export function WalletListItemStatus({
-  walletAccessSession,
   walletProvider,
+  wallet,
   large
 }: WalletListItemStatusProps) {
-  if (!walletAccessSession) {
+  if (!wallet) {
     return renderProviderDescription(walletProvider, large);
   }
 
-  const {
-    hasError,
-    errorMessage,
-    inProgress,
-    active,
-    accountInfo
-  } = walletAccessSession;
-
+  const { hasError, errorMessage, inProgress, active, accountInfo } = wallet;
   const username =
     (accountInfo && `${accountInfo.name}@${'active'}`) || 'unknown';
 
