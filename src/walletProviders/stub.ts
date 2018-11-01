@@ -1,5 +1,5 @@
 import { ApiInterfaces } from 'eosjs';
-import { WalletProvider, NetworkConfig } from '../types';
+import { WalletProvider, NetworkConfig, WalletAuth } from '../types';
 
 // A fake wallet provider that does nothing and always
 // errors on connection attempts. Useful for demoing.
@@ -23,17 +23,23 @@ export interface StubWalletProviderOptions {
   name: string;
   shortName: string;
   description?: string;
+  errorTimeout?: number;
 }
 
 export function stubWalletProvider({
   id,
   name,
   shortName,
-  description
+  description,
+  errorTimeout
 }: StubWalletProviderOptions) {
   return function makeWalletProvider(network: NetworkConfig): WalletProvider {
     function connect(appName: string) {
-      return Promise.reject(`Cannot connect to "${shortName}" wallet provider`);
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(`Cannot connect to "${shortName}" wallet provider`);
+        }, errorTimeout || 2500);
+      });
     }
 
     function disconnect(): Promise<any> {
@@ -42,13 +48,12 @@ export function stubWalletProvider({
 
     // Authentication
 
-    async function login(accountName?: string): Promise<boolean> {
-      try {
-        return true;
-      } catch (error) {
-        console.log('[scatter]', error);
-        return Promise.reject(`Cannot login to "${shortName}" wallet provider`);
-      }
+    async function login(accountName?: string): Promise<WalletAuth> {
+      return new Promise<WalletAuth>((resolve, reject) => {
+        setTimeout(() => {
+          reject(`Cannot login to "${shortName}" wallet provider`);
+        }, errorTimeout || 2500);
+      });
     }
 
     function logout(accountName?: string): Promise<boolean> {

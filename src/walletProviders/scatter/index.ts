@@ -1,6 +1,6 @@
 import { ApiInterfaces } from 'eosjs';
 import ScatterJS, { Blockchains, SocketService } from 'scatterjs-core';
-import { WalletProvider, NetworkConfig } from '../../types';
+import { WalletProvider, NetworkConfig, WalletAuth } from '../../types';
 
 const { scatter } = ScatterJS;
 
@@ -47,17 +47,14 @@ export function scatterWalletProvider() {
   return function makeWalletProvider(network: NetworkConfig): WalletProvider {
     // Connection
 
-    function connect(appName: string) {
+    function connect(appName: string): Promise<any> {
       return scatter
         .connect(
           appName,
           { initTimeout: 10000 }
         )
         .then((connected: boolean) => {
-          if (connected) {
-            return true;
-          }
-
+          if (connected) return true;
           return Promise.reject('Cannot connect to Scatter');
         });
     }
@@ -68,7 +65,7 @@ export function scatterWalletProvider() {
 
     // Authentication
 
-    async function login(accountName?: string): Promise<boolean> {
+    async function login(accountName?: string): Promise<WalletAuth> {
       try {
         const identity = await scatter.getIdentity({
           accounts: [network]
@@ -90,14 +87,18 @@ export function scatterWalletProvider() {
           );
         }
 
-        return true;
+        return {
+          accountName: account.name,
+          permission: account.authority,
+          publicKey: account.publicKey
+        };
       } catch (error) {
         console.log('[scatter]', error);
         return Promise.reject(error);
       }
     }
 
-    function logout(accountName?: string): Promise<boolean> {
+    function logout(accountName?: string): Promise<any> {
       return scatter.forgetIdentity();
     }
 
