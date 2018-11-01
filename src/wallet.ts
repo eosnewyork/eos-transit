@@ -43,7 +43,7 @@ export function initWallet(
 
   // Account helpers
 
-  function fetchAccountInfo(accountName: string): Promise<AccountInfo> {
+  function fetchAccountInfo(accountName?: string): Promise<AccountInfo> {
     _stateContainer.updateState(state => ({
       ...state,
       accountFetching: true,
@@ -148,7 +148,7 @@ export function initWallet(
           authenticating: false
         }));
 
-        return fetchAccountInfo('abc');
+        return fetchAccountInfo(accountName);
       })
       .then((accountInfo: AccountInfo) => {
         _stateContainer.updateState(state => ({

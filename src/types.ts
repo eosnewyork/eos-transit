@@ -85,10 +85,6 @@ export interface WalletState {
   accountFetchErrorMessage?: string;
 }
 
-export interface WalletOptions {
-  attachToContext?: boolean;
-}
-
 export interface Wallet {
   ctx: WalletAccessContext;
   state: WalletState;
@@ -105,7 +101,7 @@ export interface Wallet {
   disconnect(): Promise<any>;
   login(accountName?: string): Promise<AccountInfo>;
   logout(accountName?: string): Promise<any>;
-  fetchAccountInfo(accountName: string): Promise<AccountInfo>;
+  fetchAccountInfo(accountName?: string): Promise<AccountInfo>;
   terminate(): Promise<boolean>;
   subscribe(listener: StateListener<WalletState>): StateUnsubscribeFn;
 }
@@ -126,10 +122,7 @@ export interface WalletAccessContext {
   appName: string;
   eosRpc: JsonRpc;
   network: NetworkConfig;
-  initWallet(
-    walletProvider: WalletProvider | string,
-    options?: WalletOptions
-  ): Wallet;
+  initWallet(walletProvider: WalletProvider | string): Wallet;
   getWalletProviders(): WalletProvider[];
   getWallets(): Wallet[];
   getActiveWallets(): Wallet[];

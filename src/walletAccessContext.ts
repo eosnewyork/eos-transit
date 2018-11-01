@@ -44,10 +44,7 @@ export function initAccessContext(
     eosRpc,
     network,
 
-    initWallet(
-      walletProvider: WalletProvider | string,
-      { attachToContext }: WalletOptions = {}
-    ): Wallet {
+    initWallet(walletProvider: WalletProvider | string): Wallet {
       const _walletProvider =
         typeof walletProvider === 'string'
           ? findProviderById(walletProviders, walletProvider)
@@ -63,11 +60,9 @@ export function initAccessContext(
       // TODO: Consider also having generated session IDs
       const newWallet = initWallet(_walletProvider, ctx);
 
-      if (attachToContext !== false) {
-        _stateContainer.updateState(state => ({
-          wallets: [...((state && state.wallets) || []), newWallet]
-        }));
-      }
+      _stateContainer.updateState(state => ({
+        wallets: [...((state && state.wallets) || []), newWallet]
+      }));
 
       return newWallet;
     },
