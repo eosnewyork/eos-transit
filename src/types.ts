@@ -65,6 +65,8 @@ export interface WalletProvider {
   logout(accountName?: string): Promise<any>;
 }
 
+export type MakeWalletProviderFn = (network: NetworkConfig) => WalletProvider;
+
 // State-tracket Wallet instance
 
 export interface WalletState {
@@ -113,7 +115,7 @@ export interface Wallet {
 export interface WalletAccessContextOptions {
   appName: string;
   network: NetworkConfig;
-  walletProviders: WalletProvider[];
+  walletProviders: MakeWalletProviderFn[];
 }
 
 export interface WalletAccessContextState {
