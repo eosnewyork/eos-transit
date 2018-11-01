@@ -25,7 +25,10 @@ export function makeSignatureProvider(network: NetworkConfig) {
       const signatureRequestPayload = {
         ...signatureProviderArgs,
         blockchain: Blockchains.EOS,
-        network,
+        network: {
+          ...network,
+          blockchain: 'eos'
+        },
         requiredFields: {}
       };
 
@@ -71,7 +74,7 @@ export function scatterWalletProvider() {
     async function login(accountName?: string): Promise<WalletAuth> {
       try {
         const identity = await scatter.getIdentity({
-          accounts: [network]
+          accounts: [{ ...network, blockchain: 'eos' }]
         });
 
         if (!identity) {
