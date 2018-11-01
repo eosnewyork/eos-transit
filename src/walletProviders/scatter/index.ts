@@ -4,7 +4,7 @@ import { WalletProvider, NetworkConfig } from '../../types';
 
 const { scatter } = ScatterJS;
 
-export function makeScatterSignatureProvider(network: NetworkConfig) {
+export function makeSignatureProvider(network: NetworkConfig) {
   return {
     async getAvailableKeys() {
       return SocketService.sendApiRequest({
@@ -42,77 +42,82 @@ export function makeScatterSignatureProvider(network: NetworkConfig) {
   };
 }
 
-export function makeScatterWalletProvider(
-  network: NetworkConfig
-): WalletProvider {
-  // Connection
+// TODO: Ability to pass Scatter options
+export function scatterWalletProvider() {
+  return function makeWalletProvider(network: NetworkConfig): WalletProvider {
+    // Connection
 
-  function connect(appName: string) {
-    return scatter
-      .connect(
-        appName,
-        { initTimeout: 10000 }
-      )
-      .then((connected: boolean) => {
-        if (connected) {
-          return true;
+    function connect(appName: string) {
+      return scatter
+        .connect(
+          appName,
+          { initTimeout: 10000 }
+        )
+        .then((connected: boolean) => {
+          if (connected) {
+            return true;
+          }
+
+          return Promise.reject('Cannot connect to Scatter');
+        });
+    }
+
+    function disconnect(): Promise<any> {
+      return scatter.disconnect();
+    }
+
+    // Authentication
+
+    async function login(accountName?: string): Promise<boolean> {
+      try {
+        const identity = await scatter.getIdentity({
+          accounts: [network]
+        });
+
+        if (!identity) {
+          return Promise.reject('No identity obtained from Scatter');
         }
 
-        return Promise.reject('Cannot connect to Scatter');
-      });
-  }
+        const account =
+          (identity &&
+            identity.accounts &&
+            (identity.accounts as any[]).find(x => x.blockchain === 'eos')) ||
+          void 0;
 
-  function disconnect(): Promise<any> {
-    return scatter.disconnect();
-  }
+        if (!account) {
+          return Promise.reject(
+            'No account data obtained from Scatter identity'
+          );
+        }
 
-  // Authentication
-
-  async function login(accountName?: string): Promise<boolean> {
-    try {
-      const identity = await scatter.getIdentity({
-        accounts: [network]
-      });
-
-      if (!identity) {
-        return Promise.reject('No identity obtained from Scatter');
+        return true;
+      } catch (error) {
+        console.log('[scatter]', error);
+        return Promise.reject(error);
       }
-
-      const account =
-        (identity &&
-          identity.accounts &&
-          (identity.accounts as any[]).find(x => x.blockchain === 'eos')) ||
-        void 0;
-
-      if (!account) {
-        return Promise.reject('No account data obtained from Scatter identity');
-      }
-
-      return true;
-    } catch (error) {
-      console.log('[scatter]', error);
-      return Promise.reject(error);
     }
-  }
 
-  function logout(accountName?: string): Promise<boolean> {
-    return scatter.forgetIdentity();
-  }
+    function logout(accountName?: string): Promise<boolean> {
+      return scatter.forgetIdentity();
+    }
 
-  const walletProvider: WalletProvider = {
-    id: 'scatter',
-    meta: {
-      name: 'Scatter Desktop',
-      shortName: 'Scatter',
-      description:
-        'Scatter Desktop application that keeps your private keys secure'
-    },
-    signatureProvider: makeScatterSignatureProvider(network),
-    connect,
-    disconnect,
-    login,
-    logout
+    const walletProvider: WalletProvider = {
+      id: 'scatter',
+      meta: {
+        name: 'Scatter Desktop',
+        shortName: 'Scatter',
+        description:
+          'Scatter Desktop application that keeps your private keys secure'
+      },
+      signatureProvider: makeSignatureProvider(network),
+      connect,
+      disconnect,
+      login,
+      logout
+    };
+
+    return walletProvider;
   };
-
-  return walletProvider;
 }
+
+export default scatterWalletProvider;
