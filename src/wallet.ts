@@ -2,8 +2,8 @@ import { Api } from 'eosjs';
 import {
   WalletAccessContext,
   WalletProvider,
-  WalletAccessSession,
-  WalletAccessSessionState,
+  Wallet,
+  WalletState,
   AccountInfo,
   StateListener,
   StateUnsubscribeFn
@@ -11,7 +11,7 @@ import {
 import { makeStateContainer } from './stateContainer';
 import { getErrorMessage } from './util';
 
-const DEFAULT_SESSION_STATE: WalletAccessSessionState = {
+const DEFAULT_STATE: WalletState = {
   connecting: false,
   connected: false,
   connectionError: false,
@@ -27,11 +27,11 @@ const DEFAULT_SESSION_STATE: WalletAccessSessionState = {
   accountFetchErrorMessage: void 0
 };
 
-export function initAccessSession(
+export function initWallet(
   walletProvider: WalletProvider,
   ctx: WalletAccessContext
-): WalletAccessSession {
-  const _stateContainer = makeStateContainer(DEFAULT_SESSION_STATE);
+): Wallet {
+  const _stateContainer = makeStateContainer(DEFAULT_STATE);
   const { getState } = _stateContainer;
   const eosApi = new Api({
     rpc: ctx.eosRpc,
@@ -185,13 +185,13 @@ export function initAccessSession(
     });
   }
 
-  const session: WalletAccessSession = {
+  const wallet: Wallet = {
     ctx,
     provider: walletProvider,
     eosApi,
 
     get state() {
-      return getState() || { ...DEFAULT_SESSION_STATE };
+      return getState() || { ...DEFAULT_STATE };
     },
 
     // Shortcut state accessors
@@ -235,7 +235,7 @@ export function initAccessSession(
     get errorMessage(): string | undefined {
       const state = getState();
       if (!state) return void 0;
-      if (!session.hasError) return void 0;
+      if (!wallet.hasError) return void 0;
       const {
         connectionErrorMessage,
         authenticationErrorMessage,
@@ -259,17 +259,15 @@ export function initAccessSession(
       return logout()
         .then(disconnect)
         .then(() => {
-          ctx.detachSession(session);
+          ctx.detachWallet(wallet);
           return true;
         });
     },
 
-    subscribeToState(
-      listener: StateListener<WalletAccessSessionState>
-    ): StateUnsubscribeFn {
+    subscribe(listener: StateListener<WalletState>): StateUnsubscribeFn {
       return _stateContainer.subscribe(listener);
     }
   };
 
-  return session;
+  return wallet;
 }
