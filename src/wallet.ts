@@ -44,18 +44,18 @@ export function initWallet(
   // Account helpers
 
   function fetchAccountInfo(accountName?: string): Promise<AccountInfo> {
+    if (!accountName) {
+      return Promise.reject(
+        'No `accountName` was passed in order to fetch the account info'
+      );
+    }
+
     _stateContainer.updateState(state => ({
       ...state,
       accountFetching: true,
       accountFetchError: false,
       accountFetchErrorMessage: void 0
     }));
-
-    if (!accountName) {
-      return Promise.reject(
-        'No `accountName` was passed in order to fetch the account info'
-      );
-    }
 
     return ctx.eosRpc
       .get_account(accountName)
@@ -141,14 +141,14 @@ export function initWallet(
 
     return walletProvider
       .login(accountName)
-      .then(() => {
+      .then(walletAuth => {
         _stateContainer.updateState(state => ({
           ...state,
           authenticated: true,
           authenticating: false
         }));
 
-        return fetchAccountInfo(accountName);
+        return fetchAccountInfo(walletAuth.accountName);
       })
       .then((accountInfo: AccountInfo) => {
         _stateContainer.updateState(state => ({
@@ -195,6 +195,11 @@ export function initWallet(
     },
 
     // Shortcut state accessors
+
+    get auth() {
+      const state = getState();
+      return (state && state.auth) || void 0;
+    },
 
     get accountInfo() {
       const state = getState();
