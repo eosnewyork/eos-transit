@@ -5,7 +5,6 @@ import {
   WalletAccessContextOptions,
   WalletProvider,
   Wallet,
-  WalletOptions,
   StateListener,
   StateUnsubscribeFn
 } from './types';
