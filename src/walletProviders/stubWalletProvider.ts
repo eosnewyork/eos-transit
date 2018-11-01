@@ -4,7 +4,7 @@ import { WalletProvider, NetworkConfig } from '../types';
 // A fake wallet provider that does nothing and always
 // errors on connection attempts. Useful for demoing.
 
-export function makeStubSignatureProvider() {
+export function makeSignatureProvider() {
   return {
     async getAvailableKeys() {
       return [];
@@ -31,9 +31,7 @@ export function stubWalletProvider({
   shortName,
   description
 }: StubWalletProviderOptions) {
-  return function makeStubWalletProvider(
-    network: NetworkConfig
-  ): WalletProvider {
+  return function makeWalletProvider(network: NetworkConfig): WalletProvider {
     function connect(appName: string) {
       return Promise.reject(`Cannot connect to "${shortName}" wallet provider`);
     }
@@ -64,7 +62,7 @@ export function stubWalletProvider({
         shortName,
         description
       },
-      signatureProvider: makeStubSignatureProvider(),
+      signatureProvider: makeSignatureProvider(),
       connect,
       disconnect,
       login,
@@ -74,3 +72,5 @@ export function stubWalletProvider({
     return walletProvider;
   };
 }
+
+export default stubWalletProvider;
