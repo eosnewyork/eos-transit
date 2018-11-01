@@ -28,7 +28,12 @@ function findProviderById(
 export function initAccessContext(
   options: WalletAccessContextOptions
 ): WalletAccessContext {
-  const { appName, network, walletProviders } = options;
+  const { appName, network } = options;
+  const _makeWalletProviderFns = options.walletProviders;
+  const walletProviders = _makeWalletProviderFns.map(makeWalletProvider =>
+    makeWalletProvider(network)
+  );
+
   const _stateContainer = makeStateContainer(DEFAULT_CONTEXT_STATE);
 
   const eosRpcUrl = getNetworkUrl(network);
