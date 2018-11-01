@@ -1,11 +1,11 @@
 import React, { Component, FormEvent } from 'react';
 import styled from 'react-emotion';
-import { Subscribe } from 'unstated';
-import { Wallet } from 'wal-eos';
-import { SessionStateContainer } from './core/SessionStateContainer';
+import WAL, { Wallet } from 'wal-eos';
 import { TransactionButtonBlock } from './shared/transactions/TransactionButtonBlock';
 import { FormElement, Input, FormActions, FieldLabel } from './shared/forms';
 import { transfer } from './core/eosActions';
+
+const { accessContext } = WAL;
 
 // Visual components
 
@@ -64,8 +64,9 @@ const PaymentFormResetButton = styled('button')({
 
 // Form component
 
+// tslint:disable-next-line:no-empty-interface
 interface PaymentFormProps {
-  sessionStateContainer: SessionStateContainer;
+  // TODO: Pass the WAL stuff via props instead
 }
 
 interface PaymentFormState {
@@ -137,14 +138,15 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
     this.setState({ ...DEFAULT_STATE });
   };
 
-  getDefaultWalletSession = () => {
-    const { sessionStateContainer } = this.props;
-    return sessionStateContainer.getDefaultSession();
+  getDefaultWallet = () => {
+    const activeWallets = accessContext.getActiveWallets();
+    if (!activeWallets || !activeWallets.length) return void 0;
+    return activeWallets[0];
   };
 
   render() {
     const {
-      getDefaultWalletSession,
+      getDefaultWallet,
       handleAmountChange,
       handleSubmit,
       resetForm
@@ -174,7 +176,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
           <PaymentFormActions>
             <TransactionButtonBlock
               onTransactionRequested={handleSubmit}
-              defaultWalletSession={getDefaultWalletSession()}
+              defaultWallet={getDefaultWallet()}
               {...buttonProps}
             />
 
@@ -192,11 +194,10 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 
 export function PaymentFormConnected() {
   return (
-    <Subscribe to={[SessionStateContainer]}>
-      {(sessionStateContainer: SessionStateContainer) => (
-        <PaymentForm sessionStateContainer={sessionStateContainer} />
-      )}
-    </Subscribe>
+    <PaymentForm />
+    // <Subscribe to={[SessionStateContainer]}>
+    //   {(sessionStateContainer: SessionStateContainer) => <PaymentForm />}
+    // </Subscribe>
   );
 }
 

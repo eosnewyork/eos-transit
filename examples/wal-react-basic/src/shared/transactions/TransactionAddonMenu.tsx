@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Subscribe } from 'unstated';
 import styled from 'react-emotion';
 import WAL, { Wallet } from 'wal-eos';
-import { SessionStateContainer } from '../../core/SessionStateContainer';
 import { TransactionAddonMenuItem } from './TransactionAddonMenuItem';
 
 // Visual components
@@ -28,14 +27,7 @@ export interface TransactionAddonMenuProps {
   onWalletSelect?: (selectedWallet: Wallet) => void;
 }
 
-export interface TransactionAddonMenuViewProps
-  extends TransactionAddonMenuProps {
-  sessionStateContainer: SessionStateContainer;
-}
-
-export class TransactionAddonMenu extends Component<
-  TransactionAddonMenuViewProps
-> {
+export class TransactionAddonMenu extends Component<TransactionAddonMenuProps> {
   handleItemSelect = (wallet: Wallet) => {
     const { onWalletSelect } = this.props;
     if (typeof onWalletSelect === 'function') {
@@ -49,7 +41,6 @@ export class TransactionAddonMenu extends Component<
 
   render() {
     const { getActiveWallets, handleItemSelect } = this;
-    const { sessionStateContainer } = this.props;
     const activeWallets = getActiveWallets();
 
     return (
@@ -69,19 +60,22 @@ export class TransactionAddonMenu extends Component<
   }
 }
 
-export function TransactionAddonMenuConnected(
-  props: TransactionAddonMenuProps
-) {
-  return (
-    <Subscribe to={[SessionStateContainer]}>
-      {(sessionStateContainer: SessionStateContainer) => (
-        <TransactionAddonMenu
-          sessionStateContainer={sessionStateContainer}
-          {...props}
-        />
-      )}
-    </Subscribe>
-  );
-}
+// TODO: Subscribe to WAL instead
+// export function TransactionAddonMenuConnected(
+//   props: TransactionAddonMenuProps
+// ) {
+//   return (
+//     <Subscribe to={[SessionStateContainer]}>
+//       {(sessionStateContainer: SessionStateContainer) => (
+//         <TransactionAddonMenu
+//           sessionStateContainer={sessionStateContainer}
+//           {...props}
+//         />
+//       )}
+//     </Subscribe>
+//   );
+// }
 
-export default TransactionAddonMenuConnected;
+// export default TransactionAddonMenuConnected;
+
+export default TransactionAddonMenu;

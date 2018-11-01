@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'react-emotion';
+import WAL from 'wal-eos';
 import { IoIosLogOut } from 'react-icons/io';
-import { Subscribe } from 'unstated';
-import { SessionStateContainer } from './SessionStateContainer';
+
+const { accessContext } = WAL;
 
 export interface UserMenuLogoutButtonProps {
   onClick?: (event: any) => void;
@@ -56,13 +57,7 @@ export function UserMenuLogoutButton({ onClick }: UserMenuLogoutButtonProps) {
 }
 
 export function UserMenuLogoutButtonConnected() {
-  return (
-    <Subscribe to={[SessionStateContainer]}>
-      {(sessionStateContainer: SessionStateContainer) => (
-        <UserMenuLogoutButton onClick={sessionStateContainer.logout} />
-      )}
-    </Subscribe>
-  );
+  return <UserMenuLogoutButton onClick={() => accessContext.terminateAll()} />;
 }
 
 export default UserMenuLogoutButtonConnected;

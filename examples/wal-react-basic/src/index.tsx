@@ -1,48 +1,49 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider as UnstatedProvider } from 'unstated';
-import WAL, { initDefaultAccessContext } from 'wal-eos';
-import { makeScatterWalletProvider } from 'wal-eos/lib/walletProviders/scatter';
+// import { initDefaultAccessContext } from 'wal-eos';
+// import scatter from 'wal-eos/lib/walletProviders/scatter';
+import stub from 'wal-eos/lib/walletProviders/stubWalletProvider';
 import 'minireset.css';
+import './walSetup';
 import AppRoutes from './AppRoutes';
 import { applyGlobalStyles } from './globalStyles';
-import { SessionStateContainer } from './core/SessionStateContainer';
 
 applyGlobalStyles();
 
-const appName = 'my_eos_dapp';
+// const appName = 'my_eos_dapp';
 
-initDefaultAccessContext({
-  appName,
-  network: {
-    host: 'api.pennstation.eosnewyork.io',
-    port: 7001,
-    protocol: 'http',
-    chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
-  },
-  walletProviders: [
-    makeScatterWalletProvider(
-      // NOTE: Temp repetition
-      {
-        host: 'api.pennstation.eosnewyork.io',
-        port: 7001,
-        protocol: 'http',
-        chainId:
-          'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
-      }
-    )
-  ]
-});
-
-const sessionStateContainer = new SessionStateContainer(WAL.accessContext);
+// initDefaultAccessContext({
+//   appName,
+//   network: {
+//     host: 'api.pennstation.eosnewyork.io',
+//     port: 7001,
+//     protocol: 'http',
+//     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+//   },
+//   walletProviders: [
+//     scatter(),
+//     stub({
+//       id: 'eos-metro',
+//       name: 'METRO™ Hardware Wallet',
+//       shortName: 'METRO™',
+//       description:
+//         'Use secure hardware private key vault to sign your transactions'
+//     }),
+//     stub({
+//       id: 'paste-the-private-key',
+//       name: 'Paste-The-Private-Key™',
+//       shortName: 'Insecure Private Key',
+//       description:
+//         'Forget about security and just paste your private key directly to sign your transactions'
+//     })
+//   ]
+// });
 
 const Root = () => (
-  <UnstatedProvider inject={[sessionStateContainer]}>
-    <Router>
-      <AppRoutes />
-    </Router>
-  </UnstatedProvider>
+  <Router>
+    <AppRoutes />
+  </Router>
 );
 
 render(<Root />, document.getElementById('root'));

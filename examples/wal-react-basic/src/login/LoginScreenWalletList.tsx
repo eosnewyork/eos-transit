@@ -45,6 +45,9 @@ export class LoginScreenWalletList extends Component<
   render() {
     const { handleWalletProviderSelect, handleReconnectClick } = this;
     const { walletProviders, wallets } = this.props;
+    const availableWalletProviders = walletProviders.filter(
+      walletProvider => !wallets.some(w => w.provider.id === walletProvider.id)
+    );
 
     return (
       <LoginScreenWalletListRoot>
@@ -59,21 +62,16 @@ export class LoginScreenWalletList extends Component<
             dismissable={false}
           />
         ))}
-        {walletProviders
-          .filter(
-            walletProvider =>
-              !wallets.some(w => w.provider.id === walletProvider.id)
-          )
-          .map(walletProvider => (
-            <WalletListItem
-              key={walletProvider.id}
-              onSelect={handleWalletProviderSelect}
-              onReconnectClick={handleReconnectClick}
-              walletProvider={walletProvider}
-              large={true}
-              dismissable={false}
-            />
-          ))}
+        {availableWalletProviders.map(walletProvider => (
+          <WalletListItem
+            key={walletProvider.id}
+            onSelect={handleWalletProviderSelect}
+            onReconnectClick={handleReconnectClick}
+            walletProvider={walletProvider}
+            large={true}
+            dismissable={false}
+          />
+        ))}
       </LoginScreenWalletListRoot>
     );
   }
