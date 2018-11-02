@@ -125,6 +125,8 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
         });
       })
       .catch((error: any) => {
+        console.error('[txn] Error', error);
+
         this.setState({
           inProgress: false,
           hasError: true,
@@ -152,6 +154,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
       resetForm
     } = this;
     const { receiverName, amount, ...buttonProps } = this.state;
+    const defaultWallet = getDefaultWallet();
 
     return (
       <PaymentFormRoot>
@@ -176,7 +179,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
           <PaymentFormActions>
             <TransactionButtonBlock
               onTransactionRequested={handleSubmit}
-              defaultWallet={getDefaultWallet()}
+              defaultWallet={defaultWallet}
               {...buttonProps}
             />
 
