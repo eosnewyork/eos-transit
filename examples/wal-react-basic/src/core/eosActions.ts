@@ -8,19 +8,19 @@ export function transfer(
   amount: number,
   memo: string = ''
 ) {
-  const { accountInfo } = wallet.state;
-  if (!accountInfo) {
+  const { auth } = wallet;
+  if (!auth) {
     return Promise.reject(
-      'No account information has been passed with transaction'
+      'No auth information has been passed with transaction'
     );
   }
 
-  const { name: senderName } = accountInfo;
+  const { accountName: senderName, permission } = auth;
 
   if (!senderName) {
     return Promise.reject(
       new Error(
-        'Sender account name is not available in provided wallet session!'
+        'Sender account name is not available in a provided wallet auth metadata!'
       )
     );
   }
@@ -31,24 +31,40 @@ export function transfer(
 
   if (!amount) return Promise.reject(new Error('Amount not specified'));
 
-  return wallet.eosApi.transact({
-    actions: [
+  return wallet.eosApi
+    .transact(
       {
-        account: senderName,
-        name: 'transfer',
-        authorization: [
+        actions: [
           {
-            actor: senderName,
-            permission: 'active'
+            account: 'eosio.token',
+            name: 'transfer',
+            authorization: [
+              {
+                actor: senderName,
+                permission
+              }
+            ],
+            data: {
+              from: senderName,
+              to: receiverName,
+              quantity: `${Number(amount).toFixed(4)} EOS`,
+              memo
+            }
           }
-        ],
-        data: {
-          from: senderName,
-          to: receiverName,
-          quantity: `${Number(amount).toFixed(4)} EOS`,
-          memo
-        }
+        ]
+      },
+      {
+        broadcast: true,
+        blocksBehind: 3,
+        expireSeconds: 60
       }
-    ]
-  });
+    )
+    .then((result: any) => {
+      console.log('[txn][success]', result);
+      return result;
+    })
+    .catch((error: any) => {
+      console.error('[txn][error]', error);
+      throw error;
+    });
 }
