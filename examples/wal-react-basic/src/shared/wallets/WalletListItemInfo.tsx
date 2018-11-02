@@ -69,6 +69,14 @@ export const WalletListItemInfoParamContent = styled('div')({
   color: '#26c5df'
 });
 
+// Little helper
+function toNumber(input?: string) {
+  if (!input) return 0;
+  const chunks = input.split(' ');
+  if (!chunks[0]) return 0;
+  return Number(chunks[0]);
+}
+
 // Exported / behavior component
 
 export function WalletListItemInfo({
@@ -78,7 +86,7 @@ export function WalletListItemInfo({
   return (
     <WalletListItemInfoRoot>
       <WalletListItemInfoMain>
-        <strong>{Number(accountInfo.core_liquid_balance).toFixed(4)}</strong>{' '}
+        <strong>{toNumber(accountInfo.core_liquid_balance).toFixed(4)}</strong>{' '}
         <small>EOS</small>
       </WalletListItemInfoMain>
 

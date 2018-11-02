@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
-import { Redirect } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import WAL, { WalletProvider, Wallet } from 'wal-eos';
 import { CloseButton } from '../shared/buttons/CloseButton';
 import { LoginButton } from './LoginButton';
@@ -79,7 +79,7 @@ export class LoginScreen extends Component<any, LoginScreenState> {
     wallet.connect().then(wallet.login);
   };
 
-  isLoggedIn = () => WAL.accessContext.getActiveWallets().length;
+  isLoggedIn = () => !!WAL.accessContext.getActiveWallets().length;
 
   render() {
     const {
@@ -120,4 +120,4 @@ export class LoginScreen extends Component<any, LoginScreenState> {
   }
 }
 
-export default LoginScreen;
+export default withRouter(LoginScreen);

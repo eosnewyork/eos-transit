@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { WalletProvider, Wallet } from 'wal-eos';
 import WalletListItem from './WalletListItem';
+import WalletStateSubscribe from 'WalletStateSubscribe';
 
 // Visual components
 
@@ -47,15 +48,18 @@ export class WalletList extends Component<WalletListProps> {
           ))}
         {wallets &&
           wallets.map(wallet => (
-            <WalletListItem
-              key={wallet.provider.id}
-              walletProvider={wallet.provider}
-              wallet={wallet}
-              onSelect={onItemSelect}
-              onDismissClick={onItemDismissClick}
-              onLogoutClick={onItemLogoutClick}
-              onReconnectClick={onItemReconnectClick}
-            />
+            <WalletStateSubscribe wallet={wallet} key={wallet.provider.id}>
+              {() => (
+                <WalletListItem
+                  walletProvider={wallet.provider}
+                  wallet={wallet}
+                  onSelect={onItemSelect}
+                  onDismissClick={onItemDismissClick}
+                  onLogoutClick={onItemLogoutClick}
+                  onReconnectClick={onItemReconnectClick}
+                />
+              )}
+            </WalletStateSubscribe>
           ))}
       </WalletListRoot>
     );

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Wallet, WalletProvider } from 'wal-eos';
 import WalletListItem from '../shared/wallets/WalletListItem';
+import WalletStateSubscribe from '../WalletStateSubscribe';
+import AccessContextSubscribe from 'AccessContextSubscribe';
 
 // Visual components
 
@@ -50,29 +52,36 @@ export class LoginScreenWalletList extends Component<
     );
 
     return (
-      <LoginScreenWalletListRoot>
-        {wallets.map(wallet => (
-          <WalletListItem
-            key={wallet.provider.id}
-            onSelect={handleWalletProviderSelect}
-            onReconnectClick={handleReconnectClick}
-            walletProvider={wallet.provider}
-            wallet={wallet}
-            large={true}
-            dismissable={false}
-          />
-        ))}
-        {availableWalletProviders.map(walletProvider => (
-          <WalletListItem
-            key={walletProvider.id}
-            onSelect={handleWalletProviderSelect}
-            onReconnectClick={handleReconnectClick}
-            walletProvider={walletProvider}
-            large={true}
-            dismissable={false}
-          />
-        ))}
-      </LoginScreenWalletListRoot>
+      <AccessContextSubscribe>
+        {() => (
+          <LoginScreenWalletListRoot>
+            {wallets.map(wallet => (
+              <WalletStateSubscribe wallet={wallet} key={wallet.provider.id}>
+                {() => (
+                  <WalletListItem
+                    onSelect={handleWalletProviderSelect}
+                    onReconnectClick={handleReconnectClick}
+                    walletProvider={wallet.provider}
+                    wallet={wallet}
+                    large={true}
+                    dismissable={false}
+                  />
+                )}
+              </WalletStateSubscribe>
+            ))}
+            {availableWalletProviders.map(walletProvider => (
+              <WalletListItem
+                key={walletProvider.id}
+                onSelect={handleWalletProviderSelect}
+                onReconnectClick={handleReconnectClick}
+                walletProvider={walletProvider}
+                large={true}
+                dismissable={false}
+              />
+            ))}
+          </LoginScreenWalletListRoot>
+        )}
+      </AccessContextSubscribe>
     );
   }
 }

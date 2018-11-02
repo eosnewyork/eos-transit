@@ -6,9 +6,9 @@ import { WalletList } from '../shared/wallets/WalletList';
 const { accessContext } = WAL;
 
 export function UserWalletList() {
-  const activeWallets = accessContext.getActiveWallets();
+  const wallets = accessContext.getWallets();
 
-  if (!activeWallets.length) {
+  if (!wallets.length) {
     return (
       <NoContent
         message="No active wallets"
@@ -19,7 +19,7 @@ export function UserWalletList() {
 
   return (
     <WalletList
-      wallets={activeWallets}
+      wallets={wallets}
       onItemDismissClick={wallet => wallet.terminate()}
       onItemLogoutClick={wallet => wallet.terminate()}
       onItemReconnectClick={wallet => wallet.connect()}

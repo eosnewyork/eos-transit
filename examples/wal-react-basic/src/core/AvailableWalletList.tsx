@@ -29,10 +29,11 @@ export function AvailableWalletList({
       walletProviders={availableWalletProviders}
       onItemSelect={walletProvider => {
         // TODO: Implement in a cleaner way
-        accessContext.initWallet(walletProvider);
         if (typeof onItemSelect === 'function') {
           onItemSelect();
         }
+        const wallet = accessContext.initWallet(walletProvider);
+        wallet.connect().then(wallet.login);
       }}
     />
   );

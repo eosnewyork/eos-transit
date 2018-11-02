@@ -3,6 +3,7 @@ import { Subscribe } from 'unstated';
 import styled from 'react-emotion';
 import WAL, { Wallet } from 'wal-eos';
 import { TransactionAddonMenuItem } from './TransactionAddonMenuItem';
+import WalletStateSubscribe from 'WalletStateSubscribe';
 
 // Visual components
 
@@ -49,33 +50,18 @@ export class TransactionAddonMenu extends Component<TransactionAddonMenuProps> {
           Run with wallet:
         </TransactionAddonMenuHeader>
         {activeWallets.map(wallet => (
-          <TransactionAddonMenuItem
-            key={wallet.provider.id}
-            wallet={wallet}
-            onSelect={handleItemSelect}
-          />
+          <WalletStateSubscribe key={wallet.provider.id} wallet={wallet}>
+            {() => (
+              <TransactionAddonMenuItem
+                wallet={wallet}
+                onSelect={handleItemSelect}
+              />
+            )}
+          </WalletStateSubscribe>
         ))}
       </TransactionAddonMenuRoot>
     );
   }
 }
-
-// TODO: Subscribe to WAL instead
-// export function TransactionAddonMenuConnected(
-//   props: TransactionAddonMenuProps
-// ) {
-//   return (
-//     <Subscribe to={[SessionStateContainer]}>
-//       {(sessionStateContainer: SessionStateContainer) => (
-//         <TransactionAddonMenu
-//           sessionStateContainer={sessionStateContainer}
-//           {...props}
-//         />
-//       )}
-//     </Subscribe>
-//   );
-// }
-
-// export default TransactionAddonMenuConnected;
 
 export default TransactionAddonMenu;

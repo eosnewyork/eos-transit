@@ -231,8 +231,8 @@ export interface WalletListItemProps {
 
 export class WalletListItem extends Component<WalletListItemProps> {
   handleSelect = () => {
-    const { isActive } = this;
-    if (!isActive()) return;
+    const { isSelectable } = this;
+    if (!isSelectable()) return;
 
     const { onSelect, walletProvider } = this.props;
     if (typeof onSelect === 'function') {
@@ -261,16 +261,15 @@ export class WalletListItem extends Component<WalletListItemProps> {
     }
   };
 
-  isActive = () => {
+  isSelectable = () => {
     const { wallet } = this.props;
-    if (!wallet) return true;
-    return wallet.active;
-  };
+    return !wallet;
+  }
 
   render() {
     const { large, dismissable } = this.props;
     const {
-      isActive,
+      isSelectable,
       handleSelect,
       handleReconnectClick,
       handleDismissClick,
@@ -278,20 +277,10 @@ export class WalletListItem extends Component<WalletListItemProps> {
     } = this;
     const { walletProvider, wallet } = this.props;
     const walletState: WalletState = (wallet && wallet.state) || {};
-    const {
-      connecting,
-      connected,
-      connectionError,
-      authenticating,
-      authenticated,
-      authenticationError,
-      accountInfo,
-      accountFetching,
-      accountFetchError
-    } = walletState;
-    const error = connectionError || authenticationError || accountFetchError;
-    const inProgress = connecting || authenticating || accountFetching;
-    const success = connected && authenticated && !!accountInfo;
+    const { accountInfo } = walletState;
+    const hasError = (wallet && wallet.hasError) || false;
+    const inProgress = (wallet && wallet.inProgress) || false;
+    const active = (wallet && wallet.active) || false;
 
     const providerName = walletProvider.meta && walletProvider.meta.name;
 
@@ -306,13 +295,13 @@ export class WalletListItem extends Component<WalletListItemProps> {
 
     return (
       <WalletListItemRoot
-        hasError={error}
-        active={isActive()}
+        hasError={hasError}
+        active={isSelectable()}
         large={large}
         onClick={handleSelect}
       >
         <WalletListItemContent>
-          <WalletListItemIcon hasError={error} large={large}>
+          <WalletListItemIcon hasError={hasError} large={large}>
             {icon}
           </WalletListItemIcon>
 
@@ -330,14 +319,14 @@ export class WalletListItem extends Component<WalletListItemProps> {
               </WalletListItemBodyTopMain>
               {dismissable !== false && (
                 <>
-                  {success && (
+                  {active && (
                     <WalletListItemBodyTopActions>
                       <WalletListItemDismissButton onClick={handleLogoutClick}>
                         <IoIosLogOut />
                       </WalletListItemDismissButton>
                     </WalletListItemBodyTopActions>
                   )}
-                  {error && (
+                  {hasError && (
                     <WalletListItemBodyTopActions>
                       <WalletListItemDismissButton onClick={handleDismissClick}>
                         <IoMdClose />
@@ -354,7 +343,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
         </WalletListItemContent>
 
         <WalletListItemProgress active={inProgress} indeterminate={true} />
-        {error && (
+        {hasError && (
           <WalletListItemConnectButton onClick={handleReconnectClick}>
             Reconnect
           </WalletListItemConnectButton>
