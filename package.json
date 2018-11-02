@@ -15,11 +15,9 @@
     "lint": "./node_modules/.bin/tslint -c ./tslint.json -p ./tsconfig.json"
   },
   "dependencies": {
-    "eosjs": "20.0.0-beta2",
-    "text-encoding": "0.6.4"
+    "eosjs": "20.0.0-beta2"
   },
   "devDependencies": {
-    "@types/text-encoding": "^0.0.34",
     "prettier": "^1.14.3",
     "scatterjs-core": "^2.3.8",
     "scatterjs-plugin-eosjs2": "^1.1.6",
