@@ -1,48 +1,13 @@
-import { ApiInterfaces } from 'eosjs';
-import ScatterJS, { Blockchains, SocketService } from 'scatterjs-core';
+import ScatterJS from 'scatterjs-core';
+import ScatterEOS from 'scatterjs-plugin-eosjs2';
 import { WalletProvider, NetworkConfig, WalletAuth } from '../../types';
 
 const { scatter } = ScatterJS;
 
+scatter.loadPlugin(new ScatterEOS());
+
 export function makeSignatureProvider(network: NetworkConfig) {
-  return {
-    async getAvailableKeys() {
-      return SocketService.sendApiRequest({
-        type: 'identityFromPermissions',
-        payload: {}
-      }).then((identity: any) => {
-        if (!identity) return [];
-
-        return identity.accounts
-          .filter((account: any) => account.blockchain === 'eos')
-          .map((account: any) => account.publicKey);
-      });
-    },
-
-    async sign(
-      signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
-    ): Promise<string[]> {
-      const signatureRequestPayload = {
-        ...signatureProviderArgs,
-        blockchain: Blockchains.EOS,
-        network: {
-          ...network,
-          blockchain: 'eos'
-        },
-        requiredFields: {}
-      };
-
-      const result = await SocketService.sendApiRequest({
-        type: 'requestSignature',
-        payload: signatureRequestPayload
-      });
-
-      if (!result) return [];
-      return typeof result.signatures !== 'undefined'
-        ? result.signatures
-        : result;
-    }
-  };
+  return scatter.eosHook({ ...network, blockchain: 'eos' });
 }
 
 // TODO: Ability to pass Scatter options
