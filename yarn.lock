@@ -484,6 +484,11 @@ scatterjs-core@^2.3.8:
     isomorphic-ws "^4.0.1"
     ws "^6.1.0"
 
+scatterjs-plugin-eosjs2@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/scatterjs-plugin-eosjs2/-/scatterjs-plugin-eosjs2-1.1.6.tgz#4f6fa2f67da44c4da63abca77ed706c8f6cca79e"
+  integrity sha512-oHfxxzv8WUlldK/CyT3aKF36uXFRbYk+VEOKfzPFFH1rKEgUZmgZHXuZIxKI+ETPBZVVhDvpOKMl9qFqMlmjRw==
+
 semver@^5.3.0:
   version "5.6.0"
   resolved "https://registry.npmjs.org/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"

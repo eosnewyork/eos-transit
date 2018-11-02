@@ -22,6 +22,7 @@
     "@types/text-encoding": "^0.0.34",
     "prettier": "^1.14.3",
     "scatterjs-core": "^2.3.8",
+    "scatterjs-plugin-eosjs2": "^1.1.6",
     "shx": "^0.3.2",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
