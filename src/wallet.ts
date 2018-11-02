@@ -36,9 +36,7 @@ export function initWallet(
   const eosApi = new Api({
     rpc: ctx.eosRpc,
     chainId: ctx.network.chainId,
-    signatureProvider: walletProvider.signatureProvider,
-    textEncoder: new TextEncoder(),
-    textDecoder: new TextDecoder()
+    signatureProvider: walletProvider.signatureProvider
   });
 
   // Account helpers
