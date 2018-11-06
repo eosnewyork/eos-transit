@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'react-emotion';
 import { AccountInfo } from 'wal-eos';
+import { toNumber } from '../helpers';
 
 // TODO: Make expandable
 
@@ -68,14 +69,6 @@ export const WalletListItemInfoParamContent = styled('div')({
   fontWeight: 600,
   color: '#26c5df'
 });
-
-// Little helper
-function toNumber(input?: string) {
-  if (!input) return 0;
-  const chunks = input.split(' ');
-  if (!chunks[0]) return 0;
-  return Number(chunks[0]);
-}
 
 // Exported / behavior component
 
