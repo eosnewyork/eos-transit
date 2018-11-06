@@ -131,7 +131,8 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
           inProgress: false,
           hasError: true,
           success: false,
-          errorMessage: defaultErrorMessage
+          errorMessage:
+            error && error.message ? error.message : defaultErrorMessage
         });
       });
   };
@@ -198,9 +199,6 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 export function PaymentFormConnected() {
   return (
     <PaymentForm />
-    // <Subscribe to={[SessionStateContainer]}>
-    //   {(sessionStateContainer: SessionStateContainer) => <PaymentForm />}
-    // </Subscribe>
   );
 }
 
