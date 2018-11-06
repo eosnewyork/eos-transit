@@ -22,7 +22,6 @@
     "react-router-dom": "^4.3.1",
     "react-scripts-ts": "3.1.0",
     "scatterjs-core": "2.3.8",
-    "unstated": "^2.1.1",
     "wal-eos": "link:../../."
   },
   "devDependencies": {
