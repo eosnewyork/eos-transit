@@ -8,9 +8,10 @@ export interface WalletStateSubscribeProps {
 
 export class WalletStateSubscribe extends Component<WalletStateSubscribeProps> {
   unsubscribe?: StateUnsubscribeFn;
+  unmounted?: boolean;
 
   handleWalletStateUpdate = () => {
-    this.forceUpdate();
+    if (!this.unmounted) this.forceUpdate();
   };
 
   componentDidMount() {
@@ -19,6 +20,7 @@ export class WalletStateSubscribe extends Component<WalletStateSubscribeProps> {
   }
 
   componentWillUnmount() {
+    this.unmounted = true;
     const { unsubscribe } = this;
     if (typeof unsubscribe === 'function') unsubscribe();
   }

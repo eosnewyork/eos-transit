@@ -9,9 +9,10 @@ export class AccessContextSubscribe extends Component<
   AccessContextSubscribeProps
 > {
   unsubscribe?: StateUnsubscribeFn;
+  unmounted?: boolean;
 
   handleAccessContextUpdate = () => {
-    this.forceUpdate();
+    if (!this.unmounted) this.forceUpdate();
   };
 
   componentDidMount() {
@@ -21,6 +22,7 @@ export class AccessContextSubscribe extends Component<
   }
 
   componentWillUnmount() {
+    this.unmounted = true;
     const { unsubscribe } = this;
     if (typeof unsubscribe === 'function') unsubscribe();
   }
