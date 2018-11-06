@@ -7,9 +7,9 @@ import {
 } from './types';
 
 export function makeStateContainer<TState>(
-  initialState?: TState
+  initialState: TState
 ): StateContainer<TState> {
-  let state: TState | undefined = initialState || void 0;
+  let state: TState = initialState;
   let listeners: Array<StateListener<TState>> = [];
 
   return {
