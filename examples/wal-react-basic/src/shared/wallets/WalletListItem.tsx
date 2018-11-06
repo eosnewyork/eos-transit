@@ -264,7 +264,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
   isSelectable = () => {
     const { wallet } = this.props;
     return !wallet;
-  }
+  };
 
   render() {
     const { large, dismissable } = this.props;
@@ -276,6 +276,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
       handleLogoutClick
     } = this;
     const { walletProvider, wallet } = this.props;
+    // Note: Temp hackery
     const walletState: WalletState = (wallet && wallet.state) || {};
     const { accountInfo } = walletState;
     const hasError = (wallet && wallet.hasError) || false;
