@@ -6,7 +6,9 @@ import {
   WalletProvider,
   Wallet,
   StateListener,
-  StateUnsubscribeFn
+  StateUnsubscribeFn,
+  UnsubscribeFn,
+  Listener
 } from './types';
 import { makeStateContainer } from './stateContainer';
 import { initWallet } from './wallet';
@@ -34,6 +36,16 @@ export function initAccessContext(
   );
 
   const _stateContainer = makeStateContainer(DEFAULT_CONTEXT_STATE);
+  let _listeners: Array<Listener<WalletAccessContext>> = [];
+
+  function _handleUpdate() {
+    for (const listener of _listeners) {
+      listener(ctx);
+    }
+  }
+
+  const _walletUnsubscribeFns: Map<string, UnsubscribeFn> = new Map();
+  const stateUnsubscribe = _stateContainer.subscribe(_handleUpdate);
 
   const eosRpcUrl = getNetworkUrl(network);
   const eosRpc = new JsonRpc(eosRpcUrl, { fetch });
@@ -56,12 +68,17 @@ export function initAccessContext(
         `);
       }
 
-      // TODO: Consider also having generated session IDs
       const newWallet = initWallet(_walletProvider, ctx);
 
       _stateContainer.updateState(state => ({
         wallets: [...((state && state.wallets) || []), newWallet]
       }));
+
+      // Subscribe to a new wallet updates immediately
+      _walletUnsubscribeFns.set(
+        newWallet._instanceId,
+        newWallet.subscribe(_handleUpdate)
+      );
 
       return newWallet;
     },
@@ -86,6 +103,13 @@ export function initAccessContext(
       _stateContainer.updateState(state => ({
         wallets: ((state && state.wallets) || []).filter(w => w !== wallet)
       }));
+
+      const { _instanceId } = wallet;
+
+      if (_walletUnsubscribeFns.has(_instanceId)) {
+        const unsubscribe = _walletUnsubscribeFns.get(_instanceId);
+        if (typeof unsubscribe === 'function') unsubscribe();
+      }
     },
 
     logoutAll(): Promise<boolean> {
@@ -106,10 +130,24 @@ export function initAccessContext(
       ).then(() => true);
     },
 
+    destroy(): Promise<any> {
+      return ctx.terminateAll().then(() => {
+        stateUnsubscribe();
+        _walletUnsubscribeFns.forEach(unsubscribeFn => {
+          if (typeof unsubscribeFn === 'function') unsubscribeFn();
+        });
+        _listeners = [];
+      });
+    },
+
     subscribe(
-      listener: StateListener<WalletAccessContextState>
+      listener: StateListener<WalletAccessContext>
     ): StateUnsubscribeFn {
-      return _stateContainer.subscribe(listener);
+      _listeners = [..._listeners, listener];
+
+      return function unsubscribe() {
+        _listeners = _listeners.filter(l => l !== listener);
+      };
     }
   };
 
