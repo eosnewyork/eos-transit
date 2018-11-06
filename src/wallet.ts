@@ -1,4 +1,5 @@
 import { Api } from 'eosjs';
+import uuid from 'uuid/v4';
 import {
   WalletAccessContext,
   WalletProvider,
@@ -16,6 +17,7 @@ const DEFAULT_STATE: WalletState = {
   connected: false,
   connectionError: false,
   connectionErrorMessage: void 0,
+  auth: void 0,
   authenticating: false,
   authenticated: false,
   authenticationConfirmed: false,
@@ -31,7 +33,11 @@ export function initWallet(
   walletProvider: WalletProvider,
   ctx: WalletAccessContext
 ): Wallet {
-  const _stateContainer = makeStateContainer(DEFAULT_STATE);
+  const _instanceId = uuid();
+  const _stateContainer = makeStateContainer({
+    ...DEFAULT_STATE
+  });
+
   const { getState } = _stateContainer;
   const eosApi = new Api({
     rpc: ctx.eosRpc,
@@ -83,29 +89,32 @@ export function initWallet(
   // Connection
 
   function connect(): Promise<boolean> {
-    _stateContainer.updateState({
+    _stateContainer.updateState(state => ({
+      ...state,
       connected: false,
       connecting: true,
       connectionError: false,
       connectionErrorMessage: void 0
-    });
+    }));
 
     return walletProvider
       .connect(ctx.appName)
       .then(() => {
-        _stateContainer.updateState({
+        _stateContainer.updateState(state => ({
+          ...state,
           connecting: false,
           connected: true
-        });
+        }));
 
         return true;
       })
       .catch(error => {
-        _stateContainer.updateState({
+        _stateContainer.updateState(state => ({
+          ...state,
           connecting: false,
           connectionError: true,
           connectionErrorMessage: getErrorMessage(error)
-        });
+        }));
 
         return Promise.reject(error);
       });
@@ -113,12 +122,13 @@ export function initWallet(
 
   function disconnect(): Promise<boolean> {
     return walletProvider.disconnect().then(() => {
-      _stateContainer.updateState({
+      _stateContainer.updateState(state => ({
+        ...state,
         connecting: false,
         connected: false,
         connectionError: false,
         connectionErrorMessage: void 0
-      });
+      }));
 
       return true;
     });
@@ -185,6 +195,7 @@ export function initWallet(
   }
 
   const wallet: Wallet = {
+    _instanceId,
     ctx,
     provider: walletProvider,
     eosApi,
