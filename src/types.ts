@@ -25,11 +25,9 @@ export interface WalletAuth {
 
 // State management
 
-export type StateUpdaterFn<TState> = (
-  prevState: TState | undefined
-) => TState | undefined;
+export type StateUpdaterFn<TState> = (prevState: TState) => TState;
 
-export type StateUpdater<TState> = StateUpdaterFn<TState> | TState | undefined;
+export type StateUpdater<TState> = StateUpdaterFn<TState> | TState;
 
 export type UpdateStateFn<TState> = (updater: StateUpdater<TState>) => void;
 
@@ -42,6 +40,12 @@ export interface StateContainer<TState = any> {
   updateState: UpdateStateFn<TState>;
   subscribe: (listener: StateListener<TState>) => StateUnsubscribeFn;
 }
+
+// Util
+
+export type Listener<T = any> = (value?: T) => void;
+
+export type UnsubscribeFn = () => void;
 
 // Network
 
@@ -93,6 +97,7 @@ export interface WalletState {
 }
 
 export interface Wallet {
+  _instanceId: string; // UUID, for internal purposes
   ctx: WalletAccessContext;
   state: WalletState;
   provider: WalletProvider;
@@ -134,13 +139,13 @@ export interface WalletAccessContext {
   getWalletProviders(): WalletProvider[];
   getWallets(): Wallet[];
   getActiveWallets(): Wallet[];
+  // updateWalletState(wallet: Wallet): void;
   detachWallet(wallet: Wallet): void;
   logoutAll(): Promise<boolean>;
   disconnectAll(): Promise<boolean>;
   terminateAll(): Promise<boolean>;
-  subscribe(
-    listener: StateListener<WalletAccessContextState>
-  ): StateUnsubscribeFn;
+  destroy(): Promise<any>;
+  subscribe(listener: Listener<WalletAccessContext>): UnsubscribeFn;
 }
 
 // Transactions
