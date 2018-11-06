@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Wallet } from 'wal-eos';
+import { toNumber } from '../helpers';
 import { WalletProviderIcon } from '../wallets/WalletProviderIcon';
 
 // Visual components
@@ -124,7 +125,7 @@ export class TransactionAddonMenuItem extends Component<
         {accountInfo && (
           <TransactionAddonMenuItemBalance>
             <strong>
-              {Number(accountInfo.core_liquid_balance).toFixed(4)}
+              {toNumber(accountInfo.core_liquid_balance).toFixed(4)}
             </strong>{' '}
             <small>EOS</small>
           </TransactionAddonMenuItemBalance>

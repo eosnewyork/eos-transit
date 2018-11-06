@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Subscribe } from 'unstated';
 import styled from 'react-emotion';
 import WAL, { Wallet } from 'wal-eos';
 import { TransactionAddonMenuItem } from './TransactionAddonMenuItem';
