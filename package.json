@@ -11,7 +11,7 @@
     "clean": "shx rm -rf lib && shx rm -rf dist",
     "prebuild": "yarn clean",
     "build": "./node_modules/typescript/bin/tsc",
-    "build-production": "webpack",
+    "build-production": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack",
     "watch": "./node_modules/typescript/bin/tsc -w",
     "test": "",
     "lint": "./node_modules/.bin/tslint -c ./tslint.json -p ./tsconfig.json"
@@ -24,6 +24,7 @@
     "@types/node": "^10.12.2",
     "@types/uuid": "^3.4.4",
     "@types/webpack": "^4.4.17",
+    "cross-env": "^5.2.0",
     "prettier": "^1.14.3",
     "scatterjs-core": "^2.3.8",
     "scatterjs-plugin-eosjs2": "^1.1.6",
