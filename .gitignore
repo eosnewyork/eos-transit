@@ -6,6 +6,9 @@
 # compiled lib and types
 /lib
 
+# minified UMD builds
+/dist
+
 # misc
 .DS_Store
 .env
