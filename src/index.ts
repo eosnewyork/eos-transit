@@ -1,5 +1,6 @@
 import { WalletAccessContext, WalletAccessContextOptions } from './types';
 import { initAccessContext } from './walletAccessContext';
+import { initWallet } from './wallet';
 
 export * from './types';
 export { initWallet } from './wallet';
@@ -14,7 +15,7 @@ export function initDefaultAccessContext(
   return defaultAccessContext;
 }
 
-export default {
+const WAL = {
   initDefaultAccessContext,
 
   get accessContext() {
@@ -26,5 +27,13 @@ export default {
     }
 
     return defaultAccessContext;
-  }
+  },
+
+  initWallet
 };
+
+export default WAL;
+
+if (typeof window !== 'undefined') {
+  (window as any).WAL = WAL;
+}
