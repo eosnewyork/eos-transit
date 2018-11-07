@@ -1,4 +1,4 @@
-import { Api, JsonRpc } from 'eosjs';
+import { JsonRpc } from 'eosjs';
 import {
   WalletAccessContext,
   WalletAccessContextState,
