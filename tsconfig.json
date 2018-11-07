@@ -16,6 +16,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types", "./src/typings"]
   },
