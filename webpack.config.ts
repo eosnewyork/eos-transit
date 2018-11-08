@@ -64,9 +64,9 @@ const providersConfig: Configuration = {
     filename: 'wal-eos-[name].min.js',
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',
-    library: '[name]',
+    library: ['WAL', 'providers', '[name]'],
     libraryExport: 'default',
-    globalObject: 'window.WAL'
+    globalObject: 'window'
   }
 };
 
