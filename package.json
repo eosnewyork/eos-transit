@@ -11,7 +11,7 @@
     "clean": "shx rm -rf lib && shx rm -rf dist",
     "prebuild": "yarn clean",
     "build": "./node_modules/typescript/bin/tsc",
-    "build-production": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack",
+    "build-production": "yarn build && cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack",
     "watch": "./node_modules/typescript/bin/tsc -w",
     "test": "",
     "lint": "./node_modules/.bin/tslint -c ./tslint.json -p ./tsconfig.json"
