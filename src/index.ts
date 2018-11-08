@@ -33,7 +33,3 @@ const WAL = {
 };
 
 export default WAL;
-
-if (typeof window !== 'undefined') {
-  (window as any).WAL = WAL;
-}
