@@ -28,6 +28,7 @@ const config: Configuration = {
     library: 'WAL',
     libraryExport: 'default'
   },
+  externals: 'eosjs',
   stats: {
     colors: true
   }
