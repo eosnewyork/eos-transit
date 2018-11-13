@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "./lib",
     "module": "esnext",
     "target": "es5",
     "lib": ["dom", "es5", "es2015"],
-    "declaration": true,
-    "declarationDir": "./lib",
     "sourceMap": true,
     "jsx": "react",
     "forceConsistentCasingInFileNames": true,
@@ -17,13 +14,6 @@
     "noUnusedLocals": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types", "./src/typings"]
-  },
-  "files": [
-    "src/index.ts",
-    "src/walletProviders/scatter/index.ts",
-    "src/walletProviders/stub.ts"
-  ],
-  "include": ["src/typings/*"]
+    "moduleResolution": "node"
+  }
 }
