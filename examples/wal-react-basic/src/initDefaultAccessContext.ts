@@ -1,6 +1,6 @@
 import { initDefaultAccessContext } from 'wal-eos';
-import scatter from 'wal-eos/lib/walletProviders/scatter';
-import stub from 'wal-eos/lib/walletProviders/stub';
+import scatter from 'wal-eos-scatter-provider';
+import stub from 'wal-eos-stub-provider';
 
 const appName = 'my_eos_dapp';
 

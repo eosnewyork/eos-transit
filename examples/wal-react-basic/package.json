@@ -22,7 +22,9 @@
     "react-router-dom": "^4.3.1",
     "react-scripts-ts": "3.1.0",
     "scatterjs-core": "2.3.8",
-    "wal-eos": "link:../../."
+    "wal-eos": "0.0.1",
+    "wal-eos-scatter-provider": "0.0.1",
+    "wal-eos-stub-provider": "0.0.1"
   },
   "devDependencies": {
     "@types/node": "^10.11.3",
