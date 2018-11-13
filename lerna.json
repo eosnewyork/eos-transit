@@ -1,6 +1,8 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "examples/wal-react-basic",
+    "examples/wal-script-tag"
   ],
   "version": "independent",
   "npmClient": "yarn",
