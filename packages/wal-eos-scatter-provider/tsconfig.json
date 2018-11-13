@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "declaration": true,
+    "declarationDir": "./lib",
+    "typeRoots": ["./node_modules/@types", "./src/typings"]
+  },
+  "files": ["src/index.ts"],
+  "include": ["src/typings/*"]
+}
