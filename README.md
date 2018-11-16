@@ -61,6 +61,9 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
     - [Wallet session termination](#wallet-session-termination)
     - [Destroying the `WalletAccessContext`](#destroying-the-walletaccesscontext)
     - [Creating custom wallet providers](#creating-custom-wallet-providers)
+      - [Provider instance](#provider-instance)
+      - [Provider factory function](#provider-factory-function)
+      - [Higher-order provider factory function](#higher-order-provider-factory-function)
     - [TypeScript support](#typescript-support)
   - [API reference](#api-reference)
   - [Contribution](#contribution)
@@ -811,7 +814,109 @@ Once `destroy()`ed, the `WalletAccessContext` should not be used anymore.
 
 ### Creating custom wallet providers
 
-[TODO]
+#### Provider instance
+
+Creating custom `WalletProvider` is easy with `wal-eos`. The [`WalletProvider` `interface`](https://github.com/eosnewyork/wal-eos/blob/master/packages/wal-eos/src/types.ts#L68) can be used as a guide to what kind of object is expected as a `WalletProvider` instance even if you're not using TypeScript to write the actual provider.
+
+The actual `WalletProvider` instance is an object:
+
+```javascript
+{
+  // Unique identifier, e.g., "my_provider", or whatever won't clash with the existing ones
+  id: 'awesome_provider',
+
+  // Optional metadata property that can contain the optional fields 
+  // such as provider `name`, `shortName` and `description`)
+  meta: {
+    name: 'My Super Awesome Wallet Provider',
+    shortName: 'Awesome Provider',
+    description: 'Just an Awesome Provider everyone using EOS gonna be using soon'
+  },
+
+  // Key part of the provider - `signatureProvider` is passed to `eosjs`
+  // directly, when `Api` instance is created. It should be an object with
+  // `getAvailableKeys` and `sign` methods.
+  // Refer to `eosjs` docs for more information (link below the code)
+  signatureProvider: {
+    getAvailableKeys() { ... },
+    sign(signatureProviderArgs) { ... }
+  },
+
+  // This method is used by `wal-eos` to connect to a provider.
+  // Should return a Promise of anything. The method accepts the
+  // `appName` as an argument so that the wallet app can, e.g.,
+  // request from the user a permission for the certain app.
+  connect(appName: string): Promise<any>;
+
+  // Disconnects from the provider. Returns a Promise of anything,
+  // just in case disconnection is some kind of process where provider
+  // needs to receive an acknowledgement from the wallet app.
+  disconnect(): Promise<any>;
+
+  // Login is basically a way of "authenticating" the user with 
+  // a wallet app. Please note that the notion of "authentication"
+  // is different in decentralized world and its more for the
+  // wallet app and user convenience. Should return a promise
+  // of "authentication metadata" (`WalletAuth`).
+  // There's an optional `accountName` argument in case some
+  // provider authenticates or maintains some session for
+  // a given account (e.g., when wallet app itself isn't maintaining
+  // any kind of identity management, we need to let it know which
+  // user we're authenticating as in the first place).
+  login(accountName?: string): Promise<WalletAuth>;
+
+  // Logouts the current user or a user with given `accountName`.
+  // The user `accountName` argument is optional just like with `login`,
+  // as not all wallets might need it.
+  logout(accountName?: string): Promise<any>;
+}
+```
+
+Here's the link to [`eosjs` `SignatureProvider` reference](https://eosio.github.io/eosjs/interfaces/api_interfaces.signatureprovider.html).
+
+You can also check how our wallet provider packages are implemented:
+
+- [`wal-eos-scatter-provider`](packages/wal-eos-scatter-provider/src/index.ts)
+- [`wal-eos-stub-provider`](packages/wal-eos-stub-provider/src/index.ts)
+
+
+#### Provider factory function
+
+The above-described `WalletProvider` instance is whats being kept in the `wal-eos` state internally and is operated on. But before that happens, `wal-eos` needs to create the provider instance in the first place.
+
+When `WalletAccessContext` is being created, the `walletProviders` array is used to pass the providers. But what is "providers" we pass in a `walletProviders` array? Note that its not a `WalletProvidier` instance but instead a function with the following signature:
+
+```typescript
+makeWalletProvider = (network: NetworkConfig) => WalletProvider
+```
+
+That means that we pass the function that accepts `network` configuration as an argument and returns a `WalletProvider` instance. And we pass these functions as a `walletProviders` array to `initAccessContext(...)`. So, the custom wallet provider package should implement this function.
+
+
+#### Higher-order provider factory function
+
+Its also advisable to create a higher order `function` (which is a `function` that returns another `function`). The `makeWalletProvider` function could be created by another function if there's any additional arguments we want to pass to the provider just like we do with our [`wal-eos-stub-provider`](packages/wal-eos-stub-provider/src/index.ts).
+
+We encourage to use the higher-order factory functions for all custom providers for consistency:
+
+```javascript
+import { initAccessContext } from 'wal-eos';
+import stub from 'wal-eos-stub-provider';
+import scatter from 'wal-eos-scatter-provider';
+import myProvider from 'my-own-provider-package';
+
+const accessContext = initAccessContext({
+  appName: '...',
+  network: { ... },
+  walletProviders: [
+    stub({ ... }),
+    scatter(),
+    myProvider({ someOptionMaybe: 123 })
+  ]
+})
+```
+
+Good luck writing your own custom wallet provider!
 
 ### TypeScript support
 
