@@ -69,6 +69,7 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
   - [Contribution](#contribution)
     - [Package development](#package-development)
     - [Builds](#builds)
+    - [Publishing](#publishing)
 
 
 ## Quick start
@@ -956,3 +957,16 @@ To build all packages simultaneously, run the following command from the project
         $ yarn build-packages
 
 This will perform both TypeScript compilation into `lib` folder and a minified production-ready UMD build into `umd` folder for each managed package.
+
+
+### Publishing
+
+Make sure you're logged into `npm` registry by running [`yarn login`](https://yarnpkg.com/lang/en/docs/cli/login/) but note that this won't ask you a password (it will be asked upon publishing, since `yarn` doesn't maintain authenticated sessions with `npm` registry):
+
+Since this monorepo is managed with `lerna`, the latter is responsible for publishing, so run 
+
+        $ lerna publish
+
+possibly proividing [additional options](https://github.com/lerna/lerna/tree/master/commands/publish) if needed.
+
+Normally, this should guide you through version bumping process as well as creating and pushing new `git` version tags for each package.
