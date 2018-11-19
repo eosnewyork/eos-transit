@@ -961,12 +961,14 @@ This will perform both TypeScript compilation into `lib` folder and a minified p
 
 ### Publishing
 
-Make sure you're logged into `npm` registry by running [`yarn login`](https://yarnpkg.com/lang/en/docs/cli/login/) but note that this won't ask you a password (it will be asked upon publishing, since `yarn` doesn't maintain authenticated sessions with `npm` registry):
+1. First off, make sure the current state of package folders is consistent and packages that are about to be published are actually built (with `yarn build-packages`, see previous section). To make sure, you can run `yarn pack` command to create a `tgz` tarball of the package and inspect its contents (but make sure that doesn't leak to a published package, so cleanup that before publishing).
 
-Since this monorepo is managed with `lerna`, the latter is responsible for publishing, so run 
+2. Make sure you're logged into `npm` registry by running [`yarn login`](https://yarnpkg.com/lang/en/docs/cli/login/) but note that this won't ask you a password (it will be asked upon publishing, since `yarn` doesn't maintain authenticated sessions with `npm` registry):
+
+3. Since this monorepo is managed with `lerna`, the latter is responsible for publishing too, so run 
 
         $ lerna publish
 
-possibly proividing [additional options](https://github.com/lerna/lerna/tree/master/commands/publish) if needed.
+    possibly proividing [additional options](https://github.com/lerna/lerna/tree/master/commands/publish) if needed.
 
-Normally, this should guide you through version bumping process as well as creating and pushing new `git` version tags for each package.
+    Normally, this should guide you through version bumping process as well as creating and pushing new `git` version tags for each package that had been published.
