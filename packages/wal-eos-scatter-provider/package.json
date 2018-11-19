@@ -1,6 +1,6 @@
 {
   "name": "wal-eos-scatter-provider",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Scatter app wallet provider for WAL:E",
   "license": "UNLICENSED",
   "main": "lib/index.js",
