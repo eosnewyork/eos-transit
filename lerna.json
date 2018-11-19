@@ -7,7 +7,10 @@
   "npmClient": "yarn",
   "command": {
     "publish": {
-      "message": "chore(release): publish"
+      "message": "chore(release): publish",
+      "ignoreChanges": [
+        "*.md"
+      ]
     }
   }
 }
