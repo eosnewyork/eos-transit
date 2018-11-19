@@ -1,7 +1,6 @@
 {
   "name": "wal-eos-stub-provider",
   "version": "0.0.1",
-  "private": true,
   "description": "Stub wallet provider for WAL:E (for development and testing only)",
   "license": "UNLICENSED",
   "main": "lib/index.js",
