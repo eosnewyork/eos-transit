@@ -16,7 +16,7 @@
     "lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
   },
   "dependencies": {
-    "wal-eos": "0.0.1"
+    "wal-eos": "^0.0.1"
   },
   "devDependencies": {
     "eosjs": "20.0.0-beta2",
