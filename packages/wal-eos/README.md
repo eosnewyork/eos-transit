@@ -928,4 +928,4 @@ Good luck writing your own custom wallet provider!
 
 ## Contribution
 
-Please see the [Contribution Guide](../../#contribution) in the root `README`.
+Please see the [Contribution Guide](/#contribution) in the root `README`.
