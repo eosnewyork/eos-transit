@@ -12,7 +12,7 @@ This allows to concentrate on building awesome apps instead of setting up `eosjs
 
 ## Features
 
-- Easy to use API
+- Easy to use API.
 - Managed wallet connection state tracking
 - Easily pluggable wallet providers (and easy to write your own)
 - TypeScript support
