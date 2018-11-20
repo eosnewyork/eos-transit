@@ -115,7 +115,7 @@ import scatter from 'wal-eos-scatter-provider';
 
 // We're using our own test network as an example here.
 const accessContext = initAccessContext({
-  'my_first_dapp',
+  appName: 'my_first_dapp',
   network: {
     host: 'api.pennstation.eosnewyork.io',
     port: 7001,
