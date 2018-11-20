@@ -1,6 +1,6 @@
 {
   "name": "wal-eos-stub-provider",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Stub wallet provider for WAL:E (for development and testing only)",
   "license": "UNLICENSED",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
     "lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
   },
   "dependencies": {
-    "wal-eos": "^0.0.2"
+    "wal-eos": "^0.0.3"
   },
   "devDependencies": {
     "eosjs": "20.0.0-beta2",

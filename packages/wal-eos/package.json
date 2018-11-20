@@ -1,6 +1,6 @@
 {
   "name": "wal-eos",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Wallet Access Layer for EOS Blockchain Networks",
   "license": "UNLICENSED",
   "main": "lib/index.js",

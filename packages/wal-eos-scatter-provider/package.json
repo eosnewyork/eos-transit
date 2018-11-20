@@ -1,6 +1,6 @@
 {
   "name": "wal-eos-scatter-provider",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Scatter app wallet provider for WAL:E",
   "license": "UNLICENSED",
   "main": "lib/index.js",
@@ -18,7 +18,7 @@
   "dependencies": {
     "scatterjs-core": "2.3.8",
     "scatterjs-plugin-eosjs2": "1.1.6",
-    "wal-eos": "^0.0.2"
+    "wal-eos": "^0.0.3"
   },
   "devDependencies": {
     "webpack": "^4.25.1",
