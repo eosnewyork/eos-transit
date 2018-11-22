@@ -1,10 +1,10 @@
 # WAL:E - Wallet Access Layer for EOS blockchain networks.
 
-This library is a tiny abstraction layer on top of `eosjs` and is aiming to assist the EOS dapp (decentralized app) developers with wallet communication (in order to sign the transactions) by providing a simple and intuitive API.
+This library is a small abstraction layer on top of `eosjs` this is aiming to assist the EOS dapp (decentralized app) developers with wallet communication (in order to sign the transactions) by providing a simple and intuitive API.
 
-This allows to concentrate on building awesome apps instead of setting up `eosjs` and wallet connections.
+This allows developers to concentrate on building awesome apps instead of setting up `eosjs` and wallet connections.
 
-> *Disclaimer: This library is in early alpha. The core API has stabilized but some changes and extension should be expected. But we encourage to give it a try when building your decentralized apps and feel free to share any thoughts, doubts and concerns. Any kind of feedback is highly appreciated.*
+> *Disclaimer: This library is in early alpha. The core API has stabilized but some changes and extension should be expected. We encourage developers to give it a try when building decentralized apps and to share any thoughts, doubts, and concerns. All feedback is highly appreciated.*
 
 
 👉🏻 **Please see the "Quick Start" and thorough guide in the [`wal-eos` package docs](packages/wal-eos)**
