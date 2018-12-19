@@ -1,7 +1,14 @@
 # wal-react-basic
 
 This is an example of running a `transfer` transaction via WAL:E wallet providers (currently works via `Scatter Desktop` only).
-## Demo
+
+## Demo (Video)
+
+[![Transit demo video](Transit_DemoVideo.jpg)](https://www.youtube.com/watch?v=IJYMaalWfgE)
+
+
+
+## Demo (Try it yourself)
 
 http://demo.eostransit.io (Make sure you have scatter configured as per below)
 
