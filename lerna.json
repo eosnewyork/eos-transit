@@ -1,7 +1,7 @@
 {
   "packages": [
     "packages/*",
-    "examples/wal-react-basic"
+    "examples/transit-react-basic"
   ],
   "version": "independent",
   "npmClient": "yarn",

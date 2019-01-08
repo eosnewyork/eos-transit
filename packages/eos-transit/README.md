@@ -22,7 +22,7 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 
 | Package                                                         | Version | Description                       |
 |-----------------------------------------------------------------|---------|-----------------------------------|
-| [`eos-transit`](../../packages/eos-transit)                                   | 0.0.1   | WAL:E core package                |
+| [`eos-transit`](../../packages/eos-transit)                                   | 0.0.1   | Transit core package                |
 | [`eos-transit-scatter-provider`](../../packages/eos-transit-scatter-provider) | 0.0.1   | Wallet provider for [Scatter](https://get-scatter.com/) app |
 | [`eos-transit-stub-provider`](../../packages/eos-transit-stub-provider)       | 0.0.1   | Stub wallet provider that does nothing, for demo and testing only |
 
@@ -248,14 +248,14 @@ The need for `eos-transit` has formed up around realizing few issues with using 
 
 - When dapp developer gets to the point of supporting multiple wallets for authentication and transaction signing for end user to choose from (like `METRO` hardware wallet, `Scatter`, etc), he would need to setup the `eosjs` `Api` instances for each, track the connection/authentication state, user authentication data and EOS account data, handle connection errors, manage disconnected wallets, get the app notified when some wallet internal state changes, etc.
 
-So, **WAL:E** just covers the above aspects for the dapp developer. Its basically nothing more than what a dapp developer **would have written on his own** in one way or another.
+So, **Transit** just covers the above aspects for the dapp developer. Its basically nothing more than what a dapp developer **would have written on his own** in one way or another.
 
 This lib's purpose is to ease the burden of setting up multiple signature providers by standardizing the approaches to how dapps talk to 3rd-party wallet apps and by tracking that communication. Basically, we're aiming to cover the entire "Login with EOS" use case for a dapp by making it as easy as installing few packages (core and necessary providers) and using the rather minimalistic API.
 
 
 ## How it works (architecture)
 
-The WAL:E is just a small convenience wrapper around `eosjs` (core) and some code that communicates to 3rd-party wallet apps for transactions signing (wallet providers). Its not extending the EOS blockchain, nor does it extend these 3rd-party apps, it just provides the consistent glue between these pieces of tech, also providing some assisting capabilities like state tracking for wallet connections.
+Transit is just a small convenience wrapper around `eosjs` (core) and some code that communicates to 3rd-party wallet apps for transactions signing (wallet providers). Its not extending the EOS blockchain, nor does it extend these 3rd-party apps, it just provides the consistent glue between these pieces of tech, also providing some assisting capabilities like state tracking for wallet connections.
 
 The `eos-transit` is minimalistic and doesn't stand in a way, providing a lot of escape hatches (like there's always a reference to underlying `eosjs` `Api` instance available on `eos-transit` `wallet` instances) and only doing what its designed for.
 

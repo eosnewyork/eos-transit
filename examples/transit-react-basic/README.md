@@ -1,6 +1,6 @@
-# wal-react-basic
+# transit-react-basic
 
-This is an example of running a `transfer` transaction via WAL:E wallet providers (currently works via `Scatter Desktop` only).
+This is an example of running a `transfer` transaction via Transit wallet providers (currently works via `Scatter Desktop` only).
 
 ## Demo (Video)
 

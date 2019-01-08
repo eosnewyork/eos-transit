@@ -1,4 +1,4 @@
-# WAL:E - Wallet Access Layer for EOS blockchain networks.
+# Transit - Wallet Access Layer for EOS blockchain networks.
 
 This library is a small abstraction layer on top of `eosjs` this is aiming to assist the EOS dapp (decentralized app) developers with wallet communication (in order to sign the transactions) by providing a simple and intuitive API.
 
@@ -25,7 +25,7 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 
 | Package                                                         | Version | Description                       |
 |-----------------------------------------------------------------|---------|-----------------------------------|
-| [`eos-transit`](packages/eos-transit)                                   | 0.0.1   | WAL:E core package                |
+| [`eos-transit`](packages/eos-transit)                                   | 0.0.1   | Transit core package                |
 | [`eos-transit-scatter-provider`](packages/eos-transit-scatter-provider) | 0.0.1   | Wallet provider for [Scatter](https://get-scatter.com/) app |
 | [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)       | 0.0.1   | Stub wallet provider that does nothing, for demo and testing only |
 
