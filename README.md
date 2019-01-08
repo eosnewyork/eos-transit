@@ -7,7 +7,7 @@ This allows developers to concentrate on building awesome apps instead of settin
 > *Disclaimer: This library is in early alpha. The core API has stabilized but some changes and extension should be expected. We encourage developers to give it a try when building decentralized apps and to share any thoughts, doubts, and concerns. All feedback is highly appreciated.*
 
 
-👉🏻 **Please see the "Quick Start" and thorough guide in the [`wal-eos` package docs](packages/wal-eos)**
+👉🏻 **Please see the "Quick Start" and thorough guide in the [`eos-transit` package docs](packages/eos-transit)**
 
 
 ## Features
@@ -25,9 +25,9 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 
 | Package                                                         | Version | Description                       |
 |-----------------------------------------------------------------|---------|-----------------------------------|
-| [`wal-eos`](packages/wal-eos)                                   | 0.0.1   | WAL:E core package                |
-| [`wal-eos-scatter-provider`](packages/wal-eos-scatter-provider) | 0.0.1   | Wallet provider for [Scatter](https://get-scatter.com/) app |
-| [`wal-eos-stub-provider`](packages/wal-eos-stub-provider)       | 0.0.1   | Stub wallet provider that does nothing, for demo and testing only |
+| [`eos-transit`](packages/eos-transit)                                   | 0.0.1   | WAL:E core package                |
+| [`eos-transit-scatter-provider`](packages/eos-transit-scatter-provider) | 0.0.1   | Wallet provider for [Scatter](https://get-scatter.com/) app |
+| [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)       | 0.0.1   | Stub wallet provider that does nothing, for demo and testing only |
 
 
 ## Contribution
@@ -40,7 +40,7 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 
         $ yarn install
    
-    **Note** that before `wal-eos`, `wal-eos-scatter-provider` and `wal-eos-stub-provider` are published, they are managed by `lerna` along with packages themselves. That means, before running the examples, `lerna` should wire up all the dependencies and instead of running `yarn install` manually from this folder, the following commands should be run from the project root:
+    **Note** that before `eos-transit`, `eos-transit-scatter-provider` and `eos-transit-stub-provider` are published, they are managed by `lerna` along with packages themselves. That means, before running the examples, `lerna` should wire up all the dependencies and instead of running `yarn install` manually from this folder, the following commands should be run from the project root:
 
 3.  Bootstrap the dependencies with
 

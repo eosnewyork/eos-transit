@@ -4,9 +4,9 @@ import { Configuration, ProvidePlugin } from 'webpack';
 const commonConfig: Configuration = {
   mode: 'production',
   // entry: {
-  //   'wal-eos': './src/index.ts',
-  //   'wal-eos-scatter': './src/walletProviders/scatter/index.ts',
-  //   'wal-eos-stub': './src/walletProviders/stub.ts'.
+  //   'eos-transit': './src/index.ts',
+  //   'eos-transit-scatter': './src/walletProviders/scatter/index.ts',
+  //   'eos-transit-stub': './src/walletProviders/stub.ts'.
   // },
   module: {
     rules: [
@@ -43,7 +43,7 @@ const commonConfig: Configuration = {
 const libConfig: Configuration = {
   ...commonConfig,
   entry: {
-    'wal-eos': './src/index.ts'
+    'eos-transit': './src/index.ts'
   },
   output: {
     filename: '[name].min.js',
@@ -61,7 +61,7 @@ const providersConfig: Configuration = {
     stub: './src/walletProviders/stub.ts'
   },
   output: {
-    filename: 'wal-eos-[name].min.js',
+    filename: 'eos-transit-[name].min.js',
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',
     library: ['WAL', 'providers', '[name]'],
