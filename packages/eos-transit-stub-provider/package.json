@@ -1,6 +1,6 @@
 {
   "name": "eos-transit-stub-provider",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Stub wallet provider for WAL:E (for development and testing only)",
   "license": "UNLICENSED",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
     "lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
   },
   "dependencies": {
-    "eos-transit": "^0.0.6"
+    "eos-transit": "^0.0.7"
   },
   "devDependencies": {
     "eosjs": "20.0.0-beta3",
