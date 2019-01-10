@@ -1,6 +1,6 @@
 {
   "name": "eos-transit-scatter-provider",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Scatter app wallet provider for WAL:E",
   "license": "UNLICENSED",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
     "lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
   },
   "dependencies": {
-    "eos-transit": "^0.0.7",
+    "eos-transit": "^0.0.8",
     "scatterjs-core": "2.3.8",
     "scatterjs-plugin-eosjs2": "1.1.6"
   },
