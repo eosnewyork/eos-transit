@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "eos-transit": "^0.0.8",
-    "scatterjs-core": "2.3.8",
-    "scatterjs-plugin-eosjs2": "1.1.6"
+    "scatterjs-core": "2.7.7",
+    "scatterjs-plugin-eosjs2": "1.5.0"
   },
   "devDependencies": {
     "webpack": "^4.25.1",

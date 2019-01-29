@@ -7,7 +7,8 @@ const { scatter } = ScatterJS;
 scatter.loadPlugin(new ScatterEOS());
 
 export function makeSignatureProvider(network: NetworkConfig) {
-  return scatter.eosHook({ ...network, blockchain: 'eos' });
+  // 3rd param: beta3 = true
+  return scatter.eosHook({ ...network, blockchain: 'eos'}, null, true);
 }
 
 // TODO: Ability to pass Scatter options
