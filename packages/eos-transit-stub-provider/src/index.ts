@@ -1,4 +1,4 @@
-import { ApiInterfaces } from 'eosjs';
+import { ApiInterfaces, RpcInterfaces } from 'eosjs';
 import { WalletProvider, NetworkConfig, WalletAuth } from 'eos-transit';
 
 // A fake wallet provider that does nothing and always
@@ -10,10 +10,18 @@ export function makeSignatureProvider() {
       return [];
     },
 
-    async sign(
-      signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
-    ): Promise<string[]> {
-      return [];
+    async sign(signatureProviderArgs: ApiInterfaces.SignatureProviderArgs): Promise<RpcInterfaces.PushTransactionArgs> {
+      // This is where you'd implement your custom signature provider
+      var signatureArray = [""];
+      var txn = new Uint8Array(10); 
+      
+      var respone : RpcInterfaces.PushTransactionArgs =  {
+        signatures : signatureArray,
+        serializedTransaction : txn
+      };
+
+      return respone;
+      
     }
   };
 }
