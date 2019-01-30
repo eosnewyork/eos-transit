@@ -1,6 +1,7 @@
 import { initDefaultAccessContext } from 'eos-transit';
 import scatter from 'eos-transit-scatter-provider';
 import stub from 'eos-transit-stub-provider';
+import ledger from 'eos-transit-ledger-provider';
 
 const appName = 'my_eos_dapp';
 
@@ -21,12 +22,12 @@ initDefaultAccessContext({
       description:
         'Use secure hardware private key vault to sign your transactions'
     }),
-    stub({
-      id: 'paste-the-private-key',
-      name: 'Paste-The-Private-Key™',
-      shortName: 'Insecure Private Key',
+    ledger({
+      id: 'ledger',
+      name: 'ledger',
+      shortName: 'Ledger',
       description:
-        'Forget about security and just paste your private key directly to sign your transactions'
+        'Ledger XXXX'
     })
   ]
 });

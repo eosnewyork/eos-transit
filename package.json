@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "bootstrap": "lerna link && lerna exec npm install",
+    "bootstrap": "lerna link && lerna exec yarn installpkg",
     "clean": "lerna clean --yes",
     "start": "yarn watch-packages",
     "start-all": "lerna run start --stream",

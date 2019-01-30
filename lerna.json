@@ -1,6 +1,9 @@
 {
   "packages": [
-    "packages/*",
+    "packages/eos-transit",
+    "packages/eos-transit-ledger-provider",
+    "packages/eos-transit-scatter-provider",
+    "packages/eos-transit-stub-provider",    
     "examples/transit-react-basic"
   ],
   "version": "independent",
