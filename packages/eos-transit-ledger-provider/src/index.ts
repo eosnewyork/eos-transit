@@ -1,9 +1,14 @@
-import { ApiInterfaces, RpcInterfaces, JsonRpc } from 'eosjs';
+import { Api, ApiInterfaces, RpcInterfaces, JsonRpc } from 'eosjs';
+import { TextEncoder, TextDecoder } from 'text-encoding';
 import { WalletProvider, NetworkConfig, WalletAuth } from 'eos-transit';
 import * as EosLedger from "./EosLedger";
 import Transport from "@ledgerhq/hw-transport-u2f";
 import $ from "jquery";
-import serialize from './serialize'
+import LedgerDataManager from './LedgerDataManager'
+import "babel-polyfill"; 
+// https://github.com/LedgerHQ/ledgerjs/issues/266
+// https://github.com/JoinColony/purser/issues/184
+
 
 class history_get_key_accounts_result {
   account_names: string[];
@@ -103,9 +108,9 @@ export function makeSignatureProvider() {
 
       
       //Let's hard code a transaction that came from LSV1
-      const signBufTmp = new Buffer("0420cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4ffe7d315c4df0edcc935e000000000100a6823403ea3055000000572d3ccdcd01405d76789a9b315500000000a8ed323221405d76789a9b31553044286488e0af91102700000000000004454f530000000000000000000000000000000000000000000000000000000000000000000000000000", "hex");
-      //const signBufTmp = new Buffer("0420aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e90604049d75315c0402c85c0404ca6f261d040100040100040100040100040101040800a6823403ea30550408000000572d3ccdcd04010104081082f99f72f33fe5040800000000a8ed323204012604261082f99f72f33fe52082f99f72f33fe50a0000000000000004454f530000000005546573743104010004200000000000000000000000000000000000000000000000000000000000000000", "hex");
-     
+      const signBufTmp = new Buffer("0420aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e90604049d75315c0402c85c0404ca6f261d040100040100040100040100040101040800a6823403ea30550408000000572d3ccdcd04010104081082f99f72f33fe5040800000000a8ed323204012604261082f99f72f33fe52082f99f72f33fe50a0000000000000004454f530000000005546573743104010004200000000000000000000000000000000000000000000000000000000000000000", "hex");
+                                   //0420aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e90604049d75315c0402c85c0404ca6f261d040100040100040100040100040101040800a6823403ea30550408000000572d3ccdcd04010104081082f99f72f33fe5040800000000a8ed323204012604261082f99f72f33fe52082f99f72f33fe50a0000000000000004454f530000000005546573743104010004200000000000000000000000000000000000000000000000000000000000000000
+                                       //cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f
       // This is where I would like to get the transaction object as it's an input for the serialize method. 
       // signatureProviderArgs.serializedTransaction is available as input but I need the unserialized version.
       // The only way I know to do that is to call deserializeTransactionWithActions(signatureProviderArgs.serializedTransaction), the the minute I create a new JsonRpc object, things break. 
@@ -114,11 +119,26 @@ export function makeSignatureProvider() {
       // Simply adding this line, causes "Error: only one instance of babel-polyfill is allowed" when you go to the site. 
       const rpc = new JsonRpc('https://proxy.eosnode.tools');
 
-      var txn = {};
-      const ledgerBuffer = serialize(signatureProviderArgs.chainId, txn);
+      //const x =  fc.Eos(connection);
+      console.log("xxxxxxxxxx");
+      
+      const api = new Api({rpc});
+
+      console.log("----------");
+      console.log(api.abiTypes);
+      var _txn = await api.deserializeTransactionWithActions(signatureProviderArgs.serializedTransaction);
+      console.log(_txn);
+      console.log("^^^^^^^^^^");
+
+      var ledgerManager = new LedgerDataManager();
+      const ledgerBuffer = await ledgerManager.serialize(signatureProviderArgs.chainId, _txn, api.abiTypes, api);
+      console.log("@@@@@@@@@@@@");
+      console.log(ledgerBuffer.toString('hex'));
+      console.log("@@@@@@@@@@@@");
 
       let ledger = new LedgerProxy();
-      let signatures = await ledger.sign(signBufTmp);
+      //let signatures = await ledger.sign(signBufTmp);
+      let signatures = await ledger.sign(ledgerBuffer);
 
 
       var signatureArray = [""];
