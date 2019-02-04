@@ -31,7 +31,6 @@ export function defer() {
 
 export function splitPath(path: any) {
   let result: any = [];
-  console.log('try splitting' + path);
   let components : string[] = path.split("/");
   components.forEach(element => {
     let number = parseInt(element, 10);
@@ -47,7 +46,6 @@ export function splitPath(path: any) {
 }
 
 // TODO use async await
-
 export function eachSeries(arr: any, fun: any) {
   return arr.reduce((p: any, e: any) => p.then(() => fun(e)), Promise.resolve());
 }

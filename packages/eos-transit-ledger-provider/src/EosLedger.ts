@@ -48,10 +48,10 @@ class Result2 {
  * EOS API
  *
  * @example
- * import Eth from "@ledgerhq/hw-app-eth";
- * const eth = new Eth(transport)
+ * import EOS from "@ledgerhq/hw-app-eth";
+ * const eos = new EOS(transport)
  */
-export default class Eth {
+export default class EOS {
 
   transport: any;  
 
@@ -68,10 +68,9 @@ export default class Eth {
    * @option boolChaincode optionally enable or not the chaincode request
    * @return an object with a publicKey, address and (optionally) chainCode
    * @example
-   * eth.getAddress("44'/60'/0'/0/0").then(o => o.address)
+   * eos.getAddress("44'/60'/0'/0/0").then(o => o.address)
    */
   getAddress(path: any, boolDisplay?: any, boolChaincode?: any) {
-    console.log('Fetching public key from ledger');
     let paths = splitPath(path);
     let buffer = new Buffer(1 + paths.length * 4);
     buffer[0] = paths.length;
@@ -95,10 +94,9 @@ export default class Eth {
   /**
    * You can sign a transaction and retrieve v, r, s given the raw transaction and the BIP 32 path of the account to sign
    * @example
-   eth.signTransaction("44'/60'/0'/0/0", "e8018504e3b292008252089428ee52a8f3d6e5d15f8b131996950d7f296c7952872bd72a2487400080").then(result => ...)
+   eos.signTransaction("44'/60'/0'/0/0", "e8018504e3b292008252089428ee52a8f3d6e5d15f8b131996950d7f296c7952872bd72a2487400080").then(result => ...)
    */
   signTransaction(path: any, rawTxHex: any) {
-    console.log('==1');
     let paths = splitPath(path);
     let offset = 0;
     let rawTx = new Buffer(rawTxHex, "hex");
@@ -120,16 +118,9 @@ export default class Eth {
       toSend.push(buffer);
       offset += chunkSize;
     }
-    console.log('toSend');
-    console.log(toSend);
-    console.log('toSend[0]');
-    console.log(toSend[0]);
-    console.log('==2');
     return foreach(toSend, (data: any, i: any) => this.transport.send(0xD4, 0x04, i === 0 ? 0x00 : 0x80, 0x00, data).then((apduResponse: any) => {
-      console.log('==3');
       response = apduResponse;
     })).then(() => {
-      console.log('done with sign');
       const v = response.slice(0, 1).toString("hex");
       const r = response.slice(1, 1 + 32).toString("hex");
       const s = response.slice(1 + 32, 1 + 32 + 32).toString("hex");
@@ -149,9 +140,9 @@ export default class Eth {
   }
 
   /**
-  * You can sign a message according to eth_sign RPC call and retrieve v, r, s given the message and the BIP 32 path of the account to sign.
+  * You can sign a message according to eos_sign RPC call and retrieve v, r, s given the message and the BIP 32 path of the account to sign.
   * @example
-  eth.signPersonalMessage("44'/60'/0'/0/0", Buffer.from("test").toString("hex")).then(result => {
+  eos.signPersonalMessage("44'/60'/0'/0/0", Buffer.from("test").toString("hex")).then(result => {
   var v = result['v'] - 27;
   v = v.toString(16);
   if (v.length < 2) {
