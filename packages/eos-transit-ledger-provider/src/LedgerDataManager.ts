@@ -2,6 +2,7 @@
 const fcbuffer = require('fcbuffer');
 const assert = require('assert');
 const asn1 = require('asn1-ber');
+const { TextEncoder, TextDecoder } = require('text-encoding');
 
 import { Serialize } from 'eosjs';
 
@@ -77,7 +78,8 @@ export default class LedgerDataManager {
     }
   
     //serializeActionData(contract: Contract, account: string, name: string, data: any, textEncoder: TextEncoder, textDecoder: TextDecoder)
-    var b = Serialize.serializeActionData(contract, action.account, action.name, action.data);
+
+    var b = Serialize.serializeActionData(contract, action.account, action.name, action.data, new TextEncoder(), new TextDecoder());
 
     const data = Buffer.from(b, 'hex');
   

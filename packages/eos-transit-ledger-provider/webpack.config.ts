@@ -29,9 +29,12 @@ const config: Configuration = {
     libraryExport: 'default'
   },
   plugins: [
-    new ProvidePlugin({
-      'window.WAL': ['eos-transit', 'default']
-    })
+    new ProvidePlugin(
+    	{
+          'window.WAL': ['eos-transit', 'default'],
+          '_hwTransport2': ['@babel/runtime/regenerator']
+	    }
+    )
   ],
   externals: {
     'eos-transit':'WAL',

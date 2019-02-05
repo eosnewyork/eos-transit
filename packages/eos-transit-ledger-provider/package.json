@@ -8,7 +8,9 @@
   "types": "lib",
   "scripts": {
     "echo": "echo \"================== eos-transit-ledger-provider ===================\"",
-    "installpkg": "yarn echo && npm install",
+    "patch": "./patch-TransportU2F.sh",
+    "_installpkg": "yarn echo && npm install",
+    "installpkg": "yarn echo && npm install && yarn patch",
     "clean": "rm -rf lib && rm -rf umd",
     "prebuild": "yarn clean",
     "build": "tsc",

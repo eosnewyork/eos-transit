@@ -17,7 +17,9 @@
     "noUnusedLocals": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types", "./src/typings"],
+    "types": ["eosjs-ecc", "bigi"]
   },
   "files": ["src/index.ts"]
 }

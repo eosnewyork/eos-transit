@@ -6,7 +6,7 @@ import $ from "jquery";
 import LedgerDataManager from './LedgerDataManager'
 import "babel-polyfill"; 
 import * as ecc from "eosjs-ecc";
-import * as  BigInteger from "bigi"
+import * as  bigi from "bigi"
 // https://github.com/LedgerHQ/ledgerjs/issues/266
 // https://github.com/JoinColony/purser/issues/184
 
@@ -37,11 +37,11 @@ class LedgerProxy {
 
     let toSignHex = toSign.toString('hex');   
     let signedTxn = await eos.signTransaction("44'/194'/0'/0/0",toSignHex);
-    var si = new ecc.Signature(new BigInteger.fromHex(signedTxn.r), new BigInteger.fromHex(signedTxn.s), new BigInteger.fromHex(signedTxn.v));
+    
+    var si = new ecc.Signature( bigi.fromHex(signedTxn.r), bigi.fromHex(signedTxn.s), bigi.fromHex(signedTxn.v));
 
     return si.toString();
   }
-
 
 }
 
@@ -130,7 +130,16 @@ export function ledgerWalletProvider({
         {
     
           const rpc = new JsonRpc(network.protocol + '://' + network.host + ':' + network.port);
-          const api = new Api({rpc});
+          var args = {
+            rpc: rpc,
+            authorityProvider: undefined,
+            abiProvider: undefined,
+            signatureProvider: this,
+            chainId: undefined,
+            textEncoder: undefined,
+            textDecoder: undefined
+          }; 
+          const api = new Api(args);
           var _txn = await api.deserializeTransactionWithActions(signatureProviderArgs.serializedTransaction);
     
           var ledgerManager = new LedgerDataManager();
