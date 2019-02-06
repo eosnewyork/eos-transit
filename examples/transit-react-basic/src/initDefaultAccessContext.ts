@@ -24,10 +24,10 @@ initDefaultAccessContext({
     }),
     ledger({
       id: 'ledger',
-      name: 'ledger',
+      name: 'Ledger Nano S',
       shortName: 'Ledger',
       description:
-        'Ledger XXXX'
+        'Use Ledger Nano S hardware wallet to sign your transactions'
     })
   ]
 });
