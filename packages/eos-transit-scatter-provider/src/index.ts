@@ -31,7 +31,7 @@ export function scatterWalletProvider() {
     function disconnect(): Promise<any> {
       // TODO: Uncomment when Scatter implements this correctly
       // (probably by using `socket.close()` instead of `socket.disconnect()`)
-      // scatter.disconnect();
+      scatter.disconnect();
       return Promise.resolve(true);
     }
 
