@@ -1,6 +1,6 @@
 {
   "name": "eos-transit-ledger-provider",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "ledger wallet provider for WAL:E (for development and testing only)",
   "license": "UNLICENSED",
   "main": "lib/index.js",
@@ -33,7 +33,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "cross-env": "^5.2.0",
-    "eos-transit": "^0.0.10",
+    "eos-transit": "^0.0.11",
     "fcbuffer": "^2.2.2",
     "jquery": "^3.3.1",
     "lerna": "^3.9.1",
