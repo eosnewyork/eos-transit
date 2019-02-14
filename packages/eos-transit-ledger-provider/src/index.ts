@@ -72,7 +72,7 @@ export function ledgerWalletProvider({
         ledger.getPathKeys([0]).then(keysResult => {
           keys = keysResult;
           resolve(); 
-        });
+        }).catch((ex) => reject(ex));
       });
     }
 
