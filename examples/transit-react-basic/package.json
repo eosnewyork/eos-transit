@@ -16,7 +16,6 @@
     "eos-transit": "^0.0.9",
     "eos-transit-ledger-provider": "^0.0.9",
     "eos-transit-scatter-provider": "^0.0.10",
-    "eos-transit-stub-provider": "^0.0.8",
     "eosjs": "20.0.0-beta3",
     "minireset.css": "^0.0.3",
     "react": "^16.5.2",
