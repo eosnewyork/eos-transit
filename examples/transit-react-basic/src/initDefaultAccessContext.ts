@@ -12,13 +12,5 @@ initDefaultAccessContext({
 		protocol: 'https',
 		chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 	},
-	walletProviders: [
-		scatter(),
-		ledger({
-			id: 'ledger',
-			name: 'Ledger Nano S',
-			shortName: 'Ledger',
-			description: 'Use Ledger Nano S hardware wallet to sign your transactions'
-		})
-	]
+	walletProviders: [ scatter(), ledger() ]
 });
