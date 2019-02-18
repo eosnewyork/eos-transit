@@ -48,6 +48,7 @@ export interface ledgerWalletProviderOptions {
 	shortName?: string;
 	description?: string;
 	errorTimeout?: number;
+	pathIndexList?: number[];
 }
 
 export function ledgerWalletProvider(
@@ -56,7 +57,8 @@ export function ledgerWalletProvider(
 		name = 'Ledger Nano S',
 		shortName = 'Ledger Nano S',
 		description = 'Use Ledger Nano S hardware wallet to sign your transactions',
-		errorTimeout
+		errorTimeout,
+		pathIndexList = [ 0, 1, 2 ]
 	}: ledgerWalletProviderOptions = {}
 ) {
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
@@ -67,8 +69,9 @@ export function ledgerWalletProvider(
 				let ledger = new LedgerProxy();
 				//We're only getting the key at index 0
 				ledger
-					.getPathKeys([ 0 ])
+					.getPathKeys(pathIndexList)
 					.then((keysResult) => {
+						// console.log(keysResult);
 						keys = keysResult;
 						resolve();
 					})
@@ -115,13 +118,12 @@ export function ledgerWalletProvider(
 		function makeSignatureProvider() {
 			return {
 				async getAvailableKeys() {
-					console.log('get available keys called');
-					// Really we should not have to do this again becasue we already got the keys we care about when connect was called. Create a cache.
-					let ledger = new LedgerProxy();
-					//We're only getting the key at index 0
-					let keys = await ledger.getPathKeys([ 0 ]);
-					console.log(keys);
-					return [ keys[0] ];
+					// console.log('get available keys called');
+					var filtered = keys.filter(function(el) {
+						return el != null;
+					});
+					// console.log(filtered);
+					return filtered;
 				},
 
 				async sign(
