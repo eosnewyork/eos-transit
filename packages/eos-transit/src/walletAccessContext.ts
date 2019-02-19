@@ -1,155 +1,137 @@
 import { JsonRpc } from 'eosjs';
 import {
-  WalletAccessContext,
-  WalletAccessContextState,
-  WalletAccessContextOptions,
-  WalletProvider,
-  Wallet,
-  StateListener,
-  StateUnsubscribeFn,
-  UnsubscribeFn,
-  Listener
+	WalletAccessContext,
+	WalletAccessContextState,
+	WalletAccessContextOptions,
+	WalletProvider,
+	Wallet,
+	StateListener,
+	StateUnsubscribeFn,
+	UnsubscribeFn,
+	Listener,
+	MakeWalletProviderFn
 } from './types';
 import { makeStateContainer } from './stateContainer';
 import { initWallet } from './wallet';
 import { getNetworkUrl } from './util';
 
 const DEFAULT_CONTEXT_STATE: WalletAccessContextState = {
-  wallets: []
+	wallets: []
 };
 
-function findProviderById(
-  walletProviders: WalletProvider[],
-  providerId: string
-) {
-  if (!walletProviders.length) return void 0;
-  return walletProviders.find(wp => wp.id === providerId);
+function findProviderById(walletProviders: WalletProvider[], providerId: string) {
+	if (!walletProviders.length) return void 0;
+	return walletProviders.find((wp) => wp.id === providerId);
 }
 
-export function initAccessContext(
-  options: WalletAccessContextOptions
-): WalletAccessContext {
-  const { appName, network } = options;
-  const _makeWalletProviderFns = options.walletProviders;
-  const walletProviders = _makeWalletProviderFns.map(makeWalletProvider =>
-    makeWalletProvider(network)
-  );
+export function initAccessContext(options: WalletAccessContextOptions): WalletAccessContext {
+	const { appName, network } = options;
+	const _makeWalletProviderFns = options.walletProviders;
+	const walletProviders = _makeWalletProviderFns.map((makeWalletProvider) => makeWalletProvider(network));
 
-  const _stateContainer = makeStateContainer(DEFAULT_CONTEXT_STATE);
-  let _listeners: Array<Listener<WalletAccessContext>> = [];
+	const _stateContainer = makeStateContainer(DEFAULT_CONTEXT_STATE);
+	let _listeners: Array<Listener<WalletAccessContext>> = [];
 
-  function _handleUpdate() {
-    for (const listener of _listeners) {
-      listener(ctx);
-    }
-  }
+	function _handleUpdate() {
+		for (const listener of _listeners) {
+			listener(ctx);
+		}
+	}
 
-  const _walletUnsubscribeFns: Map<string, UnsubscribeFn> = new Map();
-  const stateUnsubscribe = _stateContainer.subscribe(_handleUpdate);
+	const _walletUnsubscribeFns: Map<string, UnsubscribeFn> = new Map();
+	const stateUnsubscribe = _stateContainer.subscribe(_handleUpdate);
 
-  const eosRpcUrl = getNetworkUrl(network);
-  const eosRpc = new JsonRpc(eosRpcUrl, { fetch });
+	const eosRpcUrl = getNetworkUrl(network);
+	const eosRpc = new JsonRpc(eosRpcUrl, { fetch });
 
-  const ctx: WalletAccessContext = {
-    appName,
-    eosRpc,
-    network,
+	const ctx: WalletAccessContext = {
+		appName,
+		eosRpc,
+		network,
 
-    initWallet(walletProvider: WalletProvider | string): Wallet {
-      const _walletProvider =
-        typeof walletProvider === 'string'
-          ? findProviderById(walletProviders, walletProvider)
-          : walletProvider;
+		initWallet(walletProvider: WalletProvider | string): Wallet {
+			const _walletProvider =
+				typeof walletProvider === 'string' ? findProviderById(walletProviders, walletProvider) : walletProvider;
 
-      if (!_walletProvider) {
-        throw new Error(`
+			if (!_walletProvider) {
+				throw new Error(`
           Cannot initiate a session, invalid wallet provider
           or wallet provider ID was passed
         `);
-      }
+			}
 
-      const newWallet = initWallet(_walletProvider, ctx);
+			const newWallet = initWallet(_walletProvider, ctx);
 
-      _stateContainer.updateState(state => ({
-        wallets: [...((state && state.wallets) || []), newWallet]
-      }));
+			_stateContainer.updateState((state) => ({
+				wallets: [ ...((state && state.wallets) || []), newWallet ]
+			}));
 
-      // Subscribe to a new wallet updates immediately
-      _walletUnsubscribeFns.set(
-        newWallet._instanceId,
-        newWallet.subscribe(_handleUpdate)
-      );
+			// Subscribe to a new wallet updates immediately
+			_walletUnsubscribeFns.set(newWallet._instanceId, newWallet.subscribe(_handleUpdate));
 
-      return newWallet;
-    },
+			return newWallet;
+		},
 
-    getWalletProviders(): WalletProvider[] {
-      return walletProviders;
-    },
+		addWalletProvider(walletProvider: MakeWalletProviderFn): void {
+			walletProviders.push(walletProvider(network));
+		},
 
-    getWallets(): Wallet[] {
-      const state = _stateContainer.getState();
-      if (!state) return [];
-      return state.wallets || [];
-    },
+		getWalletProviders(): WalletProvider[] {
+			return walletProviders;
+		},
 
-    getActiveWallets(): Wallet[] {
-      return ctx
-        .getWallets()
-        .filter(wallet => wallet.connected && wallet.authenticated);
-    },
+		getWallets(): Wallet[] {
+			const state = _stateContainer.getState();
+			if (!state) return [];
+			return state.wallets || [];
+		},
 
-    detachWallet(wallet: Wallet) {
-      _stateContainer.updateState(state => ({
-        wallets: ((state && state.wallets) || []).filter(w => w !== wallet)
-      }));
+		getActiveWallets(): Wallet[] {
+			return ctx.getWallets().filter((wallet) => wallet.connected && wallet.authenticated);
+		},
 
-      const { _instanceId } = wallet;
+		detachWallet(wallet: Wallet) {
+			_stateContainer.updateState((state) => ({
+				wallets: ((state && state.wallets) || []).filter((w) => w !== wallet)
+			}));
 
-      if (_walletUnsubscribeFns.has(_instanceId)) {
-        const unsubscribe = _walletUnsubscribeFns.get(_instanceId);
-        if (typeof unsubscribe === 'function') unsubscribe();
-      }
-    },
+			const { _instanceId } = wallet;
 
-    logoutAll(): Promise<boolean> {
-      return Promise.all(ctx.getWallets().map(wallet => wallet.logout())).then(
-        () => true
-      );
-    },
+			if (_walletUnsubscribeFns.has(_instanceId)) {
+				const unsubscribe = _walletUnsubscribeFns.get(_instanceId);
+				if (typeof unsubscribe === 'function') unsubscribe();
+			}
+		},
 
-    disconnectAll(): Promise<boolean> {
-      return Promise.all(
-        ctx.getWallets().map(wallet => wallet.disconnect())
-      ).then(() => true);
-    },
+		logoutAll(): Promise<boolean> {
+			return Promise.all(ctx.getWallets().map((wallet) => wallet.logout())).then(() => true);
+		},
 
-    terminateAll(): Promise<boolean> {
-      return Promise.all(
-        ctx.getWallets().map(wallet => wallet.terminate())
-      ).then(() => true);
-    },
+		disconnectAll(): Promise<boolean> {
+			return Promise.all(ctx.getWallets().map((wallet) => wallet.disconnect())).then(() => true);
+		},
 
-    destroy(): Promise<any> {
-      return ctx.terminateAll().then(() => {
-        stateUnsubscribe();
-        _walletUnsubscribeFns.forEach(unsubscribeFn => {
-          if (typeof unsubscribeFn === 'function') unsubscribeFn();
-        });
-        _listeners = [];
-      });
-    },
+		terminateAll(): Promise<boolean> {
+			return Promise.all(ctx.getWallets().map((wallet) => wallet.terminate())).then(() => true);
+		},
 
-    subscribe(
-      listener: StateListener<WalletAccessContext>
-    ): StateUnsubscribeFn {
-      _listeners = [..._listeners, listener];
+		destroy(): Promise<any> {
+			return ctx.terminateAll().then(() => {
+				stateUnsubscribe();
+				_walletUnsubscribeFns.forEach((unsubscribeFn) => {
+					if (typeof unsubscribeFn === 'function') unsubscribeFn();
+				});
+				_listeners = [];
+			});
+		},
 
-      return function unsubscribe() {
-        _listeners = _listeners.filter(l => l !== listener);
-      };
-    }
-  };
+		subscribe(listener: StateListener<WalletAccessContext>): StateUnsubscribeFn {
+			_listeners = [ ..._listeners, listener ];
+			return function unsubscribe() {
+				_listeners = _listeners.filter((l) => l !== listener);
+			};
+		}
+	};
 
-  return ctx;
+	return ctx;
 }
