@@ -36,9 +36,12 @@ export function scatterWalletProvider() {
     }
 
     // Authentication
-
     async function login(accountName?: string): Promise<WalletAuth> {
       try {
+        // Useful for testnets to provide a convenient means for the end use to quickly add
+        // the required network configuration to their Scatter seamlessly while logging in.
+        await scatter.suggestNetwork({ ...network, blockchain: 'eos' })
+
         const identity = await scatter.getIdentity({
           accounts: [{ ...network, blockchain: 'eos' }]
         });
