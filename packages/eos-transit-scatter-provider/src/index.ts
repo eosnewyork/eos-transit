@@ -7,90 +7,93 @@ const { scatter } = ScatterJS;
 scatter.loadPlugin(new ScatterEOS());
 
 export function makeSignatureProvider(network: NetworkConfig) {
-  // 3rd param: beta3 = true
-  return scatter.eosHook({ ...network, blockchain: 'eos'}, null, true);
+	// 3rd param: beta3 = true
+	return scatter.eosHook({ ...network, blockchain: 'eos' }, null, true);
 }
 
 // TODO: Ability to pass Scatter options
 export function scatterWalletProvider() {
-  return function makeWalletProvider(network: NetworkConfig): WalletProvider {
-    // Connection
+	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
+		// Connection
 
-    function connect(appName: string): Promise<any> {
-      return scatter
-        .connect(
-          appName,
-          { initTimeout: 10000 }
-        )
-        .then((connected: boolean) => {
-          if (connected) return true;
-          return Promise.reject('Cannot connect to Scatter');
-        });
-    }
+		function connect(appName: string): Promise<any> {
+			return scatter.connect(appName, { initTimeout: 10000 }).then((connected: boolean) => {
+				if (connected) return true;
+				return Promise.reject('Cannot connect to Scatter');
+			});
+		}
 
-    function disconnect(): Promise<any> {
-      // TODO: Uncomment when Scatter implements this correctly
-      // (probably by using `socket.close()` instead of `socket.disconnect()`)
-      scatter.disconnect();
-      return Promise.resolve(true);
-    }
+		function discover() {
+			console.log('in scatter discover.');
+			return new Promise((resolve, reject) => {
+				let discoveryInfo = {
+					note: 'Scatter does not support discovery'
+				};
+				resolve(discoveryInfo);
+			});
+		}
 
-    // Authentication
+		function disconnect(): Promise<any> {
+			// TODO: Uncomment when Scatter implements this correctly
+			// (probably by using `socket.close()` instead of `socket.disconnect()`)
+			scatter.disconnect();
+			return Promise.resolve(true);
+		}
 
-    async function login(accountName?: string): Promise<WalletAuth> {
-      try {
-        const identity = await scatter.getIdentity({
-          accounts: [{ ...network, blockchain: 'eos' }]
-        });
+		// Authentication
 
-        if (!identity) {
-          return Promise.reject('No identity obtained from Scatter');
-        }
+		async function login(accountName?: string): Promise<WalletAuth> {
+			try {
+				const identity = await scatter.getIdentity({
+					accounts: [ { ...network, blockchain: 'eos' } ]
+				});
 
-        const account =
-          (identity &&
-            identity.accounts &&
-            (identity.accounts as any[]).find(x => x.blockchain === 'eos')) ||
-          void 0;
+				if (!identity) {
+					return Promise.reject('No identity obtained from Scatter');
+				}
 
-        if (!account) {
-          return Promise.reject(
-            'No account data obtained from Scatter identity'
-          );
-        }
+				const account =
+					(identity &&
+						identity.accounts &&
+						(identity.accounts as any[]).find((x) => x.blockchain === 'eos')) ||
+					void 0;
 
-        return {
-          accountName: account.name,
-          permission: account.authority,
-          publicKey: account.publicKey
-        };
-      } catch (error) {
-        console.log('[scatter]', error);
-        return Promise.reject(error);
-      }
-    }
+				if (!account) {
+					return Promise.reject('No account data obtained from Scatter identity');
+				}
 
-    function logout(accountName?: string): Promise<any> {
-      return scatter.forgetIdentity();
-    }
+				return {
+					accountName: account.name,
+					permission: account.authority,
+					publicKey: account.publicKey
+				};
+			} catch (error) {
+				console.log('[scatter]', error);
+				return Promise.reject(error);
+			}
+		}
 
-    const walletProvider: WalletProvider = {
-      id: 'scatter',
-      meta: {
-        name: 'Scatter Desktop',
-        shortName: 'Scatter',
-        description:
-          'Scatter Desktop application that keeps your private keys secure'
-      },
-      signatureProvider: makeSignatureProvider(network),
-      connect,
-      disconnect,
-      login,
-      logout
-    };
+		function logout(accountName?: string): Promise<any> {
+			return scatter.forgetIdentity();
+		}
 
-    return walletProvider;
-  };
+		const walletProvider: WalletProvider = {
+			id: 'scatter',
+			meta: {
+				name: 'Scatter Desktop',
+				shortName: 'Scatter',
+				description: 'Scatter Desktop application that keeps your private keys secure'
+			},
+			signatureProvider: makeSignatureProvider(network),
+			connect,
+			discover,
+			disconnect,
+			login,
+			logout
+		};
+
+		return walletProvider;
+	};
 }
 
 export default scatterWalletProvider;

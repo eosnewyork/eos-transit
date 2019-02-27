@@ -524,6 +524,68 @@ wallet.connect().then(() => {
   });
 });
 
+
+wallet.connect().then(() => {
+  console.log('Successfully connected!');
+
+  wallet.discover().then((discoveryData: DiscoveryData) => {
+    console.log('Discovery successfully completed!');
+
+    // IF the wallet support discovery.
+    // The discover process will return an object (see example object below) that contains:
+    // 1. The keys found on the device
+    // 2. The EOS Accounts linked to those keys. 
+    //
+    // If the keyToAccountMap contains entries, then the user should be asked which account they'd like to use. 
+    if (discoveryData.keyToAccountMap.length > 0) {
+      // We're just going to hard code the selection for the demo.
+      const index = 0;
+      const keyObj = discoveryData.keyToAccountMap[index];
+
+      const accountName = keyObj.accounts[0].account;
+      const authorization = keyObj.accounts[0].authorization;
+      const keyIndex = keyObj.index;
+      const key = keyObj.key;
+
+      wallet.login(accountName, authorization, keyIndex, key).then(accountInfo => {
+        console.log(`Successfully logged in as ${accountInfo.name}!`);
+      });
+    } else {
+      // 0 keys returned, we need to user to select an account
+      wallet.login().then(accountInfo => {
+        console.log(`Successfully logged in as ${accountInfo.name}!`);
+      });
+    }
+  });
+});
+
+
+```
+The object returned from the discover() method looks as follows:
+
+```
+{
+  keyToAccountMap: [{
+    index: 0,
+    key: XXXX,
+    accounts: [{
+        account: ‘eosio’,
+        authorization: ‘owner’
+    }]
+  },{
+    index: 1,
+    key: YYYY,
+    accounts: [{
+        account: ‘anotherAccount’,
+        authorization: ‘active’
+    },{
+        account: ‘anotherAccount’,
+        authorization: ‘owner’
+    }]
+  }],
+  keys: ["XXXX","YYYY"]
+}
+
 ```
 
 After the user is logged in, the `auth` metadata is available on the `wallet.auth` property. It contains `accountName`, `permission` (like `active`, `owner`, etc) and account's `publicKey`.

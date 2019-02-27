@@ -17,6 +17,19 @@ export interface AccountInfo {
 	// TODO: permissions and more
 }
 
+export interface DiscoveryData {
+	keyToAccountMap: DiscoveryAccount[];
+}
+
+export interface DiscoveryAccount {
+	index: number;
+	key: string;
+	accounts: {
+		account: string;
+		authorization: string;
+	}[];
+}
+
 export interface WalletAuth {
 	accountName: string;
 	permission: string;
@@ -70,8 +83,9 @@ export interface WalletProvider {
 	meta?: WalletProviderMetadata;
 	signatureProvider: ApiInterfaces.SignatureProvider;
 	connect(appName: string): Promise<any>;
+	discover(): Promise<any>;
 	disconnect(): Promise<any>;
-	login(accountName?: string): Promise<WalletAuth>;
+	login(accountName?: string, authorization?: string, index?: number, key?: string): Promise<WalletAuth>;
 	logout(accountName?: string): Promise<any>;
 }
 
@@ -111,8 +125,9 @@ export interface Wallet {
 	hasError: boolean;
 	errorMessage?: string;
 	connect(): Promise<any>;
+	discover(): Promise<any>;
 	disconnect(): Promise<any>;
-	login(accountName?: string): Promise<AccountInfo>;
+	login(accountName?: string, authorization?: string, index?: number, key?: string): Promise<AccountInfo>;
 	logout(accountName?: string): Promise<any>;
 	fetchAccountInfo(accountName?: string): Promise<AccountInfo>;
 	terminate(): Promise<boolean>;

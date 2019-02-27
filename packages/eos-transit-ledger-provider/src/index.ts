@@ -28,13 +28,13 @@ class LedgerProxy {
 		return keys;
 	}
 
-	async sign(toSign: Buffer): Promise<string> {
+	async sign(toSign: Buffer, index: number): Promise<string> {
 		let transport = await Transport.create();
 		const eos = new EosLedger.default(transport);
 		let signatures: string[] = [ '' ];
 
 		let toSignHex = toSign.toString('hex');
-		let signedTxn = await eos.signTransaction("44'/194'/0'/0/0", toSignHex);
+		let signedTxn = await eos.signTransaction("44'/194'/0'/0/" + index, toSignHex);
 
 		var si = new ecc.Signature(bigi.fromHex(signedTxn.r), bigi.fromHex(signedTxn.s), bigi.fromHex(signedTxn.v));
 
@@ -58,24 +58,38 @@ export function ledgerWalletProvider(
 		shortName = 'Ledger Nano S',
 		description = 'Use Ledger Nano S hardware wallet to sign your transactions',
 		errorTimeout,
-		pathIndexList = [ 0, 1, 2 ]
+		pathIndexList = [ 0, 1, 2 ] // By default we'll get keys at the 1st 3 index positions
 	}: ledgerWalletProviderOptions = {}
 ) {
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
+		const rpc = new JsonRpc(network.protocol + '://' + network.host + ':' + network.port);
 		let keys: string[];
+		let selectedIndex: number = -1;
+		let selectedIndexArray: { id: string; index: number }[] = [];
 
 		function connect(appName: string) {
 			return new Promise((resolve, reject) => {
-				let ledger = new LedgerProxy();
-				//We're only getting the key at index 0
-				ledger
-					.getPathKeys(pathIndexList)
-					.then((keysResult) => {
-						// console.log(keysResult);
-						keys = keysResult;
-						resolve();
-					})
-					.catch((ex) => reject(ex));
+				// If connect is called a second time just resolve
+				if (!keys) {
+					let ledger = new LedgerProxy();
+					ledger
+						.getPathKeys(pathIndexList)
+						.then((keysResult) => {
+							// console.log(keysResult);
+							keys = keysResult;
+							resolve();
+						})
+						.catch((ex) => reject(ex));
+				} else {
+					resolve();
+				}
+			});
+		}
+
+		function discover() {
+			return new Promise((resolve, reject) => {
+				let discoveryInfo = { keys: keys, note: 'add any extra discoverable info here' };
+				resolve(discoveryInfo);
 			});
 		}
 
@@ -85,29 +99,27 @@ export function ledgerWalletProvider(
 
 		// Authentication
 
-		async function login(accountName?: string): Promise<WalletAuth> {
-			return new Promise<WalletAuth>((resolve, reject) => {
-				let keyObj = {
-					public_key: keys[0]
-				};
+		async function login(
+			accountName?: string,
+			authorization?: string,
+			index?: number,
+			key?: string
+		): Promise<WalletAuth> {
+			// Every time someone calls login we add to the list of account names + ledger index.
+			// Then when it comes time to sign, we'll look for the accountName + auth match and use that Index to sign the txn.
+			if (accountName && index >= 0) {
+				selectedIndexArray.push({ id: accountName + '@' + authorization, index: index });
+			} else {
+				throw 'When calling the ledger login function: accountName, authorization, index and key must be supplied';
+			}
 
-				const rpc = new JsonRpc(network.protocol + '://' + network.host + ':' + network.port);
-				rpc.history_get_key_accounts(keys[0]).then((data) => {
-					if (data.account_names.length > 0) {
-						resolve({
-							accountName: data.account_names[0],
-							permission: 'active',
-							publicKey: keys[0]
-						});
-					} else {
-						//Need to clean this up. Just wanted a dummy account so that I could tell nothing was found.
-						resolve({
-							accountName: 'badlookupsss',
-							permission: 'active',
-							publicKey: 'aEOS89EDpYUcbrZauAcvAN78EbMzK4kfC7shhuTH4Dr2A3ZYanyCax'
-						});
-					}
-				});
+			return new Promise<WalletAuth>((resolve, reject) => {
+				let user = {
+					accountName: accountName,
+					permission: authorization,
+					publicKey: key
+				};
+				resolve(user);
 			});
 		}
 
@@ -118,11 +130,10 @@ export function ledgerWalletProvider(
 		function makeSignatureProvider() {
 			return {
 				async getAvailableKeys() {
-					// console.log('get available keys called');
 					var filtered = keys.filter(function(el) {
 						return el != null;
 					});
-					// console.log(filtered);
+
 					return filtered;
 				},
 
@@ -151,10 +162,38 @@ export function ledgerWalletProvider(
 					);
 
 					let ledger = new LedgerProxy();
-					let signature = await ledger.sign(ledgerBuffer);
 
+					// console.log(_txn);
+					// console.log(selectedIndexArray);
+
+					// We need to look into the transaction to see which accounts and permissions are trying to sign.
+					// Then we try to find out which index that is on the ledger.
+					// There is a small chance that there are multiple matches. This logic will match the last one. I can't think of a case where this would happen though.
+					if (_txn.actions) {
+						_txn.actions.forEach((action: any) => {
+							action.authorization.forEach((authorization: any) => {
+								let m = selectedIndexArray.find((x: any) => {
+									var matchStr = authorization.actor + '@' + authorization.permission;
+									return x.id === matchStr;
+								});
+								if (m) {
+									selectedIndex = m.index;
+									// console.log('match in loop: ' + m.index);
+								}
+							});
+						});
+					} else {
+						throw 'The transaciton does not contain any actions. Possible bug in eos-transit-ledger-provider';
+					}
+
+					if (selectedIndex == -1) {
+						throw 'eos-transit-ledger-provider was unable to determine which index to use for the signature. Check that login() was called with the account that is now required to sign the transaction';
+					}
+
+					//console.log('selectedIndex: ' + selectedIndex);
+
+					let signature = await ledger.sign(ledgerBuffer, selectedIndex);
 					var signatureArray = [ signature ];
-
 					var respone: RpcInterfaces.PushTransactionArgs = {
 						signatures: signatureArray,
 						serializedTransaction: signatureProviderArgs.serializedTransaction
@@ -174,6 +213,7 @@ export function ledgerWalletProvider(
 			},
 			signatureProvider: makeSignatureProvider(),
 			connect,
+			discover,
 			disconnect,
 			login,
 			logout

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Redirect, withRouter } from 'react-router';
-import WAL, { WalletProvider, Wallet } from 'eos-transit';
+import WAL, { WalletProvider, Wallet, DiscoveryAccount, DiscoveryData } from 'eos-transit';
 import { CloseButton } from '../shared/buttons/CloseButton';
 import { LoginButton } from './LoginButton';
 import { LoginScreenWalletList } from './LoginScreenWalletList';
@@ -72,7 +72,28 @@ export class LoginScreen extends Component<any, LoginScreenState> {
 
   handleWalletProviderSelect = (walletProvider: WalletProvider) => {
     const wallet = WAL.accessContext.initWallet(walletProvider);
-    wallet.connect().then(wallet.login);
+    // wallet.connect().then(wallet.discover().then(wallet.login));
+    wallet.connect().then(() => {
+      wallet.discover().then((discoveryData: DiscoveryData) => {
+        // console.log(discoveryData);
+
+        if (discoveryData.keyToAccountMap.length > 0) {
+          // console.log(discoveryData.keyToAccountMap.length + ' keys returned, pick one');
+          const index = 0;
+          const keyObj = discoveryData.keyToAccountMap[index];
+
+          const accountName = keyObj.accounts[0].account;
+          const authorization = keyObj.accounts[0].authorization;
+          const keyIndex = keyObj.index;
+          const key = keyObj.key;
+
+          wallet.login(accountName, authorization, keyIndex, key);
+        } else {
+          // 0 keys returned, we need to user to select an account
+          wallet.login();
+        }
+      });
+    });
   };
 
   handleWalletReconnectClick = (wallet: Wallet) => {
@@ -94,6 +115,7 @@ export class LoginScreen extends Component<any, LoginScreenState> {
     if (isLoggedIn()) return <Redirect to="/" />;
 
     return (
+      
       <LoginScreenRoot>
         {showLoginOptions ? (
           <>
