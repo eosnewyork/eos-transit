@@ -157,10 +157,28 @@ await wallet.connect();
 
 // wallet.connected === true
 
-// Now that we are connected, lets authenticate (in case of a Scatter app,
-// it does it right after connection, so this is more for the state tracking
-// and for WAL to fetch the EOS account data for us)
-await wallet.login();
+// If we're dealing with a device that has multiple keys (eg. Ledger Nano S), then we'll need to discover which keys / accounts are available on the device. This will return an object containing an array of accounts ... you'll need the user to select which account he want to use if this is the case.
+let discoveryData = await wallet.discover();
+
+// If we have more than one account the user can select from we'll need to prompt the user.
+// Note that the Login function is called with the specific account details when multiple accounts are available.
+if (discoveryData.keyToAccountMap.length > 0) {
+
+  // If discover returned multiple acconts then you'll need to promot the user to select which account he'd like to use. 
+  // accountName, authorization, keyIndex, key are taken from the  discoveryData object. See the example of this object further down on this page.
+
+  wallet.login(accountName, authorization, keyIndex, key)
+
+} else {
+
+  // Now that we are connected, lets authenticate (in case of a Scatter app,
+  // it does it right after connection, so this is more for the state tracking
+  // and for WAL to fetch the EOS account data for us)
+  await wallet.login(); 
+
+  
+}
+
 
 // wallet.authenticated === true
 // wallet.auth === { accountName: 'some_user', permission: 'active', publicKey: '...' }
@@ -537,6 +555,9 @@ wallet.connect().then(() => {
     // 2. The EOS Accounts linked to those keys. 
     //
     // If the keyToAccountMap contains entries, then the user should be asked which account they'd like to use. 
+    // Note that the only functional difference is that:
+    // When logging in with ledger you supply the account you want to login
+    // When logging in with scatter your just calling login() and allowing the user to select an account
     if (discoveryData.keyToAccountMap.length > 0) {
       // We're just going to hard code the selection for the demo.
       const index = 0;
