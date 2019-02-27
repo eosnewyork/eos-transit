@@ -167,7 +167,7 @@ if (discoveryData.keyToAccountMap.length > 0) {
   // If discover returned multiple acconts then you'll need to promot the user to select which account he'd like to use. 
   // accountName, authorization, keyIndex, key are taken from the  discoveryData object. See the example of this object further down on this page.
 
-  wallet.login(accountName, authorization, keyIndex, key)
+  await wallet.login(accountName, authorization, keyIndex, key)
 
 } else {
 
