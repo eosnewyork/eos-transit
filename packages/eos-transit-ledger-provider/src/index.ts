@@ -107,14 +107,14 @@ export function ledgerWalletProvider(
 		): Promise<WalletAuth> {
 			// Every time someone calls login we add to the list of account names + ledger index.
 			// Then when it comes time to sign, we'll look for the accountName + auth match and use that Index to sign the txn.
-			if (accountName && index >= 0) {
+			if (accountName && authorization && key && index != undefined) {
 				selectedIndexArray.push({ id: accountName + '@' + authorization, index: index });
 			} else {
 				throw 'When calling the ledger login function: accountName, authorization, index and key must be supplied';
 			}
 
 			return new Promise<WalletAuth>((resolve, reject) => {
-				let user = {
+				let user: WalletAuth = {
 					accountName: accountName,
 					permission: authorization,
 					publicKey: key
