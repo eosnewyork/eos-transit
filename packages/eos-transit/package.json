@@ -1,6 +1,6 @@
 {
   "name": "eos-transit",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Wallet Access Layer for EOS Blockchain Networks",
   "license": "UNLICENSED",
   "main": "lib/index.js",
