@@ -1,6 +1,6 @@
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs2';
-import { WalletProvider, NetworkConfig, WalletAuth } from 'eos-transit';
+import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
 
 const { scatter } = ScatterJS;
 
@@ -23,12 +23,14 @@ export function scatterWalletProvider() {
 			});
 		}
 
-		function discover() {
-			console.log('in scatter discover.');
+		function discover(discoveryOptions: DiscoveryOptions) {
+			// console.log('in scatter discover.');
 			return new Promise((resolve, reject) => {
 				let discoveryInfo = {
+					keys: [],
 					note: 'Scatter does not support discovery'
 				};
+
 				resolve(discoveryInfo);
 			});
 		}
@@ -44,6 +46,10 @@ export function scatterWalletProvider() {
 
 		async function login(accountName?: string): Promise<WalletAuth> {
 			try {
+				// Useful for testnets to provide a convenient means for the end use to quickly add
+				// the required network configuration to their Scatter seamlessly while logging in.
+				await scatter.suggestNetwork({ ...network, blockchain: 'eos' });
+
 				const identity = await scatter.getIdentity({
 					accounts: [ { ...network, blockchain: 'eos' } ]
 				});

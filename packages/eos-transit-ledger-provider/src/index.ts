@@ -1,12 +1,12 @@
 import { Api, ApiInterfaces, RpcInterfaces, JsonRpc } from 'eosjs';
-import { WalletProvider, NetworkConfig, WalletAuth } from 'eos-transit';
+import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
 import * as EosLedger from './EosLedger';
 import Transport from '@ledgerhq/hw-transport-u2f';
-import $ from 'jquery';
 import LedgerDataManager from './LedgerDataManager';
 import 'babel-polyfill';
 import * as ecc from 'eosjs-ecc';
 import * as bigi from 'bigi';
+// import {discoveryOptions} from './types';
 // https://github.com/LedgerHQ/ledgerjs/issues/266
 // https://github.com/JoinColony/purser/issues/184
 
@@ -14,15 +14,21 @@ class history_get_key_accounts_result {
 	account_names: string[];
 }
 
+export interface matchedIndexItem {
+	index: number;
+	key: string;
+}
+
 class LedgerProxy {
-	async getPathKeys(keyPositions: number[]): Promise<string[]> {
+	async getPathKeys(keyPositions: number[]): Promise<matchedIndexItem[]> {
 		let transport = await Transport.create();
 		const eos = new EosLedger.default(transport);
-		let keys: string[] = [ '' ];
+		let keys: matchedIndexItem[] = [];
 
 		for (let num of keyPositions) {
 			let result = await eos.getAddress("44'/194'/0'/0/" + num);
-			keys[num] = result.address;
+			//keys[num] = result.address;
+			keys.push({ index: num, key: result.address });
 		}
 
 		return keys;
@@ -36,6 +42,9 @@ class LedgerProxy {
 		let toSignHex = toSign.toString('hex');
 		let signedTxn = await eos.signTransaction("44'/194'/0'/0/" + index, toSignHex);
 
+		// console.log(signedTxn.r);
+		// console.log(signedTxn.s);
+		// console.log(signedTxn.v);
 		var si = new ecc.Signature(bigi.fromHex(signedTxn.r), bigi.fromHex(signedTxn.s), bigi.fromHex(signedTxn.v));
 
 		return si.toString();
@@ -48,7 +57,6 @@ export interface ledgerWalletProviderOptions {
 	shortName?: string;
 	description?: string;
 	errorTimeout?: number;
-	pathIndexList?: number[];
 }
 
 export function ledgerWalletProvider(
@@ -57,39 +65,76 @@ export function ledgerWalletProvider(
 		name = 'Ledger Nano S',
 		shortName = 'Ledger Nano S',
 		description = 'Use Ledger Nano S hardware wallet to sign your transactions',
-		errorTimeout,
-		pathIndexList = [ 0, 1, 2 ] // By default we'll get keys at the 1st 3 index positions
+		errorTimeout
 	}: ledgerWalletProviderOptions = {}
 ) {
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
 		const rpc = new JsonRpc(network.protocol + '://' + network.host + ':' + network.port);
-		let keys: string[];
+		// let keys: string[] = [];
 		let selectedIndex: number = -1;
 		let selectedIndexArray: { id: string; index: number }[] = [];
+		let keyMap: matchedIndexItem[] = [];
+
+		// function _connect(appName: string) {
+		// 	return new Promise((resolve, reject) => {
+		// 		// If connect is called a second time just resolve
+		// 		if (!keys) {
+		// 			let ledger = new LedgerProxy();
+		// 			ledger
+		// 				.getPathKeys(pathIndexList)
+		// 				.then((keysResult) => {
+		// 					// console.log(keysResult);
+		// 					keys = keysResult;
+		// 					resolve();
+		// 				})
+		// 				.catch((ex) => reject(ex));
+		// 		} else {
+		// 			resolve();
+		// 		}
+		// 	});
+		// }
 
 		function connect(appName: string) {
 			return new Promise((resolve, reject) => {
-				// If connect is called a second time just resolve
-				if (!keys) {
-					let ledger = new LedgerProxy();
-					ledger
-						.getPathKeys(pathIndexList)
-						.then((keysResult) => {
-							// console.log(keysResult);
-							keys = keysResult;
-							resolve();
-						})
-						.catch((ex) => reject(ex));
-				} else {
-					resolve();
-				}
+				// We've moved this logic into the discover step. So connect really doesn't do anything in the case of ledger. May even want to add a small delay so it feels like a connect.
+				// setTimeout(function() {
+				// 	resolve();
+				// }, 3000);
+				resolve();
 			});
 		}
 
-		function discover() {
+		function discover(discoveryOptions: DiscoveryOptions) {
 			return new Promise((resolve, reject) => {
-				let discoveryInfo = { keys: keys, note: 'add any extra discoverable info here' };
-				resolve(discoveryInfo);
+				var _pathIndexList = discoveryOptions.pathIndexList || [ 0, 1, 2, 3 ];
+				var missingIndexs: number[] = [];
+
+				// let alreadyDiscoveredIndexs = keyMap.map(a => a.index);
+				_pathIndexList.forEach((index: number) => {
+					let matchedIndex: matchedIndexItem | undefined = keyMap.find((i) => i.index === index);
+					if (!matchedIndex) {
+						missingIndexs.push(index);
+					}
+				});
+
+				// console.log('missingIndexs:');
+				// console.log(missingIndexs);
+
+				let ledger = new LedgerProxy();
+				ledger
+					.getPathKeys(missingIndexs)
+					.then((keysResult: matchedIndexItem[]) => {
+						//Merge the new key info with any previous lookups
+						keyMap = keyMap.concat(...keysResult);
+
+						let xxx = keyMap.map((a) => a.key);
+						let discoveryInfo = {
+							keys: keyMap,
+							note: 'add any extra discoverable info here'
+						};
+						resolve(discoveryInfo);
+					})
+					.catch((ex) => reject(ex));
 			});
 		}
 
@@ -130,11 +175,11 @@ export function ledgerWalletProvider(
 		function makeSignatureProvider() {
 			return {
 				async getAvailableKeys() {
-					var filtered = keys.filter(function(el) {
-						return el != null;
-					});
-
-					return filtered;
+					// var filtered = keys.filter(function(el) {
+					// 	return el != null;
+					// });
+					let arr = keyMap.map((a) => a.key);
+					return arr;
 				},
 
 				async sign(
@@ -190,7 +235,7 @@ export function ledgerWalletProvider(
 						throw 'eos-transit-ledger-provider was unable to determine which index to use for the signature. Check that login() was called with the account that is now required to sign the transaction';
 					}
 
-					//console.log('selectedIndex: ' + selectedIndex);
+					console.log('selectedIndex: ' + selectedIndex);
 
 					let signature = await ledger.sign(ledgerBuffer, selectedIndex);
 					var signatureArray = [ signature ];
@@ -198,6 +243,8 @@ export function ledgerWalletProvider(
 						signatures: signatureArray,
 						serializedTransaction: signatureProviderArgs.serializedTransaction
 					};
+
+					console.log(respone);
 
 					return respone;
 				}

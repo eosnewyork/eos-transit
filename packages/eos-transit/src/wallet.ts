@@ -9,12 +9,14 @@ import {
 	StateListener,
 	StateUnsubscribeFn,
 	DiscoveryAccount,
-	DiscoveryData
+	DiscoveryData,
+	DiscoveryOptions
 } from './types';
 import { makeStateContainer } from './stateContainer';
 import { getErrorMessage } from './util';
 import { strict } from 'assert';
 import { stringToSymbol } from 'eosjs/dist/eosjs-serialize';
+import { stat } from 'fs';
 
 const DEFAULT_STATE: WalletState = {
 	connecting: false,
@@ -38,6 +40,10 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 	const _stateContainer = makeStateContainer({
 		...DEFAULT_STATE
 	});
+
+	//let discoverData: DiscoveryData = { keyToAccountMap: [], keys: [] };
+	let discoverData: DiscoveryData = { keyToAccountMap: [] };
+	let counter = 0;
 
 	const { getState } = _stateContainer;
 	const eosApi = new Api({
@@ -119,24 +125,38 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 			});
 	}
 
-	async function discover(): Promise<any> {
+	async function discover(discoveryOptions: DiscoveryOptions): Promise<any> {
 		let accountsDataObjToMerge: DiscoveryData = { keyToAccountMap: [] };
 
-		let discoverResult = await walletProvider.discover().then(async (walletDiscoveryData) => {
+		let discoverResult = await walletProvider.discover(discoveryOptions).then(async (walletDiscoveryData) => {
+			// console.log('walletDiscoveryData');
+			// console.log(walletDiscoveryData);
 			//Merge any properties that were returned from the wallets specific discovery process. This allows the wallet to add custom properties to the response if needed.
 			accountsDataObjToMerge = { ...accountsDataObjToMerge, ...walletDiscoveryData };
+			delete accountsDataObjToMerge.keys;
 
-			let keys: string[] = []; // If the discover fuction in the wallet doesn't return any keys we know the login function is going to have to prompt the user to select one.
-			if (walletDiscoveryData.keys) {
-				keys = walletDiscoveryData.keys;
-			}
+			// let keys: string[] = []; // If the discover fuction in the wallet doesn't return any keys we know the login function is going to have to prompt the user to select one.
+			// if (walletDiscoveryData.keys) {
+			// 	keys = walletDiscoveryData.keys;
+			// }
 
 			let promises = [];
 
-			for (let key of keys) {
-				if (key) {
+			for (let keyData of walletDiscoveryData.keys) {
+				let key = keyData.key;
+				let keyIndex = keyData.index;
+
+				let cached = false;
+				if (discoverData.keyToAccountMap) {
+					let foundInCache = discoverData.keyToAccountMap.findIndex(
+						(y: DiscoveryAccount) => y.index == keyIndex
+					);
+					if (foundInCache > -1) cached = true;
+				}
+
+				if (key && !cached) {
 					let p = ctx.eosRpc.history_get_key_accounts(key).then(async (accountData) => {
-						let keyIndex = keys.findIndex((y: string) => y == key);
+						// let keyIndex = keys.findIndex((y: string) => y == key);
 
 						let accountEntry: DiscoveryAccount = {
 							index: keyIndex,
@@ -173,7 +193,18 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 			});
 		});
 
-		return Promise.resolve(accountsDataObjToMerge);
+		counter++;
+		if (discoverData.keyToAccountMap.length == 0) {
+			discoverData = { ...discoverData, ...accountsDataObjToMerge };
+		} else {
+			accountsDataObjToMerge.keyToAccountMap.forEach((newKey) => {
+				discoverData.keyToAccountMap.push(newKey);
+				// discoverData.keys = accountsDataObjToMerge.keys;
+			});
+		}
+
+		// console.log(discoverData);
+		return Promise.resolve(discoverData);
 	}
 
 	function disconnect(): Promise<boolean> {
@@ -192,7 +223,7 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 
 	// Authentication
 
-	function login(accountName?: string, authorization?: string, index?: number, key?: string): Promise<AccountInfo> {
+	function login(accountName?: string, authorization?: string): Promise<AccountInfo> {
 		_stateContainer.updateState((state) => ({
 			...state,
 			accountInfo: void 0,
@@ -202,6 +233,28 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 			authenticationError: false,
 			authenticationErrorMessage: void 0
 		}));
+
+		let index = -1;
+		let key = undefined;
+
+		//If we've done discovery then we should be able to find the account trying to login in the discoverData
+		if (discoverData.keyToAccountMap.length > 0) {
+			// console.log('see if we can find ' + accountName + ' ' + authorization);
+			if (accountName && authorization) {
+				discoverData.keyToAccountMap.forEach((indexObj) => {
+					let found = indexObj.accounts.find((account) => {
+						return account.account == accountName && account.authorization == authorization;
+					});
+					if (found) {
+						index = indexObj.index;
+						key = indexObj.key;
+					}
+				});
+			}
+			if (!key) {
+				throw 'Loging was not able to determine the Key and Index for ' + authorization + '@' + accountName;
+			}
+		}
 
 		return walletProvider
 			.login(accountName, authorization, index, key)

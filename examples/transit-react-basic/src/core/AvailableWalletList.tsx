@@ -27,21 +27,23 @@ export function AvailableWalletList({ onItemSelect }: AvailableWalletListProps) 
 					onItemSelect();
 				}
 				const wallet = accessContext.initWallet(walletProvider);
+				const start = window.performance.now();
 				wallet.connect().then(() => {
-					wallet.discover().then((discoveryData: DiscoveryData) => {
+					const end = window.performance.now();
+					const time = end - start;
+					console.log(time);
+					wallet.discover({ pathIndexList: [ 0, 1, 2, 35 ] }).then((discoveryData: DiscoveryData) => {
 						console.log(discoveryData);
+						// console.timeEnd('someFunction');
 
 						if (discoveryData.keyToAccountMap.length > 0) {
-							// console.log(discoveryData.keyToAccountMap.length + ' keys returned, pick one');
-							const index = 3;
+							const index = 6;
 							const keyObj = discoveryData.keyToAccountMap[index];
 
 							const accountName = keyObj.accounts[0].account;
 							const authorization = keyObj.accounts[0].authorization;
-							const keyIndex = keyObj.index;
-							const key = keyObj.key;
 
-							wallet.login(accountName, authorization, keyIndex, key);
+							wallet.login(accountName, authorization);
 						} else {
 							// 0 keys returned, we need to user to select an account
 							wallet.login();

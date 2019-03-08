@@ -19,6 +19,7 @@ export interface AccountInfo {
 
 export interface DiscoveryData {
 	keyToAccountMap: DiscoveryAccount[];
+	keys?: { index: number; key: string }[];
 }
 
 export interface DiscoveryAccount {
@@ -83,7 +84,7 @@ export interface WalletProvider {
 	meta?: WalletProviderMetadata;
 	signatureProvider: ApiInterfaces.SignatureProvider;
 	connect(appName: string): Promise<any>;
-	discover(): Promise<any>;
+	discover(discoveryOptions: DiscoveryOptions): Promise<any>;
 	disconnect(): Promise<any>;
 	login(accountName?: string, authorization?: string, index?: number, key?: string): Promise<WalletAuth>;
 	logout(accountName?: string): Promise<any>;
@@ -110,6 +111,11 @@ export interface WalletState {
 	accountFetchErrorMessage?: string;
 }
 
+//{ pathIndexList: [ 0, 1, 2, 35 ] }
+export interface DiscoveryOptions {
+	pathIndexList: number[];
+}
+
 export interface Wallet {
 	_instanceId: string; // UUID, for internal purposes
 	ctx: WalletAccessContext;
@@ -125,9 +131,9 @@ export interface Wallet {
 	hasError: boolean;
 	errorMessage?: string;
 	connect(): Promise<any>;
-	discover(): Promise<any>;
+	discover(discoveryOptions: DiscoveryOptions): Promise<any>;
 	disconnect(): Promise<any>;
-	login(accountName?: string, authorization?: string, index?: number, key?: string): Promise<AccountInfo>;
+	login(accountName?: string, authorization?: string): Promise<AccountInfo>;
 	logout(accountName?: string): Promise<any>;
 	fetchAccountInfo(accountName?: string): Promise<AccountInfo>;
 	terminate(): Promise<boolean>;

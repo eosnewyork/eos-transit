@@ -73,26 +73,39 @@ export class LoginScreen extends Component<any, LoginScreenState> {
   handleWalletProviderSelect = (walletProvider: WalletProvider) => {
     const wallet = WAL.accessContext.initWallet(walletProvider);
     // wallet.connect().then(wallet.discover().then(wallet.login));
+    
+    
     wallet.connect().then(() => {
-      wallet.discover().then((discoveryData: DiscoveryData) => {
-        // console.log(discoveryData);
 
-        if (discoveryData.keyToAccountMap.length > 0) {
-          // console.log(discoveryData.keyToAccountMap.length + ' keys returned, pick one');
-          const index = 0;
-          const keyObj = discoveryData.keyToAccountMap[index];
+      const start1 = window.performance.now();
+      wallet.discover({ pathIndexList: [ 0,1,2,3,4,5 ]  }).then((discoveryData2: DiscoveryData) => {
+        const end1 = window.performance.now();
+        const time1 = end1 - start1;
+        console.log(time1);    
 
-          const accountName = keyObj.accounts[0].account;
-          const authorization = keyObj.accounts[0].authorization;
-          const keyIndex = keyObj.index;
-          const key = keyObj.key;
-
-          wallet.login(accountName, authorization, keyIndex, key);
-        } else {
-          // 0 keys returned, we need to user to select an account
-          wallet.login();
-        }
-      });
+        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        
+        const start2 = window.performance.now();
+        wallet.discover({ pathIndexList: [ 0,1,2,3,4,5,35 ] }).then((discoveryData: DiscoveryData) => {
+          const end2 = window.performance.now();
+          const time2 = end2 - start2;
+          console.log(time2);    
+  
+          if (discoveryData.keyToAccountMap.length > 0) {
+            // console.log(discoveryData.keyToAccountMap.length + ' keys returned, pick one');
+            const index = 0;
+            const keyObj = discoveryData.keyToAccountMap[index];
+  
+            const accountName = keyObj.accounts[0].account;
+            const authorization = keyObj.accounts[0].authorization;
+  
+            wallet.login(accountName, authorization);
+          } else {
+            // 0 keys returned, we need to user to select an account
+            wallet.login();
+          }
+        });
+      }); 
     });
   };
 
