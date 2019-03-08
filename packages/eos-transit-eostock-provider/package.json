@@ -1,0 +1,36 @@
+{
+	"name": "eos-transit-eostock-provider",
+	"version": "2.0.0",
+	"description": "eosTock app wallet provider for eos-transit",
+	"license": "UNLICENSED",
+	"main": "lib/index.js",
+	"module": "lib/index.js",
+	"types": "lib",
+	"scripts": {
+		"echo": "echo \"================== eos-transit-eosTock-provider ===================\"",
+		"installpkg": "yarn echo && npm install",
+		"clean": "rm -rf lib && rm -rf umd",
+		"prebuild": "yarn clean",
+		"build": "../../node_modules/typescript/bin/tsc",
+		"build-production": "yarn build && TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack",
+		"watch": "../../node_modules/typescript/bin/tsc -w",
+		"test": "",
+		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
+	},
+	"dependencies": {
+		"eos-transit": "^2.0.0",
+		"eosjsv1": "npm:eosjs"
+	},
+	"devDependencies": {
+		"eosjs": "^20.0.0-beta3",
+		"webpack": "^4.25.1",
+		"webpack-cli": "^3.1.2"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"printWidth": 80,
+		"tabWidth": 2,
+		"useTabs": false,
+		"bracketSpacing": true
+	}
+}
