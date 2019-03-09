@@ -289,7 +289,7 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 	}
 
 	function logout(): Promise<boolean> {
-		return walletProvider.disconnect().then(() => {
+		return walletProvider.logout().then(() => {
 			_stateContainer.updateState((state) => ({
 				...state,
 				accountInfo: void 0,
