@@ -75,31 +75,8 @@ export function ledgerWalletProvider(
 		let selectedIndexArray: { id: string; index: number }[] = [];
 		let keyMap: matchedIndexItem[] = [];
 
-		// function _connect(appName: string) {
-		// 	return new Promise((resolve, reject) => {
-		// 		// If connect is called a second time just resolve
-		// 		if (!keys) {
-		// 			let ledger = new LedgerProxy();
-		// 			ledger
-		// 				.getPathKeys(pathIndexList)
-		// 				.then((keysResult) => {
-		// 					// console.log(keysResult);
-		// 					keys = keysResult;
-		// 					resolve();
-		// 				})
-		// 				.catch((ex) => reject(ex));
-		// 		} else {
-		// 			resolve();
-		// 		}
-		// 	});
-		// }
-
 		function connect(appName: string) {
 			return new Promise((resolve, reject) => {
-				// We've moved this logic into the discover step. So connect really doesn't do anything in the case of ledger. May even want to add a small delay so it feels like a connect.
-				// setTimeout(function() {
-				// 	resolve();
-				// }, 3000);
 				resolve();
 			});
 		}
@@ -197,6 +174,9 @@ export function ledgerWalletProvider(
 					};
 					const api = new Api(args);
 					var _txn = await api.deserializeTransactionWithActions(signatureProviderArgs.serializedTransaction);
+
+					// console.log(new Buffer(signatureProviderArgs.serializedTransaction).toString('hex'));
+					// console.log(_txn);
 
 					var ledgerManager = new LedgerDataManager();
 					const ledgerBuffer = await ledgerManager.serialize(
