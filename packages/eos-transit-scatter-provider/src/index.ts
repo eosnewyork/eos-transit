@@ -99,7 +99,8 @@ export function scatterWalletProvider() {
 			discover,
 			disconnect,
 			login,
-			logout
+			logout,
+			sign
 		};
 
 		return walletProvider;

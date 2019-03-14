@@ -89,7 +89,6 @@ export interface WalletProvider {
 	login(accountName?: string, authorization?: string, index?: number, key?: string): Promise<WalletAuth>;
 	logout(accountName?: string): Promise<any>;
 	sign(publicKey: string, data: string): Promise<any>;
-
 }
 
 export type MakeWalletProviderFn = (network: NetworkConfig) => WalletProvider;

@@ -79,7 +79,12 @@ export function stubWalletProvider({
       connect,
       disconnect,
       login,
-      logout
+      logout,
+      sign: (publicKey: string, data: string): Promise<any> => {
+				return new Promise((resolve, reject) => {
+					reject("not implemented");
+				});
+			}
     };
 
     return walletProvider;
