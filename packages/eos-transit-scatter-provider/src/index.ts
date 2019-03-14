@@ -83,6 +83,10 @@ export function scatterWalletProvider() {
 			return scatter.forgetIdentity();
 		}
 
+		function sign(publicKey: string, data:string): Promise<any> {
+			return scatter.getArbitrarySignature(publicKey, data)
+		}
+
 		const walletProvider: WalletProvider = {
 			id: 'scatter',
 			meta: {
