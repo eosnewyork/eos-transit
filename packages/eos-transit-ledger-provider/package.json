@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-ledger-provider",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "ledger wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
