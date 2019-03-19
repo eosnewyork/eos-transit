@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-scatter-provider",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "Scatter app wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
