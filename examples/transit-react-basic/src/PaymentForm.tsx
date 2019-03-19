@@ -85,8 +85,8 @@ const defaultSuccessMessage = 'Transaction completed. See console for details';
 const defaultErrorMessage = 'Transaction failed. See console for details';
 
 const DEFAULT_STATE = {
-	receiverName: 'mary12345123',
-	amount: 1,
+	receiverName: 'wozzawozza55',
+	amount: 0.0002,
 	inProgress: false,
 	hasError: false,
 	success: false

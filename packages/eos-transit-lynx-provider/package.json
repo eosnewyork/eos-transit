@@ -1,30 +1,29 @@
 {
-	"name": "eos-transit-scatter-provider",
+	"name": "eos-transit-lynx-provider",
 	"version": "2.0.1",
-	"description": "Scatter app wallet provider for eos-transit",
+	"description": "EOS Lynx wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
 	"module": "lib/index.js",
 	"types": "lib",
 	"scripts": {
-		"echo": "echo \"================== eos-transit-scatter-provider ===================\"",
+		"echo": "echo \"================== eos-lynx-ledger-provider ===================\"",
 		"installpkg": "yarn echo && npm install",
 		"clean": "rm -rf lib && rm -rf umd",
 		"prebuild": "yarn clean",
-		"build": "../../node_modules/typescript/bin/tsc",
+		"build": "tsc",
 		"build-production": "yarn build && TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack",
-		"watch": "../../node_modules/typescript/bin/tsc -w",
+		"watch": "tsc -w",
 		"test": "",
-		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
+		"lint": "tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
-		"eos-transit": "^2.0.1",
-		"scatterjs-core": "2.7.9",
-		"scatterjs-plugin-eosjs2": "1.5.0"
+		"eos-transit": "^2.0.1"
 	},
 	"devDependencies": {
-		"webpack": "^4.25.1",
-		"webpack-cli": "^3.1.2"
+		"@babel/plugin-transform-regenerator": "^7.0.0",
+		"eosjs": "20.0.0-beta3",
+		"webpack": "^4.25.1"
 	},
 	"prettier": {
 		"singleQuote": true,
