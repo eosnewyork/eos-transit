@@ -14,6 +14,7 @@
     <script src="../../packages/eos-transit/umd/eos-transit.min.js"></script>
     <script src="../../packages/eos-transit-stub-provider/umd/eos-transit-stub-provider.min.js"></script>
     <script src="../../packages/eos-transit-scatter-provider/umd/eos-transit-scatter-provider.min.js"></script>
+    <script src="../../packages/eos-transit-ledger-provider/umd/eos-transit-ledger-provider.min.js"></script>
 
     <script>
       function transfer(
@@ -92,12 +93,13 @@
           appName,
           network: {
             host: 'api.pennstation.eosnewyork.io',
-            port: 7001,
-            protocol: 'http',
+            port: 7101,
+            protocol: 'https',
             chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
           },
           walletProviders: [
             WAL.providers.scatter(),
+            WAL.providers.ledger(),
             WAL.providers.stub({
               id: 'eos-metro',
               name: 'METRO™ Hardware Wallet',
@@ -139,10 +141,12 @@
 
         // Now setting up the wallet connection
 
+        // console.log(WAL.accessContext.getWalletProviders());
         // Selecting Scatter wallet provider (as if the user did that)
         const scatterWalletProvider = WAL.accessContext
           .getWalletProviders()
-          .find(p => p.id === 'scatter');
+          // .find(p => p.id === 'scatter');
+          .find(p => p.id === 'ledger');
 
         // Initializing the Wallet for that provider
         const activeWallet = WAL.accessContext.initWallet(scatterWalletProvider);
@@ -153,8 +157,26 @@
         // Connecting to that Wallet
         await activeWallet.connect();
 
-        // Logging in to a connected wallet (will also pull the account_data internally)
-        await activeWallet.login();
+        const discoveryData = await activeWallet.discover({pathIndexList: [0,1,2,3]});
+        
+        // If we're dealing with a wallet that supports discovery, like the ledger then we'll get discovery data and we'll have the user select an index / account. 
+        // console.log(discoveryData);
+        if (discoveryData.keyToAccountMap.length > 0) {
+          // We're just hard coding a selection here. In your UI you'd prompt the user to select an index. 
+          const index = 0;
+          const keyObj = discoveryData.keyToAccountMap[index];
+
+          const accountName = keyObj.accounts[0].account;
+          const authorization = keyObj.accounts[0].authorization;
+
+          // Logging in to a connected wallet (will also pull the account_data internally)
+          await activeWallet.login(accountName, authorization);
+
+        } else {
+
+          await activeWallet.login();
+
+        }
 
         // We're all set to sign a txn at this point.
         txtButton.addEventListener('click', () =>
