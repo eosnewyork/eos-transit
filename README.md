@@ -1,10 +1,10 @@
-# Transit - Wallet Access Layer for EOS blockchain networks.
+# Transit - Wallet Access Layer for EOSIO blockchain networks.
 
-This library is a small abstraction layer on top of `eosjs` this is aiming to assist the EOS dapp (decentralized app) developers with wallet communication (in order to sign the transactions) by providing a simple and intuitive API.
+This library is a small abstraction layer on top of `eosjs` which aims to assist EOS dApp (decentralized app) developers with wallet communication (signature verification and acceptance) by providing a simple and intuitive API.
 
-This allows developers to concentrate on building awesome apps instead of setting up `eosjs` and wallet connections.
+Instead of focusing on supporting specific signature providers one by one, developers can support every one that has built a Transit plugin, allowing the user to use their signature provider of choice. This way, the best UX for signature providers wins and the developers can focus on building their dApp instead of setting up `eosjs` and wallet connections.
 
-> *Disclaimer: This library is in early alpha. The core API has stabilized but some changes and extension should be expected. We encourage developers to give it a try when building decentralized apps and to share any thoughts, doubts, and concerns. All feedback is highly appreciated.*
+> *Disclaimer: This library is in early alpha. The core API has stabilized but some changes and extensions should be expected. We encourage developers to give it a try when building decentralized apps and to share any thoughts, doubts, and concerns. All feedback is highly appreciated.*
 
 
 👉🏻 **Please see the "Quick Start" and thorough guide in the [`eos-transit` package docs](packages/eos-transit)**
@@ -62,11 +62,11 @@ This will perform both TypeScript compilation into `lib` folder and a minified p
 
 ### Publishing
 
-1. First off, make sure the current state of package folders is consistent and packages that are about to be published are actually built (with `yarn build-packages`, see previous section). To make sure, you can run `yarn pack` command to create a `tgz` tarball of the package and inspect its contents (but make sure that doesn't leak to a published package, so cleanup that before publishing).
+1. Make sure the current state of package folders is consistent and that packages which are about to be published are actually built (with `yarn build-packages`, see previous section). To make sure, you can run `yarn pack` command to create a `tgz` tarball of the package and inspect its contents (but make sure that doesn't leak to a published package, so cleanup that before publishing).
 
-2. Make sure you're logged into `npm` registry by running [`yarn login`](https://yarnpkg.com/lang/en/docs/cli/login/) but note that this won't ask you a password (it will be asked upon publishing, since `yarn` doesn't maintain authenticated sessions with `npm` registry):
+2. Make sure you're logged into `npm` registry by running [`yarn login`](https://yarnpkg.com/lang/en/docs/cli/login/). Please note that this won't ask you for a password (it will be asked upon publishing, since `yarn` doesn't maintain authenticated sessions with `npm` registry):
 
-3. Since this monorepo is managed with `lerna`, the latter is responsible for publishing too, so run 
+3. Since this monorepo is managed with `lerna`, the latter is responsible for publishing too, so run:
 
         $ lerna publish
 
