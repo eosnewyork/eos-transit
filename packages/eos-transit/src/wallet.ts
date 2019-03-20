@@ -303,6 +303,10 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 		});
 	}
 
+	function sign(publicKey: string, data: string): Promise<any> {
+		return walletProvider.sign(publicKey, data);
+	}
+	
 	const wallet: Wallet = {
 		_instanceId,
 		ctx,
