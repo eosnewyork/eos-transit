@@ -1,6 +1,6 @@
 # Transit PLUGIN Developer Kit
 
-Most of the documentation for eos-transit, it targeted at  developers wanting to use the transit in their application.
+Most of the documentation for eos-transit is targeted at developers wanting to use the transit in their application.
 
 This project and document is targeted at __developers wanting to build a transit plugins__. So if you're a wallet provider looking to integrate with Transit, you're in the right place. 
 
