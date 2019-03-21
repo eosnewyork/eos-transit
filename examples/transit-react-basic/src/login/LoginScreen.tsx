@@ -49,6 +49,9 @@ const ContentPanelHeaderItem = styled('div')(
   }
 );
 
+
+
+
 const ContentPanelHeading = styled('span')({
   fontSize: 12,
   textTransform: 'uppercase',
@@ -78,19 +81,13 @@ export class LoginScreen extends Component<any, LoginScreenState> {
     wallet.connect().then(() => {
 
       const start1 = window.performance.now();
-      wallet.discover({ pathIndexList: [ 0,1,2,3,4,5 ]  }).then((discoveryData2: DiscoveryData) => {
+      wallet.discover({ pathIndexList: [ 0,1 ]  }).then((discoveryData: DiscoveryData) => {
         const end1 = window.performance.now();
         const time1 = end1 - start1;
         console.log(time1);    
 
         console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         
-        const start2 = window.performance.now();
-        wallet.discover({ pathIndexList: [ 0,1,2,3,4,5,35 ] }).then((discoveryData: DiscoveryData) => {
-          const end2 = window.performance.now();
-          const time2 = end2 - start2;
-          console.log(time2);    
-  
           if (discoveryData.keyToAccountMap.length > 0) {
             // console.log(discoveryData.keyToAccountMap.length + ' keys returned, pick one');
             const index = 0;
@@ -104,8 +101,8 @@ export class LoginScreen extends Component<any, LoginScreenState> {
             // 0 keys returned, we need to user to select an account
             wallet.login();
           }
-        });
-      }); 
+
+        }); 
     });
   };
 

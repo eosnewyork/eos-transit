@@ -4,7 +4,6 @@ import WAL, { Wallet } from 'eos-transit';
 import { TransactionButtonBlock } from './shared/transactions/TransactionButtonBlock';
 import { FormElement, Input, FormActions, FieldLabel } from './shared/forms';
 import { transfer } from './core/eosActions';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 const { accessContext } = WAL;
 
@@ -20,15 +19,6 @@ const PaymentFormActions = styled(FormActions)({
 });
 
 const PaymentFormTitle = styled('h1')({
-	margin: 0,
-	marginBottom: 30,
-	fontSize: 20,
-	fontWeight: 600,
-	textTransform: 'uppercase',
-	color: 'white'
-});
-
-const TestLinkTitle = styled('h1')({
 	margin: 0,
 	marginBottom: 30,
 	fontSize: 20,
@@ -102,13 +92,9 @@ const DEFAULT_STATE = {
 	success: false
 };
 
-export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
+export class ArbSign extends Component<PaymentFormProps, PaymentFormState> {
 	state: PaymentFormState = {
 		...DEFAULT_STATE
-	};
-
-	handleAmountChange = (event: FormEvent<HTMLInputElement>) => {
-		this.setState({ amount: Number(event.currentTarget.value) });
 	};
 
 	handleSubmit = (wallet: Wallet) => {
@@ -146,56 +132,36 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 			});
 	};
 
-	resetForm = () => {
-		this.setState({ ...DEFAULT_STATE });
-	};
-
 	getDefaultWallet = () => {
 		const activeWallets = accessContext.getActiveWallets();
 		if (!activeWallets || !activeWallets.length) return void 0;
 		return activeWallets[0];
 	};
 
-	test() {
-		alert('ssss');
-		// history.push('/my-new-location')
+	async test(wallet?: Wallet) {
+		console.log(wallet);
+		if (wallet) {
+			const signResult = await wallet.signArbitrary(
+				'This is a custom message to sign',
+				'A message for the user to see'
+			);
+			console.log(signResult);
+			alert(signResult);
+		}
 	}
 
 	render() {
-		const { getDefaultWallet, handleAmountChange, handleSubmit, resetForm } = this;
 		const { receiverName, amount, ...buttonProps } = this.state;
-		const defaultWallet = getDefaultWallet();
+		const defaultWallet = this.getDefaultWallet();
 
 		return (
 			<PaymentFormRoot>
-				<Link to="/test">test</Link>
-
-				<PaymentFormTitle>Transfer</PaymentFormTitle>
+				<PaymentFormTitle>Test Options</PaymentFormTitle>
 
 				<form noValidate={true}>
-					<FormElement>
-						<FieldLabel>Receiver</FieldLabel>
-						<Input type="text" value={receiverName} disabled={true} readOnly={true} />
-					</FormElement>
-
-					<FormElement>
-						<FieldLabel>Amount (EOS)</FieldLabel>
-						<Input type="number" value={amount} onChange={handleAmountChange} />
-					</FormElement>
-
-					<PaymentFormActions>
-						<TransactionButtonBlock
-							onTransactionRequested={handleSubmit}
-							defaultWallet={defaultWallet}
-							{...buttonProps}
-						/>
-
-						{buttonProps.success && (
-							<PaymentFormResetButton type="button" onClick={resetForm}>
-								Start over
-							</PaymentFormResetButton>
-						)}
-					</PaymentFormActions>
+					<PaymentFormResetButton type="button" onClick={() => this.test(defaultWallet)}>
+						Sign Arbitrary
+					</PaymentFormResetButton>
 				</form>
 			</PaymentFormRoot>
 		);
@@ -203,7 +169,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 }
 
 export function PaymentFormConnected() {
-	return <PaymentForm />;
+	return <ArbSign />;
 }
 
 export default PaymentFormConnected;

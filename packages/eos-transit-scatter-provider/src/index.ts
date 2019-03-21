@@ -3,6 +3,7 @@ import ScatterEOS from 'scatterjs-plugin-eosjs2';
 import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
 
 const { scatter } = ScatterJS;
+let accountPublickey: string;
 
 scatter.loadPlugin(new ScatterEOS());
 
@@ -68,10 +69,12 @@ export function scatterWalletProvider() {
 					return Promise.reject('No account data obtained from Scatter identity');
 				}
 
+				accountPublickey = account.publicKey;
+
 				return {
 					accountName: account.name,
 					permission: account.authority,
-					publicKey: account.publicKey
+					publicKey: accountPublickey
 				};
 			} catch (error) {
 				console.log('[scatter]', error);
@@ -83,8 +86,8 @@ export function scatterWalletProvider() {
 			return scatter.forgetIdentity();
 		}
 
-		function sign(publicKey: string, data:string): Promise<any> {
-			return scatter.getArbitrarySignature(publicKey, data)
+		function signArbitrary(data: string, userMessage: string): Promise<string> {
+			return scatter.getArbitrarySignature(accountPublickey, data, userMessage);
 		}
 
 		const walletProvider: WalletProvider = {
@@ -100,7 +103,7 @@ export function scatterWalletProvider() {
 			disconnect,
 			login,
 			logout,
-			sign
+			signArbitrary
 		};
 
 		return walletProvider;

@@ -96,6 +96,11 @@ export function myWalletProvider() {
 			return Promise.resolve(true);
 		}
 
+		function signArbitrary(data: string, userMessage: string): Promise<string> {
+			// @ts-ignore:
+			return window.lynxMobile.requestArbitrarySignature({ data, whatFor: userMessage });
+		}
+
 		// Authentication
 		async function login(accountName?: string): Promise<WalletAuth> {
 			logIfDebugEnabled('The login method of myWallet was called');
@@ -148,7 +153,8 @@ export function myWalletProvider() {
 			discover,
 			disconnect,
 			login,
-			logout
+			logout,
+			signArbitrary
 		};
 
 		return walletProvider;

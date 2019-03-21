@@ -54,6 +54,12 @@ function discover(discoveryOptions: DiscoveryOptions) {
 	});
 }
 
+function signArbitrary(data: string, userMessage: string): Promise<string> {
+	return new Promise((resolve, reject) => {
+		reject('not implemented');
+	});
+}
+
 export interface StubWalletProviderOptions {
 	id: string;
 	name: string;
@@ -102,7 +108,8 @@ export function stubWalletProvider({ id, name, shortName, description, errorTime
 			discover,
 			disconnect,
 			login,
-			logout
+			logout,
+			signArbitrary
 		};
 
 		return walletProvider;

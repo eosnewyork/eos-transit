@@ -303,10 +303,10 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 		});
 	}
 
-	function sign(publicKey: string, data: string): Promise<any> {
-		return walletProvider.sign(publicKey, data);
+	function signArbitrary(data: string, userMessage: string): Promise<string> {
+		return walletProvider.signArbitrary(data, userMessage);
 	}
-	
+
 	const wallet: Wallet = {
 		_instanceId,
 		ctx,
@@ -389,7 +389,9 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 
 		subscribe(listener: StateListener<WalletState>): StateUnsubscribeFn {
 			return _stateContainer.subscribe(listener);
-		}
+		},
+
+		signArbitrary
 	};
 
 	return wallet;

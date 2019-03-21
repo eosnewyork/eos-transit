@@ -149,6 +149,12 @@ export function ledgerWalletProvider(
 			return Promise.resolve(true);
 		}
 
+		function signArbitrary(data: string, userMessage: string): Promise<string> {
+			return new Promise((resolve, reject) => {
+				reject('not implemented');
+			});
+		}
+
 		function makeSignatureProvider() {
 			return {
 				async getAvailableKeys() {
@@ -244,11 +250,7 @@ export function ledgerWalletProvider(
 			disconnect,
 			login,
 			logout,
-			sign: (publicKey: string, data: string): Promise<any> => {
-				return new Promise((resolve, reject) => {
-					reject("not implemented");
-				});
-			}
+			signArbitrary
 		};
 
 		return walletProvider;
