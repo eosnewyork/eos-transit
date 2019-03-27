@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"emotion": "^9.2.10",
-		"eos-transit": "^2.0.1",
+		"eos-transit": "^3.0.0",
 		"eosjs": "^20.0.0-beta3",
 		"minireset.css": "^0.0.3",
 		"react": "^16.5.2",

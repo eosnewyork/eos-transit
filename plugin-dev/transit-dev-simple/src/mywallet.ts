@@ -91,6 +91,11 @@ export function myWalletProvider() {
 			return res();
 		}
 
+		function signArbitrary(data: string, userMessage: string): Promise<string> {
+			return new Promise((resolve, reject) => {
+				reject('not implemented');
+			});
+		}
 		const walletProvider: WalletProvider = {
 			id: 'myWallet',
 			meta: {
@@ -103,7 +108,8 @@ export function myWalletProvider() {
 			discover,
 			disconnect,
 			login,
-			logout
+			logout,
+			signArbitrary
 		};
 
 		return walletProvider;

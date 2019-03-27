@@ -18,39 +18,38 @@ export class TestScreen extends Component<any, LoginScreenState> {
 	constructor(props: any) {
 		super(props);
 		this.takeOverConsole();
+		this.logIfDebugEnabled('Doing Connect');
+		this.connect();
 	}
 
 	async connect() {
+		// return true;
 		this.wallet = WAL.accessContext.initWallet(getWalletProviders()[0]);
 
-		try {
-			if (this.wallet) {
-				this.logIfDebugEnabled('Calling Connect()');
-				this.wallet.connect().then(() => {
-					this.logIfDebugEnabled('Calling Discover()');
-					this.wallet.discover({ pathIndexList: [ 0, 1, 2 ] }).then((discoveryData: DiscoveryData) => {
-						// Normally we'd check the discovery data here.
-						this.logIfDebugEnabled('Calling login()');
-						this.logIfDebugEnabled('Transit will try to fetch account info for this account');
-						this.wallet.login().then(() => {
-							const auth = this.wallet;
+		if (this.wallet) {
+			this.logIfDebugEnabled('Calling Connect()');
+			this.wallet.connect().then(() => {
+				this.logIfDebugEnabled('Calling Discover()');
+				this.wallet.discover({ pathIndexList: [ 0, 1, 2 ] }).then((discoveryData: DiscoveryData) => {
+					// Normally we'd check the discovery data here.
+					this.logIfDebugEnabled('Calling login()');
+					this.logIfDebugEnabled('Transit will try to fetch account info for this account');
+					this.wallet.login().then(() => {
+						const auth = this.wallet;
 
-							this.logIfDebugEnabled('Login Completed. The account info fetched from chain was:');
-							// @ts-ignore: TypeScript doesn't have the full definition for accountInfo so ignore for now
-							this.accountName = this.wallet.auth.accountName;
-							this.logIfDebugEnabled('-- account_name: ' + this.accountName);
-							// @ts-ignore:
-							this.permission = this.wallet.auth.permission;
-							this.logIfDebugEnabled('-- permission: ' + this.permission);
-							// @ts-ignore:
-							this.publicKey = this.wallet.auth.publicKey;
-							this.logIfDebugEnabled('-- publicKey: ' + this.publicKey);
-						});
+						this.logIfDebugEnabled('Login Completed. The account info fetched from chain was:');
+						// @ts-ignore: TypeScript doesn't have the full definition for accountInfo so ignore for now
+						this.accountName = this.wallet.auth.accountName;
+						this.logIfDebugEnabled('-- account_name: ' + this.accountName);
+						// @ts-ignore:
+						this.permission = this.wallet.auth.permission;
+						this.logIfDebugEnabled('-- permission: ' + this.permission);
+						// @ts-ignore:
+						this.publicKey = this.wallet.auth.publicKey;
+						this.logIfDebugEnabled('-- publicKey: ' + this.publicKey);
 					});
 				});
-			}
-		} catch (error) {
-			console.error(error);
+			});
 		}
 	}
 

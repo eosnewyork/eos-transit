@@ -1,5 +1,5 @@
 {
-	"name": "wal-eos-tokenpocket-provider",
+	"name": "eos-transit-tokenpocket-provider",
 	"version": "3.0.0",
 	"description": "TokenPocket wallet provider for eos-transit",
 	"license": "UNLICENSED",
@@ -16,7 +16,7 @@
 		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
-		"eosjs": "20.0.0-beta3",
+		"eosjs": "20.0.0-ba6d627.0",
 		"eos-transit": "^3.0.0"
 	},
 	"devDependencies": {

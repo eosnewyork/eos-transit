@@ -1,12 +1,5 @@
 {
-	"packages": [
-		"packages/eos-transit",
-		"packages/eos-transit-ledger-provider",
-		"packages/eos-transit-scatter-provider",
-		"packages/eos-transit-lynx-provider",
-		"packages/eos-transit-stub-provider",
-		"examples/transit-react-basic"
-	],
+	"packages": [ "packages/*", "examples/transit-react-basic" ],
 	"version": "independent",
 	"npmClient": "yarn",
 	"command": {
