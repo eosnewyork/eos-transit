@@ -685,7 +685,7 @@ wallet.eosApi
 });
 ```
 
-Nothing special here really. Any other `eosjs` `Api` method can be used wuthout issues on the instance exposed at the `eosApi` property.
+Nothing special here really. Any other `eosjs` `Api` method can be used without issues on the instance exposed at the `eosApi` property.
 
 
 ### State tracking
