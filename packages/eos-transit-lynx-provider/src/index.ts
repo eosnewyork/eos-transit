@@ -2,6 +2,17 @@ import { Api, ApiInterfaces, RpcInterfaces, JsonRpc } from 'eosjs';
 import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
 
 let accountPublickey: string;
+let lynx: any;
+
+if (typeof window !== undefined && typeof document !== undefined) {
+	// @ts-ignore:
+
+	lynx = window.lynxMobile;
+	window.addEventListener('lynxMobileLoaded', () => {
+		// @ts-ignore:
+		lynx = window.lynxMobile;
+	});
+}
 
 function logIfDebugEnabled(msg: string) {
 	const debug = localStorage.getItem('DEBUG');
@@ -41,7 +52,7 @@ function makeSignatureProvider(network: NetworkConfig) {
 			// logIfDebugEnabled(JSON.stringify(_txn));
 
 			// @ts-ignore:
-			const signatureResponse = await window.lynxMobile.requestSignature(_txn);
+			const signatureResponse = await lynx.requestSignature(_txn);
 
 			logIfDebugEnabled('signature: ' + signatureResponse.signatures[0]);
 
@@ -51,32 +62,35 @@ function makeSignatureProvider(network: NetworkConfig) {
 				serializedTransaction: signatureProviderArgs.serializedTransaction
 			};
 
-			// const signatureArray = [ '' ];
-			// const respone: RpcInterfaces.PushTransactionArgs = {
-			// 	signatures: signatureArray,
-			// 	serializedTransaction: signatureProviderArgs.serializedTransaction
-			// };
-
 			return respone;
 		}
 	};
 }
 
-export function myWalletProvider() {
+export function lynxWalletProvider() {
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
 		// Connection
 
-		function connect(appName: string): Promise<any> {
-			logIfDebugEnabled('The connect method of myWallet was called');
+		function connect(appName: string) {
+			logIfDebugEnabled('In wallet connect');
+			return new Promise((resolve, reject) => {
+				let tries = 0;
 
-			if (!window.hasOwnProperty('lynxMobile')) {
-				throw new Error('Lynx wallet not detected');
-			}
+				function checkConnect() {
+					logIfDebugEnabled('Checking the state of lynx Object: ' + tries + ' : ' + lynx);
+					if (lynx) return resolve(true);
 
-			const res = async function m2(): Promise<any> {
-				return true;
-			};
-			return res();
+					tries++;
+
+					if (tries > 5) return reject('Cannot connect to lynx wallet provider');
+
+					setTimeout(() => {
+						checkConnect();
+					}, 1000);
+				}
+
+				checkConnect();
+			});
 		}
 
 		function discover(discoveryOptions: DiscoveryOptions) {
@@ -98,7 +112,7 @@ export function myWalletProvider() {
 
 		function signArbitrary(data: string, userMessage: string): Promise<string> {
 			// @ts-ignore:
-			return window.lynxMobile.requestArbitrarySignature({ data, whatFor: userMessage });
+			return lynx.requestArbitrarySignature({ data, whatFor: userMessage });
 		}
 
 		// Authentication
@@ -106,12 +120,12 @@ export function myWalletProvider() {
 			logIfDebugEnabled('The login method of myWallet was called');
 
 			// @ts-ignore:
-			const _accountName = await window.lynxMobile.requestSetAccountName();
+			const _accountName = await lynx.requestSetAccountName();
 			logIfDebugEnabled(_accountName);
 			if (!_accountName) throw new Error('Account name was null');
 
 			// @ts-ignore:
-			const accountState = await window.lynxMobile.requestSetAccount(_accountName);
+			const accountState = await lynx.requestSetAccount(_accountName);
 			if (!accountState) throw new Error('Account state was null');
 
 			const perm = accountState.account.permissions.find((x: any) => x.perm_name === 'active');
@@ -125,13 +139,6 @@ export function myWalletProvider() {
 				permission: 'active',
 				publicKey
 			};
-
-			// TODO: Need a way to get the permission and publicKey for the selected account.
-			// return {
-			// 	accountName: 'eostransitio',
-			// 	permission: 'active',
-			// 	publicKey: 'EOS5ryMP4HXW4tHLyjxPv6DrhT25RVjwsACHnwijHdpkXPEA3CsQF'
-			// };
 		}
 
 		function logout(accountName?: string): Promise<any> {
@@ -161,4 +168,4 @@ export function myWalletProvider() {
 	};
 }
 
-export default myWalletProvider;
+export default lynxWalletProvider;
