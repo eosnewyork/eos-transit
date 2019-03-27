@@ -1,6 +1,6 @@
 {
 	"name": "transit-react-basic",
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"private": true,
 	"scripts": {
 		"echo": "echo \"================== transit-react-basic example ===================\"",
@@ -15,7 +15,7 @@
 		"emotion": "^9.2.10",
 		"eos-transit": "^3.0.1",
 		"eos-transit-ledger-provider": "^3.0.1",
-		"eos-transit-lynx-provider": "^3.0.1",
+		"eos-transit-lynx-provider": "^3.0.2",
 		"eos-transit-scatter-provider": "^3.0.1",
 		"eos-transit-tokenpocket-provider": "^3.0.1",
 		"minireset.css": "^0.0.3",
