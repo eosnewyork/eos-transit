@@ -25,7 +25,7 @@ If you need to need to load this URL into a mobile application/access it remotel
 
 Here's a quick demo of what to expect:
 
-![](https://cdn-images-1.medium.com/max/800/0*KQAr5teF3AilCffp.png)
+![https://youtu.be/85kFTyGRcd4](https://cdn-images-1.medium.com/max/800/0*KQAr5teF3AilCffp.png)
 
 ### 1\. Match your configuration
 
