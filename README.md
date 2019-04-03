@@ -4,9 +4,6 @@ This library is a small abstraction layer on top of `eosjs` which aims to assist
 
 Instead of focusing on supporting specific signature providers one by one, developers can support every one that has built a Transit plugin, allowing the user to use their signature provider of choice. This way, the best UX for signature providers wins and the developers can focus on building their dApp instead of setting up `eosjs` and wallet connections.
 
-> *Disclaimer: This library is in early alpha. The core API has stabilized but some changes and extensions should be expected. We encourage developers to give it a try when building decentralized apps and to share any thoughts, doubts, and concerns. All feedback is highly appreciated.*
-
-
 👉🏻 **Please see the "Quick Start" and thorough guide in the [`eos-transit` package docs](packages/eos-transit)**
 
 
@@ -21,7 +18,9 @@ Instead of focusing on supporting specific signature providers one by one, devel
 
 ## Packages
 
-This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna). There are several packages maintained here:
+This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna).  
+
+Wallet providers have the option to add their plugin to this repo via pull request, or they maintain it within their own repo. 
 
 | Package                                                                         | Version | Description                       |
 |---------------------------------------------------------------------------------|---------|-----------------------------------|
@@ -30,10 +29,19 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 | [`eos-transit-lynx-provider`](packages/eos-transit-lynx-provider)               | 3.0.x   | Wallet provider for [Lynx](https://eoslynx.com/) app |
 | [`eos-transit-ledger-provider`](packages/eos-transit-ledger-provider)           | 3.0.x   | Wallet provider for [Ledger](https://www.ledger.com/) app |
 | [`eos-transit-tokenpocket-provider`](packages/eos-transit-tokenpocket-provider) | 3.0.x   | Wallet provider for [Token Pocket](https://www.tokenpocket.pro/) app |
+| [`eos-transit-meetone-provider`](https://github.com/meet-one/eos-transit-meetone-provider) | ???   | Wallet provider for [MEET.ONE](https://meet.one/) app |
 | [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)               | 3.0.x   | Stub wallet provider that does nothing, for demo and testing only |
 
 
 ## Contribution
+
+The below instructions only apply to developers wishing to build the transit project. In most cases developers will want to pull the NPM pakckages. 
+
+If you're wanting to USE eos-transit and plugins:
+
+ 👉🏻 **Please see the "Quick Start" and thorough guide in the [`eos-transit` package docs](packages/eos-transit)**
+
+If you are looking to build your own plugin, the [Transit PLUGIN Developer Kit](/eosnewyork/eos-transit/tree/master/plugin-dev/transit-dev-simple) is a good place to start. 
 
 ### Package development
 

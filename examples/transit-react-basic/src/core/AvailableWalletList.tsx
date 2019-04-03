@@ -32,12 +32,12 @@ export function AvailableWalletList({ onItemSelect }: AvailableWalletListProps) 
 					const end = window.performance.now();
 					const time = end - start;
 					console.log(time);
-					wallet.discover({ pathIndexList: [ 0, 1, 2, 35 ] }).then((discoveryData: DiscoveryData) => {
+					wallet.discover({ pathIndexList: [ 0 ] }).then((discoveryData: DiscoveryData) => {
 						console.log(discoveryData);
 						// console.timeEnd('someFunction');
 
 						if (discoveryData.keyToAccountMap.length > 0) {
-							const index = 6;
+							const index = 0;
 							const keyObj = discoveryData.keyToAccountMap[index];
 
 							const accountName = keyObj.accounts[0].account;
