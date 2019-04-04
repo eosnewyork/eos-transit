@@ -3,6 +3,7 @@ import scatter from 'eos-transit-scatter-provider';
 import ledger from 'eos-transit-ledger-provider';
 import lynx from 'eos-transit-lynx-provider';
 import tokenpocket from 'eos-transit-tokenpocket-provider';
+import meetone from 'eos-transit-meetone-provider';
 
 const appName = 'my_eos_dapp';
 
@@ -15,7 +16,7 @@ const walContext = initDefaultAccessContext({
 		chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 	},
 	// walletProviders: [ scatter() ]
-	walletProviders: [ scatter(), ledger(), lynx(), tokenpocket() ]
+	walletProviders: [ scatter(), ledger(), lynx(), tokenpocket(), meetone() ]
 });
 
 // walContext.addWalletProvider(ledger({ pathIndexList: [ 0, 1, 2, 35 ] }));

@@ -1,4 +1,4 @@
-# eos-transit-lynx-provider
+# eos-transit-meetone-provider
 
 ## Introduction
 
@@ -11,8 +11,8 @@ EOS Transit, Github: https://github.com/eosnewyork/eos-transit/tree/master/packa
 
 ## Links To This Package
 
-NPM: https://www.npmjs.com/package/eos-transit-lynx-provider  
-Github: https://github.com/eosnewyork/eos-transit/tree/master/packages/eos-transit-lynx-provider 
+NPM: https://www.npmjs.com/package/eos-transit-meetone-provider  
+Github: https://github.com/eosnewyork/eos-transit/tree/master/packages/eos-transit-meetone-provider
 
 ## Implementation Details
 

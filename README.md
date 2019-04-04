@@ -20,7 +20,6 @@ Instead of focusing on supporting specific signature providers one by one, devel
 
 This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna).  
 
-Wallet providers have the option to add their plugin to this repo via pull request, or they maintain it within their own repo. 
 
 | Package                                                                         | Version | Description                       |
 |---------------------------------------------------------------------------------|---------|-----------------------------------|
@@ -29,7 +28,7 @@ Wallet providers have the option to add their plugin to this repo via pull reque
 | [`eos-transit-lynx-provider`](packages/eos-transit-lynx-provider)               | 3.0.x   | Wallet provider for [Lynx](https://eoslynx.com/) app |
 | [`eos-transit-ledger-provider`](packages/eos-transit-ledger-provider)           | 3.0.x   | Wallet provider for [Ledger](https://www.ledger.com/) app |
 | [`eos-transit-tokenpocket-provider`](packages/eos-transit-tokenpocket-provider) | 3.0.x   | Wallet provider for [Token Pocket](https://www.tokenpocket.pro/) app |
-| [`eos-transit-meetone-provider`](https://github.com/meet-one/eos-transit-meetone-provider) | ???   | Wallet provider for [MEET.ONE](https://meet.one/) app |
+| [`eos-transit-meetone-provider`](packages/eos-transit-meetone-provider) | 3.0.x   | Wallet provider for [MEET.ONE](https://meet.one/) app |
 | [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)               | 3.0.x   | Stub wallet provider that does nothing, for demo and testing only |
 
 
