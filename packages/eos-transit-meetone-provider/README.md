@@ -21,4 +21,4 @@ Github: https://github.com/eosnewyork/eos-transit/tree/master/packages/eos-trans
 ## Build Your Own Plugin
 To build a plugin for your own signature provider to be included in the Transit API framework, please visit our in-depth tutorial here: https://github.com/eosnewyork/eos-transit/tree/master/plugin-dev/transit-dev-simple
 
-// We'll be adding plugin specific documentation here soon.
+// We'll be adding plugin specific documentation here soon..
