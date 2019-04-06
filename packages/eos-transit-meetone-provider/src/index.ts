@@ -5,9 +5,17 @@ let accountPublickey: string;
 let scatter: any;
 let signatureProvider: ApiInterfaces.SignatureProvider;
 
+function logIfDebugEnabled(msg: string) {
+	const debug = localStorage.getItem('DEBUG');
+	if (debug === 'true') {
+		console.log('IN WALLET: ' + msg);
+	}
+}
+
 if (typeof window !== undefined && typeof document !== undefined) {
 	// @ts-ignore:
 	scatter = window.scatter;
+	// Don't beleive this event really exists in the case of MEET.ONE
 	document.addEventListener('scatterLoaded', () => {
 		// @ts-ignore:
 		scatter = window.scatter;
@@ -35,10 +43,26 @@ export function meetoneWalletProvider() {
 		// connection
 		function connect(appName: string) {
 			return new Promise((resolve, reject) => {
-				if (scatter.wallet === 'MEETONE') {
-					return resolve(true)
+				let tries = 0;
+
+				function checkConnect() {
+					logIfDebugEnabled('Checking the state of Scatter Object: ' + tries + ' : ' + scatter);
+					if (scatter) {
+						if (scatter.wallet === 'MEETONE') {
+							return resolve(true);
+						}
+					}
+
+					tries++;
+
+					if (tries > 5) return reject('Cannot connect to MEET.ONE wallet provider');
+
+					setTimeout(() => {
+						checkConnect();
+					}, 1000);
 				}
-				return Promise.reject('Cannot connect to Scatter');
+
+				checkConnect();
 			});
 		}
 
@@ -54,7 +78,11 @@ export function meetoneWalletProvider() {
 				if (!identity) {
 					return Promise.reject('No identity obtained from Scatter');
 				}
-				const account = (identity && identity.accounts && (identity.accounts as any[]).find((x) => x.blockchain === 'eos')) || void 0;
+				const account =
+					(identity &&
+						identity.accounts &&
+						(identity.accounts as any[]).find((x) => x.blockchain === 'eos')) ||
+					void 0;
 
 				if (!account) {
 					return Promise.reject('No account data obtained from Scatter identity');
