@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-meetone-provider",
-	"version": "3.0.5",
+	"version": "3.0.6",
 	"description": "meetone wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
