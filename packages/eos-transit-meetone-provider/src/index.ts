@@ -47,11 +47,18 @@ export function meetoneWalletProvider() {
 
 				function checkConnect() {
 					logIfDebugEnabled('Checking the state of Scatter Object: ' + tries + ' : ' + scatter);
-					if (scatter) {
-						if (scatter.wallet === 'MEETONE') {
-							return resolve(true);
-						}
+					// @ts-ignore:
+					if (window.scatter && navigator && navigator.userAgent.toLowerCase().includes('meet.one')) {
+						// @ts-ignore:
+						scatter = window.scatter;
+						return resolve(true);
 					}
+
+					// if (scatter) {
+					// 	if (scatter.wallet === 'MEETONE') {
+					// 		return resolve(true);
+					// 	}
+					// }
 
 					tries++;
 
