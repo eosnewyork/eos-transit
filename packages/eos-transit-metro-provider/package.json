@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-metro-provider",
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"description": "Metro wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
@@ -21,9 +21,9 @@
 		"eos-transit": "^3.0.1"
 	},
 	"devDependencies": {
+		"@types/chrome": "0.0.82",
 		"webpack": "^4.25.1",
-		"webpack-cli": "^3.1.2",
-		"@types/chrome": "0.0.82"
+		"webpack-cli": "^3.1.2"
 	},
 	"prettier": {
 		"singleQuote": true,
