@@ -84,7 +84,9 @@ export class LoginScreen extends Component<any, LoginScreenState> {
       wallet.discover({ pathIndexList: [ 0,1 ]  }).then((discoveryData: DiscoveryData) => {
         const end1 = window.performance.now();
         const time1 = end1 - start1;
-        console.log(time1);    
+        console.log(time1);
+
+        console.log(discoveryData);
 
         console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         
