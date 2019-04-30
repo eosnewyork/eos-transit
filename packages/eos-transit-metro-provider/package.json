@@ -7,6 +7,8 @@
 	"module": "lib/index.js",
 	"types": "lib",
 	"scripts": {
+		"echo": "echo \"================== eos-transit-metro-provider ===================\"",
+		"installpkg": "yarn echo && npm install",
 		"clean": "rm -rf lib && rm -rf umd",
 		"prebuild": "yarn clean",
 		"build": "../../node_modules/typescript/bin/tsc",

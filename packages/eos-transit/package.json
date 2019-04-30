@@ -19,7 +19,7 @@
 		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
-		"eosjs": "20.0.0-ba6d627.0",
+		"eosjs": "^20.0.0",
 		"uuid": "^3.3.2"
 	},
 	"devDependencies": {

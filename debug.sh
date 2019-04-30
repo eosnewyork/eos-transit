@@ -1,7 +1,8 @@
 #!/bin/bash
-SESSION=$USER
+SESSION=transit
 
 set -- $(stty size)
+tmux kill-session -t transit 
 tmux -2 new-session -d -s $SESSION -x "$2" -y "$(($1 - 1))"
 
 # Setup a window for tailing log files

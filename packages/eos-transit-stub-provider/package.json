@@ -7,6 +7,8 @@
 	"module": "lib/index.js",
 	"types": "lib",
 	"scripts": {
+		"echo": "echo \"================== eos-transit-stub-provider ===================\"",
+		"installpkg": "yarn echo && npm install",
 		"clean": "rm -rf lib && rm -rf umd",
 		"prebuild": "yarn clean",
 		"build": "../../node_modules/typescript/bin/tsc",
@@ -19,7 +21,7 @@
 		"eos-transit": "^3.0.1"
 	},
 	"devDependencies": {
-		"eosjs": "20.0.0-beta3",
+		"eosjs": "^20.0.0",
 		"webpack": "^4.25.1",
 		"webpack-cli": "^3.1.2"
 	},

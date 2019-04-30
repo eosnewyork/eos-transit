@@ -44,7 +44,7 @@
 	},
 	"devDependencies": {
 		"@babel/plugin-transform-regenerator": "^7.0.0",
-		"eosjs": "20.0.0-ba6d627.0",
+		"eosjs": "^20.0.0",
 		"webpack": "^4.25.1"
 	},
 	"prettier": {
