@@ -4,6 +4,7 @@ const assert = require('assert');
 const asn1 = require('asn1-ber');
 // const { TextEncoder, TextDecoder } = require('text-encoding');
 
+
 import { Serialize } from 'eosjs';
 
 export default class LedgerDataManager {
