@@ -3,7 +3,7 @@ import styled from 'react-emotion';
 import WAL, { Wallet } from 'eos-transit';
 import { TransactionButtonBlock } from './shared/transactions/TransactionButtonBlock';
 import { FormElement, Input, FormActions, FieldLabel } from './shared/forms';
-import { transfer, claim, vote } from './core/eosActions';
+import { transfer, claim, vote, stake } from './core/eosActions';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 const { accessContext } = WAL;
@@ -125,7 +125,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 			progressMessage: defaultProgressMessage
 		});
 
-		return vote(wallet)
+		return stake(wallet)
 			.then((result: any) => {
 				this.setState({
 					inProgress: false,

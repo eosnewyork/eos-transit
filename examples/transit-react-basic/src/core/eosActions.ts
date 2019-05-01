@@ -41,15 +41,15 @@ export function claim(wallet: Wallet) {
 
 	return wallet.eosApi.transact({
 		actions: [{
-		  account: 'efxstakepool',
-		  name: 'claim',
-		  authorization: [{
-			actor: senderName,
-			permission: 'active',
-		  }],
-		  data: {
-			owner: senderName
-		  },
+				account: 'efxstakepool',
+				name: 'claim',
+				authorization: [{
+				actor: senderName,
+				permission: 'active',
+			}],
+				data: {
+				owner: senderName
+			},
 		},
 		{
 			account: 'efxstakepool',
@@ -76,17 +76,48 @@ export function stake(wallet: Wallet) {
 	const { accountName: senderName, permission } = auth;
 
 	return wallet.eosApi.transact({
-		actions: [{
-		  account: 'efxstakepool',
-		  name: 'claim',
-		  authorization: [{
-			actor: senderName,
-			permission: 'active',
-		  }],
-		  data: {
-			owner: senderName
-		  },
-		}],
+		actions: [
+			{
+			  account: 'efxstakepool',
+			  name: 'open',
+			  authorization: [{
+				actor: senderName,
+				permission: 'active',
+			  }],
+			  data: {
+				owner: senderName,
+				ram_payer: senderName,
+			  },
+			},
+			{
+			  account: 'effecttokens',
+			  name: 'open',
+			  authorization: [{
+				actor: senderName,
+				permission: 'active',
+			  }],
+			  data: {
+				owner: senderName,
+				symbol: `4,NFX`,
+				ram_payer: senderName,
+			  },
+			},
+		  
+		  {
+			account: 'effecttokens',
+			name: 'transfer',
+			authorization: [{
+			  actor: senderName,
+			  permission: 'active',
+			}],
+			data: {
+			  from: senderName,
+			  to: 'efxstakepool',
+			  quantity: '1.0000 EFX',
+			  memo: 'stake',
+			},
+		  }
+		],
 	  }, {blocksBehind: 3, expireSeconds: 60});
 }
 
