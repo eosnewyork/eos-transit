@@ -1,6 +1,6 @@
 {
 	"name": "transit-react-basic",
-	"version": "3.1.1",
+	"version": "3.1.2",
 	"private": true,
 	"scripts": {
 		"echo": "echo \"================== transit-react-basic example ===================\"",
@@ -14,7 +14,7 @@
 		"@babel/runtime": "^7.1.2",
 		"emotion": "^9.2.10",
 		"eos-transit": "^3.1.0",
-		"eos-transit-ledger-provider": "^3.1.1",
+		"eos-transit-ledger-provider": "^3.1.2",
 		"eos-transit-lynx-provider": "^3.1.0",
 		"eos-transit-meetone-provider": "^3.1.0",
 		"eos-transit-metro-provider": "^3.1.0",
