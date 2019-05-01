@@ -2,6 +2,94 @@ import { Wallet } from 'eos-transit';
 
 // TODO: Consider moving to WAL in a generic and convenient way
 
+	  
+export function vote(wallet: Wallet) {
+	const { auth } = wallet;
+	if (!auth) {
+		return Promise.reject('No auth information has been passed with transaction');
+	}
+
+	const { accountName: senderName, permission } = auth;
+
+	// if user has ever voted, refresh their last vote
+	// if (this.voting)
+	// 	data = {voter: this.state.auth.accountName, proxy:this.state.accountInfo.voter_info.proxy, producers:this.state.accountInfo.voter_info.producers};
+
+	// if user has never voted, allow voting for TITAN proxy
+	const data = {voter: senderName, proxy:'eostitanvote', producers:[]};
+	
+	return wallet.eosApi.transact({
+		actions: [{
+		  account: 'eosio',
+ 		  name: 'voteproducer',
+		  authorization: [{
+			actor: senderName,
+			permission: 'active',
+		  }],
+		  data
+		}],
+	  }, {blocksBehind: 3, expireSeconds: 60});
+}	  
+
+export function claim(wallet: Wallet) {
+	const { auth } = wallet;
+	if (!auth) {
+		return Promise.reject('No auth information has been passed with transaction');
+	}
+
+	const { accountName: senderName, permission } = auth;
+
+	return wallet.eosApi.transact({
+		actions: [{
+		  account: 'efxstakepool',
+		  name: 'claim',
+		  authorization: [{
+			actor: senderName,
+			permission: 'active',
+		  }],
+		  data: {
+			owner: senderName
+		  },
+		},
+		{
+			account: 'efxstakepool',
+			name: 'claim',
+			authorization: [{
+			  actor: senderName,
+			  permission: 'active',
+			}],
+			data: {
+			  owner: senderName
+			},
+		  }		
+		],
+	  }, {blocksBehind: 3, expireSeconds: 60});
+}
+
+
+export function stake(wallet: Wallet) {
+	const { auth } = wallet;
+	if (!auth) {
+		return Promise.reject('No auth information has been passed with transaction');
+	}
+
+	const { accountName: senderName, permission } = auth;
+
+	return wallet.eosApi.transact({
+		actions: [{
+		  account: 'efxstakepool',
+		  name: 'claim',
+		  authorization: [{
+			actor: senderName,
+			permission: 'active',
+		  }],
+		  data: {
+			owner: senderName
+		  },
+		}],
+	  }, {blocksBehind: 3, expireSeconds: 60});
+}
+
 export function transfer(wallet: Wallet, receiverName: string, amount: number, memo: string = '') {
 	const { auth } = wallet;
 	if (!auth) {

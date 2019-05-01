@@ -181,8 +181,8 @@ export function ledgerWalletProvider(
 					const api = new Api(args);
 					var _txn = await api.deserializeTransactionWithActions(signatureProviderArgs.serializedTransaction);
 
-					// console.log(new Buffer(signatureProviderArgs.serializedTransaction).toString('hex'));
-					// console.log(_txn);
+					console.log(new Buffer(signatureProviderArgs.serializedTransaction).toString('hex'));
+					console.log(_txn);
 
 					var ledgerManager = new LedgerDataManager();
 					const ledgerBuffer = await ledgerManager.serialize(
@@ -191,6 +191,9 @@ export function ledgerWalletProvider(
 						api.abiTypes,
 						api
 					);
+
+					console.log("ledgerBuffer");
+					console.log(ledgerBuffer);
 
 					let ledger = new LedgerProxy();
 

@@ -3,7 +3,7 @@ import styled from 'react-emotion';
 import WAL, { Wallet } from 'eos-transit';
 import { TransactionButtonBlock } from './shared/transactions/TransactionButtonBlock';
 import { FormElement, Input, FormActions, FieldLabel } from './shared/forms';
-import { transfer } from './core/eosActions';
+import { transfer, claim, vote } from './core/eosActions';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 const { accessContext } = WAL;
@@ -125,7 +125,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 			progressMessage: defaultProgressMessage
 		});
 
-		return transfer(wallet, receiverName, amount)
+		return vote(wallet)
 			.then((result: any) => {
 				this.setState({
 					inProgress: false,
@@ -143,7 +143,27 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 					success: false,
 					errorMessage: error && error.message ? error.message : defaultErrorMessage
 				});
-			});
+			});		
+
+		// return transfer(wallet, receiverName, amount)
+		// 	.then((result: any) => {
+		// 		this.setState({
+		// 			inProgress: false,
+		// 			hasError: false,
+		// 			success: true,
+		// 			successMessage: defaultSuccessMessage
+		// 		});
+		// 	})
+		// 	.catch((error: any) => {
+		// 		console.error('[txn] Error', error);
+
+		// 		this.setState({
+		// 			inProgress: false,
+		// 			hasError: true,
+		// 			success: false,
+		// 			errorMessage: error && error.message ? error.message : defaultErrorMessage
+		// 		});
+		// 	});
 	};
 
 	resetForm = () => {

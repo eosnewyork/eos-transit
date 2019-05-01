@@ -61,66 +61,68 @@ export default class LedgerDataManager {
 			fcbufferMatch +
 			encode(writer, sertype, 0, types, 'Not sure what the heck this is (Hard Coded to 0) (0401)');
 
-		assert(transaction.actions.length === 1);
-		//encode(writer, fcbuffer.toBuffer(types.unsigned_int(), 1));
 		var sertype = 'uint8';
 		fcbufferMatch =
 			fcbufferMatch +
-			encode(writer, sertype, 1, types, 'Not sure what the heck this is (Hard Coded to 1) (0401)');
+			encode(writer, sertype, transaction.actions.length, types, 'The number of transactions (0401)');
 
-		//encode(writer, fcbuffer.toBuffer(types.account_name(), action.account));
-		var sertype = 'name';
-		fcbufferMatch = fcbufferMatch + encode(writer, sertype, action.account, types, 'action.account (0408)');
+		for(const action of transaction.actions) {
 
-		//encode(writer, fcbuffer.toBuffer(types.action_name(), action.name));
-		var sertype = 'name';
-		fcbufferMatch = fcbufferMatch + encode(writer, sertype, action.name, types, 'action.name (0408)');
-
-		//encode(writer,fcbuffer.toBuffer(types.unsigned_int(), action.authorization.length));
-		var sertype = 'uint8';
-		fcbufferMatch =
-			fcbufferMatch + encode(writer, sertype, action.authorization.length, types, 'action.authorization.length');
-
-		for (let i = 0; i < action.authorization.length; i += 1) {
-			const authorization = action.authorization[i];
-
-			//encode(writer,fcbuffer.toBuffer(types.account_name(), authorization.actor));
+			//encode(writer, fcbuffer.toBuffer(types.account_name(), action.account));
 			var sertype = 'name';
+			fcbufferMatch = fcbufferMatch + encode(writer, sertype, action.account, types, 'action.account (0408)');
+
+			//encode(writer, fcbuffer.toBuffer(types.action_name(), action.name));
+			var sertype = 'name';
+			fcbufferMatch = fcbufferMatch + encode(writer, sertype, action.name, types, 'action.name (0408)');
+
+			//encode(writer,fcbuffer.toBuffer(types.unsigned_int(), action.authorization.length));
+			var sertype = 'uint8';
 			fcbufferMatch =
-				fcbufferMatch +
-				encode(writer, sertype, authorization.actor, types, 'authorization.actor (was account_name)');
+				fcbufferMatch + encode(writer, sertype, action.authorization.length, types, 'action.authorization.length');
 
-			//encode(writer,fcbuffer.toBuffer(types.permission_name(), authorization.permission));
-			var sertype = 'name';
+			for (let i = 0; i < action.authorization.length; i += 1) {
+				const authorization = action.authorization[i];
+
+				//encode(writer,fcbuffer.toBuffer(types.account_name(), authorization.actor));
+				var sertype = 'name';
+				fcbufferMatch =
+					fcbufferMatch +
+					encode(writer, sertype, authorization.actor, types, 'authorization.actor (was account_name)');
+
+				//encode(writer,fcbuffer.toBuffer(types.permission_name(), authorization.permission));
+				var sertype = 'name';
+				fcbufferMatch =
+					fcbufferMatch +
+					encode(
+						writer,
+						sertype,
+						authorization.permission,
+						types,
+						'authorization.permission (was permission_name)'
+					);
+			}				
+
+			//serializeActionData(contract: Contract, account: string, name: string, data: any, textEncoder: TextEncoder, textDecoder: TextDecoder)
+			// @ts-ignore - we don't seem to really need TextEncoder or TextDecoder and it adds a large overhead to the package.
+			var b = Serialize.serializeActionData(contract, action.account, action.name, action.data, null, null);
+			const data = Buffer.from(b, 'hex');
+
+			//encode(writer, fcbuffer.toBuffer(types.unsigned_int(), data.length));
+			var sertype = 'varuint32';
 			fcbufferMatch =
 				fcbufferMatch +
 				encode(
 					writer,
 					sertype,
-					authorization.permission,
+					data.length,
 					types,
-					'authorization.permission (was permission_name)'
+					'data.length (IMPORTANT, this is a varuint32 - the byte length varies depending on the data size)'
 				);
+
+			fcbufferMatch = fcbufferMatch + encodeRaw(writer, data, data.length, 'raw data not serialized');			
+
 		}
-
-		//serializeActionData(contract: Contract, account: string, name: string, data: any, textEncoder: TextEncoder, textDecoder: TextDecoder)
-		// @ts-ignore - we don't seem to really need TextEncoder or TextDecoder and it adds a large overhead to the package.
-		var b = Serialize.serializeActionData(contract, action.account, action.name, action.data, null, null);
-		const data = Buffer.from(b, 'hex');
-
-		//encode(writer, fcbuffer.toBuffer(types.unsigned_int(), data.length));
-		var sertype = 'varuint32';
-		fcbufferMatch =
-			fcbufferMatch +
-			encode(
-				writer,
-				sertype,
-				data.length,
-				types,
-				'data.length (IMPORTANT, this is a varuint32 - the byte length varies depending on the data size)'
-			);
-
-		fcbufferMatch = fcbufferMatch + encodeRaw(writer, data, data.length, 'raw data not serialized');
 
 		assert(writer, transaction.transaction_extensions.length === 0);
 		//encode(writer, fcbuffer.toBuffer(types.unsigned_int(), 0));
