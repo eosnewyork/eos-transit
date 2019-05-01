@@ -17,7 +17,7 @@ const walContext = initDefaultAccessContext({
 		chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 	},
 	// walletProviders: [ scatter() ]
-	walletProviders: [ scatter(), ledger(), lynx(), tokenpocket(), meetone(), metro() ]
+	walletProviders: [ scatter(), ledger({exchangeTimeout : 30000}), lynx(), tokenpocket(), meetone(), metro() ]
 });
 
 // walContext.addWalletProvider(ledger({ pathIndexList: [ 0, 1, 2, 35 ] }));

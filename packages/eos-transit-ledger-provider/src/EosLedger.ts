@@ -55,8 +55,10 @@ export default class EOS {
 
   transport: any;  
 
-  constructor(transport: any, scrambleKey = "e0s") {
+  constructor(transport: any, exchangeTimeout = 5000, scrambleKey = "e0s") {
     this.transport = transport;
+    // Set the U2F timeout to 30 Seconds. The default is 5 seconds. 
+    this.transport.setExchangeTimeout(exchangeTimeout);
     transport.decorateAppAPIMethods(this, ["getAddress", "signTransaction", "signPersonalMessage", "getAppConfiguration"], scrambleKey);
   }
 

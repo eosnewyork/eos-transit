@@ -20,6 +20,12 @@ export interface matchedIndexItem {
 }
 
 class LedgerProxy {
+
+	_exchangeTimeout: number;
+	public constructor(exchangeTimeout: number){
+		this._exchangeTimeout = exchangeTimeout;
+	};
+	
 	async getPathKeys(keyPositions: number[]): Promise<matchedIndexItem[]> {
 		let transport = await Transport.create();
 		const eos = new EosLedger.default(transport);
@@ -36,7 +42,7 @@ class LedgerProxy {
 
 	async sign(toSign: Buffer, index: number): Promise<string> {
 		let transport = await Transport.create();
-		const eos = new EosLedger.default(transport);
+		const eos = new EosLedger.default(transport, this._exchangeTimeout);
 		let signatures: string[] = [ '' ];
 
 		let toSignHex = toSign.toString('hex');
@@ -56,7 +62,7 @@ export interface ledgerWalletProviderOptions {
 	name?: string;
 	shortName?: string;
 	description?: string;
-	errorTimeout?: number;
+	exchangeTimeout?: number;
 }
 
 export function ledgerWalletProvider(
@@ -65,7 +71,7 @@ export function ledgerWalletProvider(
 		name = 'Ledger Nano S',
 		shortName = 'Ledger Nano S',
 		description = 'Use Ledger Nano S hardware wallet to sign your transactions',
-		errorTimeout
+		exchangeTimeout = 10000
 	}: ledgerWalletProviderOptions = {}
 ) {
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
@@ -97,7 +103,7 @@ export function ledgerWalletProvider(
 				// console.log('missingIndexs:');
 				// console.log(missingIndexs);
 
-				let ledger = new LedgerProxy();
+				let ledger = new LedgerProxy(exchangeTimeout);
 				ledger
 					.getPathKeys(missingIndexs)
 					.then((keysResult: matchedIndexItem[]) => {
@@ -195,7 +201,7 @@ export function ledgerWalletProvider(
 					console.log("ledgerBuffer");
 					console.log(ledgerBuffer);
 
-					let ledger = new LedgerProxy();
+					let ledger = new LedgerProxy(exchangeTimeout);
 
 					// console.log(_txn);
 					// console.log(selectedIndexArray);
