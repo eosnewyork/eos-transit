@@ -125,27 +125,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 			progressMessage: defaultProgressMessage
 		});
 
-		return stake(wallet)
-			.then((result: any) => {
-				this.setState({
-					inProgress: false,
-					hasError: false,
-					success: true,
-					successMessage: defaultSuccessMessage
-				});
-			})
-			.catch((error: any) => {
-				console.error('[txn] Error', error);
-
-				this.setState({
-					inProgress: false,
-					hasError: true,
-					success: false,
-					errorMessage: error && error.message ? error.message : defaultErrorMessage
-				});
-			});		
-
-		// return transfer(wallet, receiverName, amount)
+		// return stake(wallet)
 		// 	.then((result: any) => {
 		// 		this.setState({
 		// 			inProgress: false,
@@ -163,7 +143,27 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 		// 			success: false,
 		// 			errorMessage: error && error.message ? error.message : defaultErrorMessage
 		// 		});
-		// 	});
+		// 	});		
+
+		return transfer(wallet, receiverName, amount)
+			.then((result: any) => {
+				this.setState({
+					inProgress: false,
+					hasError: false,
+					success: true,
+					successMessage: defaultSuccessMessage
+				});
+			})
+			.catch((error: any) => {
+				console.error('[txn] Error', error);
+
+				this.setState({
+					inProgress: false,
+					hasError: true,
+					success: false,
+					errorMessage: error && error.message ? error.message : defaultErrorMessage
+				});
+			});
 	};
 
 	resetForm = () => {

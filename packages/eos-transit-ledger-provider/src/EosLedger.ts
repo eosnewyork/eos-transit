@@ -18,7 +18,7 @@
 
 // FIXME drop:
 import { splitPath, foreach } from "./EosUtils";
-import Transport from "@ledgerhq/hw-transport-u2f";
+// import Transport from "@ledgerhq/hw-transport-u2f";
 //import Transport from "@ledgerhq/hw-transport";
 
 const CLA = 0xD4;
@@ -57,8 +57,6 @@ export default class EOS {
 
   constructor(transport: any, exchangeTimeout = 5000, scrambleKey = "e0s") {
     this.transport = transport;
-    // Set the U2F timeout to 30 Seconds. The default is 5 seconds. 
-    this.transport.setExchangeTimeout(exchangeTimeout);
     transport.decorateAppAPIMethods(this, ["getAddress", "signTransaction", "signPersonalMessage", "getAppConfiguration"], scrambleKey);
   }
 

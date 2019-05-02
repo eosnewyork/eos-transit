@@ -1,7 +1,8 @@
 import { Api, ApiInterfaces, RpcInterfaces, JsonRpc } from 'eosjs';
 import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
 import * as EosLedger from './EosLedger';
-import Transport from '@ledgerhq/hw-transport-u2f';
+import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import TransportWebAuthn from '@ledgerhq/hw-transport-webauthn';
 import LedgerDataManager from './LedgerDataManager';
 import 'babel-polyfill';
 import * as ecc from 'eosjs-ecc';
@@ -22,13 +23,17 @@ export interface matchedIndexItem {
 class LedgerProxy {
 
 	_exchangeTimeout: number;
-	public constructor(exchangeTimeout: number){
+	transport: any;
+	public constructor(exchangeTimeout: number, supplied_transport: any){
 		this._exchangeTimeout = exchangeTimeout;
+		this.transport = supplied_transport;
 	};
 	
 	async getPathKeys(keyPositions: number[]): Promise<matchedIndexItem[]> {
-		let transport = await Transport.create();
-		const eos = new EosLedger.default(transport);
+		// let transport: any = await this.initTransport();
+
+		// let transport = await Transport.create();
+		const eos = new EosLedger.default(this.transport);
 		let keys: matchedIndexItem[] = [];
 
 		for (let num of keyPositions) {
@@ -41,8 +46,10 @@ class LedgerProxy {
 	}
 
 	async sign(toSign: Buffer, index: number): Promise<string> {
-		let transport = await Transport.create();
-		const eos = new EosLedger.default(transport, this._exchangeTimeout);
+		// let transport: any = await this.initTransport();
+
+		// let transport = await Transport.create();
+		const eos = new EosLedger.default(this.transport, this._exchangeTimeout);
 		let signatures: string[] = [ '' ];
 
 		let toSignHex = toSign.toString('hex');
@@ -55,6 +62,18 @@ class LedgerProxy {
 
 		return si.toString();
 	}
+
+	// private async initTransport() {
+	// 	let transport: any;
+	// 	if (this._transport === 'TransportWebAuthn') {
+	// 		transport = await TransportWebAuthn.create();
+	// 	}
+	// 	else {
+	// 		transport = await TransportU2F.create();
+	// 	}
+	// 	transport.setExchangeTimeout(this._exchangeTimeout);
+	// 	return transport;
+	// }
 }
 
 export interface ledgerWalletProviderOptions {
@@ -63,6 +82,7 @@ export interface ledgerWalletProviderOptions {
 	shortName?: string;
 	description?: string;
 	exchangeTimeout?: number;
+	transport?: 'TransportWebAuthn' | 'TransportU2F';
 }
 
 export function ledgerWalletProvider(
@@ -71,7 +91,8 @@ export function ledgerWalletProvider(
 		name = 'Ledger Nano S',
 		shortName = 'Ledger Nano S',
 		description = 'Use Ledger Nano S hardware wallet to sign your transactions',
-		exchangeTimeout = 10000
+		exchangeTimeout = 10000, 
+		transport = 'TransportU2F'
 	}: ledgerWalletProviderOptions = {}
 ) {
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
@@ -80,10 +101,28 @@ export function ledgerWalletProvider(
 		let selectedIndex: number = -1;
 		let selectedIndexArray: { id: string; index: number }[] = [];
 		let keyMap: matchedIndexItem[] = [];
+		let ledger: LedgerProxy;
+		let selectedTransport: any;
 
 		function connect(appName: string) {
 			return new Promise((resolve, reject) => {
-				resolve();
+				if (transport === 'TransportWebAuthn') {
+					TransportWebAuthn.create().then((_transport: any) => {
+						selectedTransport = _transport;
+						selectedTransport.setExchangeTimeout(exchangeTimeout);
+						ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
+						resolve();
+					}) 	
+				}
+				else {
+					TransportU2F.create().then((_transport: any) => {
+						selectedTransport = _transport;
+						selectedTransport.setExchangeTimeout(exchangeTimeout);
+						ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
+						resolve();
+					}) 	
+				}
+
 			});
 		}
 
@@ -103,7 +142,7 @@ export function ledgerWalletProvider(
 				// console.log('missingIndexs:');
 				// console.log(missingIndexs);
 
-				let ledger = new LedgerProxy(exchangeTimeout);
+				// let ledger = new LedgerProxy(exchangeTimeout, transport);
 				ledger
 					.getPathKeys(missingIndexs)
 					.then((keysResult: matchedIndexItem[]) => {
@@ -187,8 +226,8 @@ export function ledgerWalletProvider(
 					const api = new Api(args);
 					var _txn = await api.deserializeTransactionWithActions(signatureProviderArgs.serializedTransaction);
 
-					console.log(new Buffer(signatureProviderArgs.serializedTransaction).toString('hex'));
-					console.log(_txn);
+					// console.log(new Buffer(signatureProviderArgs.serializedTransaction).toString('hex'));
+					// console.log(_txn);
 
 					var ledgerManager = new LedgerDataManager();
 					const ledgerBuffer = await ledgerManager.serialize(
@@ -198,10 +237,10 @@ export function ledgerWalletProvider(
 						api
 					);
 
-					console.log("ledgerBuffer");
-					console.log(ledgerBuffer);
+					// console.log("ledgerBuffer");
+					// console.log(ledgerBuffer);
 
-					let ledger = new LedgerProxy(exchangeTimeout);
+					// let ledger = new LedgerProxy(exchangeTimeout, transport);
 
 					// console.log(_txn);
 					// console.log(selectedIndexArray);
