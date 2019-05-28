@@ -1,0 +1,11 @@
+--- TransportU2F.js	2019-02-05 14:51:58.052501700 -0500
++++ TransportU2F_new.js	2019-02-05 14:52:20.660241700 -0500
+@@ -14,6 +14,8 @@
+ 
+ var _hwTransport2 = _interopRequireDefault(_hwTransport);
+ 
++var regeneratorRuntime = require("@babel/runtime/regenerator");
++
+ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+ 
+ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }

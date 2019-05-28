@@ -4,7 +4,8 @@
 	"private": true,
 	"scripts": {
 		"echo": "echo \"================== transit-react-basic example ===================\"",
-		"installpkg": "yarn echo && npm install",
+		"patchledger": "./patch-TransportU2F.sh && ./patch-Transportwebauthn.sh",
+		"installpkg": "yarn echo && npm install && yarn patchledger",
 		"start": "react-scripts-ts start",
 		"build": "react-scripts-ts build",
 		"test": "react-scripts-ts test --env=jsdom",

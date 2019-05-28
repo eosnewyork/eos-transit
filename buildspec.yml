@@ -22,7 +22,7 @@ phases:
       - echo build site using yarn
       - yarn
       - cd ./examples/transit-react-basic/
-      - npm install
+      - yarn installpkg
       - yarn build
       - echo done building
   post_build:
