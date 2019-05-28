@@ -28,7 +28,7 @@ class LedgerProxy {
 		this._exchangeTimeout = exchangeTimeout;
 		this.transport = supplied_transport;
 	};
-	
+
 	async getPathKeys(keyPositions: number[]): Promise<matchedIndexItem[]> {
 		// let transport: any = await this.initTransport();
 
@@ -91,7 +91,7 @@ export function ledgerWalletProvider(
 		name = 'Ledger Nano S',
 		shortName = 'Ledger Nano S',
 		description = 'Use Ledger Nano S hardware wallet to sign your transactions',
-		exchangeTimeout = 10000, 
+		exchangeTimeout = 10000,
 		transport = 'TransportU2F'
 	}: ledgerWalletProviderOptions = {}
 ) {
@@ -104,26 +104,17 @@ export function ledgerWalletProvider(
 		let ledger: LedgerProxy;
 		let selectedTransport: any;
 
-		function connect(appName: string) {
-			return new Promise((resolve, reject) => {
-				if (transport === 'TransportWebAuthn') {
-					TransportWebAuthn.create().then((_transport: any) => {
-						selectedTransport = _transport;
-						selectedTransport.setExchangeTimeout(exchangeTimeout);
-						ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
-						resolve();
-					}) 	
-				}
-				else {
-					TransportU2F.create().then((_transport: any) => {
-						selectedTransport = _transport;
-						selectedTransport.setExchangeTimeout(exchangeTimeout);
-						ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
-						resolve();
-					}) 	
-				}
-
-			});
+		async function connect(appName: string) {
+			if (transport === 'TransportWebAuthn') {
+				selectedTransport = await TransportWebAuthn.create();
+				selectedTransport.setExchangeTimeout(exchangeTimeout);
+				ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
+			}
+			else {
+				selectedTransport = await TransportU2F.create();
+				selectedTransport.setExchangeTimeout(exchangeTimeout);
+				ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
+			}
 		}
 
 		function discover(discoveryOptions: DiscoveryOptions) {
@@ -139,11 +130,7 @@ export function ledgerWalletProvider(
 					}
 				});
 
-				// console.log('missingIndexs:');
-				// console.log(missingIndexs);
-
-				// let ledger = new LedgerProxy(exchangeTimeout, transport);
-				ledger
+				return ledger
 					.getPathKeys(missingIndexs)
 					.then((keysResult: matchedIndexItem[]) => {
 						//Merge the new key info with any previous lookups
@@ -156,7 +143,6 @@ export function ledgerWalletProvider(
 						};
 						resolve(discoveryInfo);
 					})
-					.catch((ex) => reject(ex));
 			});
 		}
 
@@ -179,15 +165,12 @@ export function ledgerWalletProvider(
 			} else {
 				throw 'When calling the ledger login function: accountName, authorization, index and key must be supplied';
 			}
-
-			return new Promise<WalletAuth>((resolve, reject) => {
-				let user: WalletAuth = {
-					accountName: accountName,
-					permission: authorization,
-					publicKey: key
-				};
-				resolve(user);
-			});
+			let user: WalletAuth = {
+				accountName: accountName,
+				permission: authorization,
+				publicKey: key
+			};
+			return user;
 		}
 
 		function logout(accountName?: string): Promise<boolean> {
