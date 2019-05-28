@@ -22,6 +22,8 @@ phases:
       - echo build site using yarn
       - yarn
       - cd ./examples/transit-react-basic/
+      - chmod 755 patch-TransportU2F.sh
+      - chmod 755 patch-Transportwebauthn.sh
       - yarn installpkg
       - yarn build
       - echo done building
