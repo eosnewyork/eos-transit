@@ -1,0 +1,35 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+  pre_build:
+    commands:
+      - echo prepare env. Ensure latest version of node is available. 
+      - sudo apt-get update
+      - sudo apt-get install -y apt-transport-https
+      - sudo curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+      - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - 
+      - sudo apt-get update
+      - sudo apt-get install -y nodejs
+      - sudo apt-get install -y build-essential
+      - sudo npm -v
+      - sudo apt-get install -y yarn
+      - echo done with prepare env.
+  build:
+    commands:
+      - echo build site using yarn
+      - yarn
+      - cd ./examples/transit-react-basic/
+      - npm install
+      - yarn build
+      - echo done building
+  post_build:
+    commands:
+      - echo about to sync to S3 
+      - aws s3 sync ./build "s3://${BUCKET_NAME}" --delete
+      - echo after sync to S3 
+artifacts:
+  files:
+    - '**/*'
