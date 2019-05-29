@@ -46,4 +46,4 @@ export class Dropdown extends Component<
   }
 }
 
-export default onClickOutside<DropdownProps>(Dropdown);
+export default onClickOutside(Dropdown);

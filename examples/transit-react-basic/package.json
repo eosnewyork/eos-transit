@@ -29,8 +29,7 @@
 		"react-onclickoutside": "^6.7.1",
 		"react-router": "^4.3.1",
 		"react-router-dom": "^4.3.1",
-		"react-scripts-ts": "3.1.0",
-		"scatterjs-core": "2.3.8"
+		"react-scripts-ts": "3.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "^10.11.3",

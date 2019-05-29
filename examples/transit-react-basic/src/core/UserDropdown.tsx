@@ -14,7 +14,7 @@ export interface UserDropdownProps {
 export function UserDropdown({ username }: UserDropdownProps) {
   return (
     <Dropdown>
-      {({ isExpanded, toggle }) => (
+      {({ isExpanded, toggle }: any) => (
         <DropdownContainer>
           <UserMedia
             caret={true}
