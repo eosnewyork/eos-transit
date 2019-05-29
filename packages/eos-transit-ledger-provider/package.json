@@ -24,6 +24,7 @@
 		"@babel/runtime": "^7.3.1",
 		"@ledgerhq/hw-transport": "^4.60.2",
 		"@ledgerhq/hw-transport-u2f": "^4.60.2",
+		"@ledgerhq/hw-transport-web-ble": "^4.60.3",
 		"@ledgerhq/hw-transport-webauthn": "^4.55.0",
 		"@types/ledgerhq__hw-transport": "^4.21.0",
 		"@types/ledgerhq__hw-transport-u2f": "^4.21.0",

@@ -3,6 +3,7 @@ import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos
 import * as EosLedger from './EosLedger';
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import TransportWebAuthn from '@ledgerhq/hw-transport-webauthn';
+import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 import LedgerDataManager from './LedgerDataManager';
 import 'babel-polyfill';
 import * as ecc from 'eosjs-ecc';
@@ -82,7 +83,7 @@ export interface ledgerWalletProviderOptions {
 	shortName?: string;
 	description?: string;
 	exchangeTimeout?: number;
-	transport?: 'TransportWebAuthn' | 'TransportU2F';
+	transport?: 'TransportWebAuthn' | 'TransportU2F' | 'TransportWebBLE';
 }
 
 export function ledgerWalletProvider(
@@ -107,14 +108,16 @@ export function ledgerWalletProvider(
 		async function connect(appName: string) {
 			if (transport === 'TransportWebAuthn') {
 				selectedTransport = await TransportWebAuthn.create();
-				selectedTransport.setExchangeTimeout(exchangeTimeout);
-				ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
+			} else if (transport === 'TransportWebBLE') {
+				selectedTransport = await TransportWebBLE.create();
 			}
 			else {
 				selectedTransport = await TransportU2F.create();
-				selectedTransport.setExchangeTimeout(exchangeTimeout);
-				ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
 			}
+
+			selectedTransport.setExchangeTimeout(exchangeTimeout);
+			ledger = new LedgerProxy(exchangeTimeout, selectedTransport);
+
 		}
 
 		function discover(discoveryOptions: DiscoveryOptions) {

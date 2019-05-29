@@ -17,8 +17,18 @@ const walContext = initDefaultAccessContext({
 		chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 	},
 	// walletProviders: [ scatter() ]
-	walletProviders: [ scatter(), ledger({exchangeTimeout : 30000, transport: 'TransportU2F'}), lynx(), tokenpocket(), meetone(), metro() ]
+	walletProviders: [ 
+		scatter(),
+		ledger({exchangeTimeout : 30000, transport: 'TransportWebBLE', name: 'Ledger Nano S BLE', shortName: 'Ledger Nano S BLE', id: 'ledgerble' }),
+		ledger({exchangeTimeout : 30000, transport: 'TransportU2F', name: 'Ledger Nano S U2F', shortName: 'Ledger Nano S U2F', id: 'ledgeru2f' }),
+		ledger({exchangeTimeout : 30000, transport: 'TransportWebAuthn', name: 'Ledger Nano S WebAuthn', shortName: 'Ledger Nano S WebAuthn', id: 'ledgeruwebauthn' }),
+		lynx(),
+		tokenpocket(),
+		meetone(),
+		metro() ]
 });
 
 // walContext.addWalletProvider(ledger({ pathIndexList: [ 0, 1, 2, 35 ] }));
-// transport?: 'TransportWebAuthn' | 'TransportU2F';
+// transport?: 'TransportWebAuthn' | 'TransportU2F | TransportWebBLE';
+// name = 'Ledger Nano S',
+// shortName = 'Ledger Nano S',
