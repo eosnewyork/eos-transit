@@ -5,6 +5,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.3.2 - eos-transit-ledger-provider] - 2019-05-28  
+
+Added WebBLE transport to the eos-transit-ledger-provider 
+
+Demo can be seen here - https://www.demo.eostransit.io
+
+See the example below of how multiple Ledger instances are initialized with different transport support. 
+
+Note the intial testing shows that WebBLE only works on Mac OS
+
+	walletProviders: [ 
+		scatter(),
+		ledger({exchangeTimeout : 30000, transport: 'TransportWebBLE', name: 'Ledger Nano S BLE', shortName: 'Ledger Nano S BLE', id: 'ledgerble' }),
+		ledger({exchangeTimeout : 30000, transport: 'TransportU2F', name: 'Ledger Nano S U2F', shortName: 'Ledger Nano S U2F', id: 'ledgeru2f' }),
+		ledger({exchangeTimeout : 30000, transport: 'TransportWebAuthn', name: 'Ledger Nano S WebAuthn', shortName: 'Ledger Nano S WebAuthn', id: 'ledgeruwebauthn' }),
+		lynx(),
+		tokenpocket(),
+		meetone(),
+		metro() ]
+
+https://github.com/eosnewyork/eos-transit/pull/18 
+
+I'm not entirly sure if this resolves the problem the pull intended to fix (need to do more testing), but it was a code improvement regardless. 
+
+
+## [3.3.1 - eos-transit-ledger-provider] - 2019-05-28  
+
+Upgraded the Ledger hw-transport and hw-transport-u2f libraries
+
+		"@ledgerhq/hw-transport": "^4.32.0" -> "^4.60.2"
+		"@ledgerhq/hw-transport-u2f": "^4.32.0" -> "^4.60.2",
+
+This pull request 
+
+
 ## [3.2.0] - 2019-05-02
 
 Added WebAuthn support to the Ledger plugin and consolidated transport instances. 
