@@ -1,6 +1,6 @@
 {
 	"name": "transit-react-basic",
-	"version": "3.3.1",
+	"version": "3.3.2",
 	"private": true,
 	"scripts": {
 		"echo": "echo \"================== transit-react-basic example ===================\"",
@@ -19,9 +19,9 @@
 		"eos-transit-lynx-provider": "^3.1.0",
 		"eos-transit-meetone-provider": "^3.1.0",
 		"eos-transit-metro-provider": "^3.1.0",
-		"eos-transit-scatter-provider": "^3.1.0",
-		"eos-transit-tokenpocket-provider": "^3.1.0",
-		"eos-transit-portis-provider": "^3.1.0",
+		"eos-transit-portis-provider": "^3.1.1",
+		"eos-transit-scatter-provider": "^3.2.0",
+		"eos-transit-tokenpocket-provider": "^3.1.1",
 		"minireset.css": "^0.0.3",
 		"react": "^16.5.2",
 		"react-dom": "^16.5.2",
