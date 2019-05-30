@@ -1,4 +1,4 @@
-# eos-transit-ledger-provider
+# eos-transit-tokenpocket-provider
 
 ## Introduction
 
