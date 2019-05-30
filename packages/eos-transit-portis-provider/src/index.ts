@@ -6,7 +6,7 @@ import {
   DiscoveryOptions
 } from 'eos-transit';
 import Portis from '@portis/eos';
- 
+
 let portis: Portis;
 let accName: string;
 let permission: string;
@@ -21,22 +21,20 @@ function makeSignatureProvider(network: NetworkConfig) {
     async sign(
       signatureProviderArgs: ApiInterfaces.SignatureProviderArgs
     ): Promise<RpcInterfaces.PushTransactionArgs> {
+      const widgetCommunication = (await portis.widget).communication;
+      const signedTx = await widgetCommunication.signTransaction(
+        signatureProviderArgs,
+        portis.config
+      );
 
-		const widgetCommunication = (await portis.widget).communication;
-        const signedTx = await widgetCommunication.signTransaction(
-          signatureProviderArgs,
-          portis.config
-		);
-		
-		if(!signedTx.result) {
-			throw new Error(signedTx.error);
-		}
+      if (!signedTx.result) {
+        throw new Error(signedTx.error);
+      }
 
-        return {
-              signatures: signedTx.result,
-              serializedTransaction: signatureProviderArgs.serializedTransaction
-            }          
-      
+      return {
+        signatures: signedTx.result,
+        serializedTransaction: signatureProviderArgs.serializedTransaction
+      };
     }
   };
 }
@@ -47,25 +45,22 @@ function signArbitrary(data: string, userMessage: string): Promise<string> {
   });
 }
 
-
 export interface portisWalletProviderOptions {
-	id?: string;
-	name?: string;
-	shortName?: string;
-	description?: string;
-	exchangeTimeout?: number;
-	DappId?: string;
+  id?: string;
+  name?: string;
+  shortName?: string;
+  description?: string;
+  exchangeTimeout?: number;
+  DappId?: string;
 }
 
-
-export function portisWalletProvider(	{
-	id = 'PortisProvider',
-	name = 'Portis',
-	shortName = 'Portis',
-	description = 'Portis EOS wallet provider',
-	DappId = '__YOUR_DAPPID_HERE__'
+export function portisWalletProvider({
+  id = 'PortisProvider',
+  name = 'Portis',
+  shortName = 'Portis',
+  description = 'Portis EOS wallet provider',
+  DappId = '__YOUR_DAPPID_HERE__'
 }: portisWalletProviderOptions = {}) {
-
   return function makeWalletProvider(network: NetworkConfig): WalletProvider {
     // Connection
     async function connect(): Promise<boolean> {
@@ -79,7 +74,7 @@ export function portisWalletProvider(	{
             accountName?: string,
             accountPermission?: string
           ) => {
-			console.log('insid eonlogin');
+            console.log('insid eonlogin');
             publicKey = walletAddress;
             accName = accountName!;
             permission = accountPermission!;
@@ -108,10 +103,7 @@ export function portisWalletProvider(	{
 
     // Authentication
     async function login(accountName?: string): Promise<WalletAuth> {
-      await portis.getAccounts();
-      if (!accName) {
-        // await portis.createEosAccount();
-      }
+      await portis.showPortis();
       return { publicKey, accountName: accName, permission };
     }
 
@@ -125,18 +117,18 @@ export function portisWalletProvider(	{
     }
 
     const walletProvider: WalletProvider = {
-    //   id: 'PortisProvider',
-    //   meta: {
-    //     name: 'Portis',
-    //     shortName: 'Portis',
-    //     description: 'Portis EOS wallet provider'
-	//   },
-	  id,
-	  meta: {
-		name,
-		shortName,
-		description
-	  },	  
+      //   id: 'PortisProvider',
+      //   meta: {
+      //     name: 'Portis',
+      //     shortName: 'Portis',
+      //     description: 'Portis EOS wallet provider'
+      //   },
+      id,
+      meta: {
+        name,
+        shortName,
+        description
+      },
       signatureProvider: makeSignatureProvider(network),
       connect,
       discover,
