@@ -23,13 +23,14 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 
 | Package                                                                         | Version | Description                       |
 |---------------------------------------------------------------------------------|---------|-----------------------------------|
-| [`eos-transit`](packages/eos-transit)                                           | 3.0.x   | Transit core package                |
-| [`eos-transit-scatter-provider`](packages/eos-transit-scatter-provider)         | 3.0.x   | Wallet provider for [Scatter](https://get-scatter.com/) app |
-| [`eos-transit-lynx-provider`](packages/eos-transit-lynx-provider)               | 3.0.x   | Wallet provider for [Lynx](https://eoslynx.com/) app |
-| [`eos-transit-ledger-provider`](packages/eos-transit-ledger-provider)           | 3.0.x   | Wallet provider for [Ledger](https://www.ledger.com/) app |
-| [`eos-transit-tokenpocket-provider`](packages/eos-transit-tokenpocket-provider) | 3.0.x   | Wallet provider for [Token Pocket](https://www.tokenpocket.pro/) app |
-| [`eos-transit-meetone-provider`](packages/eos-transit-meetone-provider) | 3.0.x   | Wallet provider for [MEET.ONE](https://meet.one/) app |
-| [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)               | 3.0.x   | Stub wallet provider that does nothing, for demo and testing only |
+| [`eos-transit`](packages/eos-transit)                                           | [![npm version](https://badge.fury.io/js/eos-transit.svg)](https://badge.fury.io/js/eos-transit)   | Transit core package                |
+| [`eos-transit-scatter-provider`](packages/eos-transit-scatter-provider)         | [![npm version](https://badge.fury.io/js/eos-transit-scatter-provider.svg)](https://badge.fury.io/js/eos-transit-scatter-provider)   | Wallet provider for [Scatter](https://get-scatter.com/) app |
+| [`eos-transit-lynx-provider`](packages/eos-transit-lynx-provider)               | [![npm version](https://badge.fury.io/js/eos-transit-lynx-provider.svg)](https://badge.fury.io/js/eos-transit-lynx-provider)   | Wallet provider for [Lynx](https://eoslynx.com/) app |
+| [`eos-transit-ledger-provider`](packages/eos-transit-ledger-provider)           | [![npm version](https://badge.fury.io/js/eos-transit-ledger-provider.svg)](https://badge.fury.io/js/eos-transit-ledger-provider)   | Wallet provider for [Ledger](https://www.ledger.com/) app |
+| [`eos-transit-tokenpocket-provider`](packages/eos-transit-tokenpocket-provider) | [![npm version](https://badge.fury.io/js/eos-transit-tokenpocket-provider.svg)](https://badge.fury.io/js/eos-transit-tokenpocket-provider)   | Wallet provider for [Token Pocket](https://www.tokenpocket.pro/) app |
+| [`eos-transit-meetone-provider`](packages/eos-transit-meetone-provider) | [![npm version](https://badge.fury.io/js/eos-transit-meetone-provider.svg)](https://badge.fury.io/js/eos-transit-meetone-provider)   | Wallet provider for [MEET.ONE](https://meet.one/) app |
+| [`eos-transit-portis-provider`](packages/eos-transit-portis-provider) | [![npm version](https://badge.fury.io/js/eos-transit-portis-provider.svg)](https://badge.fury.io/js/eos-transit-portis-provider)   | Wallet provider for [Portis](https://www.portis.io) app |
+| [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)               | [![npm version](https://badge.fury.io/js/eos-transit-stub-provider.svg)](https://badge.fury.io/js/eos-transit-stub-provider)   | Stub wallet provider that does nothing, for demo and testing only |
 
 
 ## Contribution

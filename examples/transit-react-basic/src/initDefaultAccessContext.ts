@@ -5,8 +5,9 @@ import lynx from 'eos-transit-lynx-provider';
 import tokenpocket from 'eos-transit-tokenpocket-provider';
 import meetone from 'eos-transit-meetone-provider';
 import metro from 'eos-transit-metro-provider';
+import portis from 'eos-transit-portis-provider';
 
-const appName = 'my_eos_dapp';
+const appName = 'My Dapp';
 
 const walContext = initDefaultAccessContext({
 	appName,
@@ -25,7 +26,8 @@ const walContext = initDefaultAccessContext({
 		lynx(),
 		tokenpocket(),
 		meetone(),
-		metro() ]
+		metro(),
+		portis({DappId: '0f987db7-f1f6-4ec6-bd8e-64672f8b5ac2'}) ]
 });
 
 // walContext.addWalletProvider(ledger({ pathIndexList: [ 0, 1, 2, 35 ] }));

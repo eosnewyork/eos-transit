@@ -1,13 +1,13 @@
 {
-	"name": "eos-transit-scatter-provider",
+	"name": "eos-transit-portis-provider",
 	"version": "3.1.0",
-	"description": "Scatter app wallet provider for eos-transit",
+	"description": "portis wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
 	"module": "lib/index.js",
 	"types": "lib",
 	"scripts": {
-		"echo": "echo \"================== eos-transit-scatter-provider ===================\"",
+		"echo": "echo \"================== eos-transit-portis-provider ===================\"",
 		"installpkg": "yarn echo && npm install",
 		"clean": "rm -rf lib && rm -rf umd",
 		"prebuild": "yarn clean",
@@ -18,9 +18,9 @@
 		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
+		"@portis/eos": "^1.0.0-beta.2",
 		"eos-transit": "^3.1.0",
-		"scatterjs-core": "2.7.18",
-		"scatterjs-plugin-eosjs2": "1.5.0"
+		"eosjs": "^20.0.0"
 	},
 	"devDependencies": {
 		"webpack": "^4.25.1",
@@ -32,6 +32,5 @@
 		"tabWidth": 2,
 		"useTabs": false,
 		"bracketSpacing": true
-	},
-	"gitHead": "2540a6a5c87f61e4487d67673a4579bec0ea8feb"
+	}
 }
