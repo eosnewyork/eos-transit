@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-tokenpocket-provider",
-	"version": "3.1.1",
+	"version": "3.1.2",
 	"description": "TokenPocket wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
