@@ -5,7 +5,7 @@ import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos
 let accountPublickey: string;
 let scatter: any;
 let signatureProvider: ApiInterfaces.SignatureProvider;
-
+ 
 if (typeof window !== undefined && typeof document !== undefined) {
 	// @ts-ignore:
 	scatter = window.scatter;

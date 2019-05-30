@@ -6,7 +6,7 @@ import {
   DiscoveryOptions
 } from 'eos-transit';
 import Portis from '@portis/eos';
-
+ 
 let portis: Portis;
 let accName: string;
 let permission: string;
