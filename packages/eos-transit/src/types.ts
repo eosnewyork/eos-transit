@@ -1,4 +1,5 @@
 import { ApiInterfaces, JsonRpc, Api } from 'eosjs';
+import { type } from 'os';
 
 // Core helper types
 
@@ -112,9 +113,12 @@ export interface WalletState {
 	accountFetchErrorMessage?: string;
 }
 
+export type KeyModifierCallback = ( discoveryData: DiscoveryData ) => DiscoveryData;
+
 //{ pathIndexList: [ 0, 1, 2, 35 ] }
 export interface DiscoveryOptions {
 	pathIndexList: number[];
+	keyModifierFunc?: KeyModifierCallback;
 }
 
 export interface Wallet {

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+##  2019-06-23  - 3.1.2
+
+The discover() methods options object now takes am optional new property keyModifierFunc. 
+( discoveryData: DiscoveryData ) => DiscoveryData;
+Callback of this kind can be supplied to the discover function, which will allow the caller to modify the list of keys before the account lookup process happens. 
+The feature was added so that key returned from the Ledger device can be modified to have a ENU prefix when in use with the the enumivo chain 
+
 ##  2019-06-23  
 
 New provide eos-transit-whalevault-provider

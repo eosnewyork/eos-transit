@@ -140,6 +140,14 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 			// 	keys = walletDiscoveryData.keys;
 			// }
 
+			// A callback of this kind can be supplied to the discover function, which will allow the caller to modify the list of keys before the account lookup process happens. 
+		    // The feature was added so that key returned from the Ledger device can be modified to have a ENU prefix when in use with the the enumivo chain 
+			if(discoveryOptions.keyModifierFunc !== undefined) {
+				const modifiedData = discoveryOptions.keyModifierFunc(walletDiscoveryData);
+				walletDiscoveryData = modifiedData;
+			}
+			
+
 			let promises = [];
 
 			for (let keyData of walletDiscoveryData.keys) {

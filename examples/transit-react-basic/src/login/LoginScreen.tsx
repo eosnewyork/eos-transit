@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Redirect, withRouter } from 'react-router';
-import WAL, { WalletProvider, Wallet, DiscoveryAccount, DiscoveryData } from 'eos-transit';
+import WAL, { WalletProvider, Wallet, DiscoveryAccount, DiscoveryData, KeyModifierCallback } from 'eos-transit';
 import { CloseButton } from '../shared/buttons/CloseButton';
 import { LoginButton } from './LoginButton';
 import { LoginScreenWalletList } from './LoginScreenWalletList';
@@ -77,11 +77,26 @@ export class LoginScreen extends Component<any, LoginScreenState> {
     const wallet = WAL.accessContext.initWallet(walletProvider);
     // wallet.connect().then(wallet.discover().then(wallet.login));
     
+    // A callback of this kind can be supplied to the discover function, which will allow the caller to modify the list of keys before the account lookup process happens. 
+    // The feature was added so that key returned from the Ledger device can be modified to have a ENU prefix when in use with the the enumivo chain 
+    const keyModCallback : KeyModifierCallback = ( discoveryData: DiscoveryData ) : DiscoveryData => {
+      console.log("Inside My KeyModifierCallback");
+      console.log("Before data is modified");
+      console.log(discoveryData);
+      const modifiedDiscoveryData = discoveryData;
+      if(modifiedDiscoveryData !== undefined && modifiedDiscoveryData.keys !== undefined && modifiedDiscoveryData.keys[0].key !== undefined) {
+        modifiedDiscoveryData.keys[0].key = modifiedDiscoveryData.keys[0].key.replace("EOS", "ENU");
+      }
+      console.log("After data is modified");        
+      console.log(modifiedDiscoveryData);
+      return modifiedDiscoveryData;
+    }
     
     wallet.connect().then(() => {
 
       const start1 = window.performance.now();
-      wallet.discover({ pathIndexList: [ 0,1 ]  }).then((discoveryData: DiscoveryData) => {
+        // wallet.discover({ pathIndexList: [ 0,1 ], keyModifierFunc: keyModCallback} ).then((discoveryData: DiscoveryData) => {
+        wallet.discover({ pathIndexList: [ 0,1 ] } ).then((discoveryData: DiscoveryData) => {
         const end1 = window.performance.now();
         const time1 = end1 - start1;
         console.log(time1);
