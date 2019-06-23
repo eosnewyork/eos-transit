@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-whalevault-provider",
-	"version": "3.1.1",
+	"version": "3.1.2",
 	"description": "WhaleVault wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
@@ -18,7 +18,7 @@
 		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
-		"eos-transit": "^3.1.1",
+		"eos-transit": "^3.1.2",
 		"eosjs": "^20.0.0"
 	},
 	"devDependencies": {
