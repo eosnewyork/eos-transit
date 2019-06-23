@@ -39,16 +39,19 @@ export function whalevaultWalletProvider() {
 			const res = async function m2(): Promise<any> {
 				console.log(connected);
 				if (connected) return true;
-				if (typeof window.whalevault !== 'undefined') {
+				console.log("window.whalevault");
+				console.log(window.whalevault);
+				if (window.whalevault !== null) {
+					console.log("window.whalevault  xxx");
 					const response = await window.whalevault.promiseRequestHandshake(appName);
 					if (response) {
 						connected = true;
 						appId = appName;
 						whalevault = window.whalevault;
 						return true; 
-					} else return false;
+					} else Promise.reject("Could not connect to WhaleVault");
 				}
-				return false;
+				return Promise.reject("Could not connect to WhaleVault");
 			};
 			return res();
 		}
