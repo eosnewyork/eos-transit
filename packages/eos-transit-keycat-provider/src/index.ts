@@ -19,7 +19,7 @@ export function keycatWalletProvider() {
 
 		const { chainId } = network
 
-		// This is a temporary solution, will be cleaned up so that any chanin can be used. 
+		// This is a temporary solution, will be cleaned up so that any chanin can be used.  
 		let keycatNetwork:string = '';
 		if (chainId === 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906') {
 			keycatNetwork = 'main'

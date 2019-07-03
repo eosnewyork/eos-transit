@@ -111,6 +111,7 @@ export function whalevaultWalletProvider() {
 			return res();
 		}
 
+		
 		const walletProvider: WalletProvider = {
 			id: 'whalevault',
 			meta: {
