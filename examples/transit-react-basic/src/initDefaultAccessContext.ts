@@ -7,6 +7,7 @@ import meetone from 'eos-transit-meetone-provider';
 import metro from 'eos-transit-metro-provider';
 import portis from 'eos-transit-portis-provider';
 import whaleVault from 'eos-transit-whalevault-provider'
+import keycat from 'eos-transit-keycat-provider'
 
 const appName = 'My Dapp';
 
@@ -29,7 +30,8 @@ const walContext = initDefaultAccessContext({
 		meetone(),
 		metro(),
 		portis({DappId: '0f987db7-f1f6-4ec6-bd8e-64672f8b5ac2'}),
-		whaleVault() ]
+		whaleVault(),
+		keycat() ]
 });
 
 // walContext.addWalletProvider(ledger({ pathIndexList: [ 0, 1, 2, 35 ] }));
