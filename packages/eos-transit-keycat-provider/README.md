@@ -1,4 +1,4 @@
-# eos-transit-tokenpocket-provider
+# eos-transit-keycat-provider
 
 ## Introduction
 
@@ -11,8 +11,8 @@ EOS Transit, Github: https://github.com/eosnewyork/eos-transit/tree/master/packa
 
 ## Links To This Package
 
-NPM: https://www.npmjs.com/package/eos-transit-tokenpocket-provider  
-Github: https://github.com/eosnewyork/eos-transit/tree/master/packages/eos-transit-tokenpocket-provider
+NPM: https://www.npmjs.com/package/eos-transit-keycat-provider  
+Github: https://github.com/eosnewyork/eos-transit/tree/master/packages/eos-transit-keycat-provider
 
 ## Implementation Details
 
