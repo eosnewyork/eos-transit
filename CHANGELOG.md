@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+##  2019-07-02 - 3.1.5
+
+simpleEOS provider published  
+A known issues exists where if the user cancels account selection. Will be resolved shourtly. 
+
 ##  2019-07-02 - 3.1.4
 
-Keycat provider published
+Keycat provider published  
 Note that this provider has hard coded chain ids which limits it to mainnet and jungle usage right now.
 
 ##  2019-06-23 - 3.1.2

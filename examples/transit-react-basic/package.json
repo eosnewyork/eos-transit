@@ -24,6 +24,7 @@
 		"eos-transit-scatter-provider": "^3.2.2",
 		"eos-transit-tokenpocket-provider": "^3.1.4",
 		"eos-transit-whalevault-provider": "^3.1.5",
+		"eos-transit-simpleos-provider": "^3.1.5",
 		"minireset.css": "^0.0.3",
 		"react": "^16.5.2",
 		"react-dom": "^16.5.2",
