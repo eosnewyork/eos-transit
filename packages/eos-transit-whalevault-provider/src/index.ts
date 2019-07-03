@@ -148,13 +148,15 @@ export function whalevaultWalletProvider() {
 						const _txn = await api.deserializeTransactionWithActions(signatureProviderArgs.serializedTransaction);
 
 						console.log(_txn);
+						console.log('v2');
 			
 						if (reason == null || reason === '') reason = _txn.actions[0].name;
 			
 						_txn.network = network;
 			
-						const response = await whalevault.promiseRequestSignBuffer(appId, 'eos:'+_txn.actions[0].data.from, 
-																					  _txn, 'active', reason, 'eos');
+									 
+						const response = await whalevault.promiseRequestSignBuffer(appId, 'eos:'+_txn.actions["0"].authorization["0"].actor, 
+																					  _txn, _txn.actions["0"].authorization["0"].permission, reason, 'eos');
 			
 						const signatureArray = response.success ? [response.result] : [];
 						const sigResponse: RpcInterfaces.PushTransactionArgs = {
