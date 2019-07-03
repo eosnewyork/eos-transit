@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-keycat-provider",
-	"version": "3.1.5",
+	"version": "3.1.6",
 	"description": "Keycat - a wallet in your browser",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
