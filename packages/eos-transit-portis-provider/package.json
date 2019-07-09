@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-portis-provider",
-	"version": "3.1.4",
+	"version": "4.0.0",
 	"description": "portis wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
@@ -19,7 +19,7 @@
 	},
 	"dependencies": {
 		"@portis/eos": "^1.0.0-beta.2",
-		"eos-transit": "^3.1.2",
+		"eos-transit": "^4.0.0",
 		"eosjs": "^20.0.0"
 	},
 	"devDependencies": {

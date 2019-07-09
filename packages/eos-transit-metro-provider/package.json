@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-metro-provider",
-	"version": "3.1.2",
+	"version": "4.0.0",
 	"description": "Metro wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
@@ -20,7 +20,7 @@
 	"dependencies": {
 		"eos-metro-api": "^1.0.11",
 		"eos-metro-transport-u2f": "^1.0.12",
-		"eos-transit": "^3.1.2"
+		"eos-transit": "^4.0.0"
 	},
 	"devDependencies": {
 		"@types/chrome": "0.0.82",
