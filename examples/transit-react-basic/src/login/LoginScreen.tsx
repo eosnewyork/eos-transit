@@ -109,6 +109,11 @@ export class LoginScreen extends Component<any, LoginScreenState> {
           
           // Note: Setting this value will warm the discoveryData cache, this allows you to save discoveryData from a previous session and supply it again .. avoiding the network overhead of looking up the data again. 
           // discoveryOptions.presetKeyMap = presetKeyMap;
+          // OR 
+          // discoveryOptions.presetKeyMap = [{
+          //   key: "EOS5TYtUXsbRJrz61gsQWQho6AYyCcRFgbFm4TPfrEbzb43x8Ewfq",
+          //   index: 0
+          // }];
 
           if(discoveryOptions.presetKeyMap) {
             console.log("Supply presetKeyMap and warm the cache");

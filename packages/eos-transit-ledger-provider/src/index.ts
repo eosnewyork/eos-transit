@@ -31,6 +31,7 @@ class LedgerProxy {
 	};
 
 	async getPathKeys(keyPositions: number[]): Promise<matchedIndexItem[]> {
+		
 		// let transport: any = await this.initTransport();
 
 		// let transport = await Transport.create();
@@ -38,6 +39,7 @@ class LedgerProxy {
 		let keys: matchedIndexItem[] = [];
 
 		for (let num of keyPositions) {
+			console.log('getting address from ledger: ' + num);
 			let result = await eos.getAddress("44'/194'/0'/0/" + num);
 			//keys[num] = result.address;
 			keys.push({ index: num, key: result.address });
@@ -130,8 +132,9 @@ export function ledgerWalletProvider(
 						note: 'Preset List'
 					};
 					resolve(discoveryInfo);
+					return;
 				}
-				
+
 				var _pathIndexList = discoveryOptions.pathIndexList || [ 0, 1, 2, 3 ];
 				var missingIndexs: number[] = [];
 
