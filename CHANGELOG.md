@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+##  2019-07-09 - 4.0.0
+
+This change only effect Ledger and plugins that support discovery (currently only Ledger)
+
+Added the ability warm the discovery cache when dealing with devices like Ledger.
+
+When calling wallet.discover( discoveryOptions ); 
+
+The DiscoveryOptions interface looks as follows. New param = presetKeyMap
+
+export interface DiscoveryOptions {
+	pathIndexList: number[];
+	keyModifierFunc?: KeyModifierCallback;
+	presetKeyMap?: any; // TODO: This data structure is not defined as a type right now, but should be. It's the same as the response structure from discover()
+}
+
+Setting this value will warm the discoveryData cache, this allows you to save discoveryData from a previous session and supply it again .. avoiding the network overhead of looking up the data again. 
+
+As an example one can save the previous discoveryData:
+
+	localStorage.setItem('discoveryData', JSON.stringify(discoveryData.keyToAccountMap));
+
+and then
+
+ 	presetKeyMap = JSON.parse(discoveryDataCached);
+	discoveryOptions.presetKeyMap = presetKeyMap;
+
 ##  2019-07-02 - 3.1.5
 
 simpleEOS provider published  

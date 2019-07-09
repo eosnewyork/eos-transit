@@ -119,6 +119,7 @@ export type KeyModifierCallback = ( discoveryData: DiscoveryData ) => DiscoveryD
 export interface DiscoveryOptions {
 	pathIndexList: number[];
 	keyModifierFunc?: KeyModifierCallback;
+	presetKeyMap?: any; // TODO: This data structure is not defined as a type right now, but should be. It's the same as the response structure from discover()
 }
 
 export interface Wallet {

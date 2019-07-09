@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Redirect, withRouter } from 'react-router';
-import WAL, { WalletProvider, Wallet, DiscoveryAccount, DiscoveryData, KeyModifierCallback } from 'eos-transit';
+import WAL, { WalletProvider, Wallet, DiscoveryAccount, DiscoveryData, KeyModifierCallback, DiscoveryOptions } from 'eos-transit';
 import { CloseButton } from '../shared/buttons/CloseButton';
 import { LoginButton } from './LoginButton';
 import { LoginScreenWalletList } from './LoginScreenWalletList';
@@ -96,14 +96,37 @@ export class LoginScreen extends Component<any, LoginScreenState> {
 
       const start1 = window.performance.now();
         // wallet.discover({ pathIndexList: [ 0,1 ], keyModifierFunc: keyModCallback} ).then((discoveryData: DiscoveryData) => {
-        wallet.discover({ pathIndexList: [ 0,1 ] } ).then((discoveryData: DiscoveryData) => {
-        const end1 = window.performance.now();
-        const time1 = end1 - start1;
-        console.log(time1);
 
-        console.log(discoveryData);
+        const myStorage = window.localStorage;
+        const discoveryDataCached : any = localStorage.getItem('discoveryData');
+        let presetKeyMap : any;
+        const discoveryOptions : DiscoveryOptions = { pathIndexList: [ 0,1 ] };
 
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        if(discoveryDataCached) { 
+          presetKeyMap = JSON.parse(discoveryDataCached);
+          console.log("LocalStorage contains data. presetKeyMap:");
+          console.log(presetKeyMap);
+          
+          // Note: Setting this value will warm the discoveryData cache, this allows you to save discoveryData from a previous session and supply it again .. avoiding the network overhead of looking up the data again. 
+          // discoveryOptions.presetKeyMap = presetKeyMap;
+
+          if(discoveryOptions.presetKeyMap) {
+            console.log("Supply presetKeyMap and warm the cache");
+          }
+
+        }
+
+        wallet.discover( discoveryOptions ).then((discoveryData: DiscoveryData) => {
+
+          localStorage.setItem('discoveryData', JSON.stringify(discoveryData.keyToAccountMap));
+
+          const end1 = window.performance.now();
+          const time1 = end1 - start1;
+          console.log(time1);
+
+          console.log(discoveryData);
+
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         
           if (discoveryData.keyToAccountMap.length > 0) {
             // console.log(discoveryData.keyToAccountMap.length + ' keys returned, pick one');
