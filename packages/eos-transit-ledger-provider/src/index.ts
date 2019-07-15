@@ -4,6 +4,7 @@ import * as EosLedger from './EosLedger';
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import TransportWebAuthn from '@ledgerhq/hw-transport-webauthn';
 import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
+import TransportWebusb from '@ledgerhq/hw-transport-webusb';
 import LedgerDataManager from './LedgerDataManager';
 import 'babel-polyfill';
 import * as ecc from 'eosjs-ecc';
@@ -85,7 +86,7 @@ export interface ledgerWalletProviderOptions {
 	shortName?: string;
 	description?: string;
 	exchangeTimeout?: number;
-	transport?: 'TransportWebAuthn' | 'TransportU2F' | 'TransportWebBLE';
+	transport?: 'TransportWebAuthn' | 'TransportU2F' | 'TransportWebBLE' | 'TransportWebusb';
 }
 
 export function ledgerWalletProvider(
@@ -112,6 +113,8 @@ export function ledgerWalletProvider(
 				selectedTransport = await TransportWebAuthn.create();
 			} else if (transport === 'TransportWebBLE') {
 				selectedTransport = await TransportWebBLE.create();
+			} else if (transport === 'TransportWebusb') {
+				selectedTransport = await TransportWebusb.create();
 			}
 			else {
 				selectedTransport = await TransportU2F.create();

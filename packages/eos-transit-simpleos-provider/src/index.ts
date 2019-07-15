@@ -89,14 +89,22 @@ export function myWalletProvider() {
     async function login(accountName?: string): Promise<WalletAuth> {
       logIfDebugEnabled("The login method of myWallet was called");
       let url: string = localApiURL + "login";
+      logIfDebugEnabled("xx"+accountName);      
       if (accountName) {
         url += (`?account=${accountName}`);
       }
-	  const resp: any = await fetch(url);
-	  console.log("resp");
-	  console.log(resp);
+      logIfDebugEnabled("1");      
+      const resp: any = await fetch(url);
+      console.log("resp");
+      console.log(resp);
       const results = await resp.json();
       accountPublickey = results.publicKey;
+      console.log("accountPublickey");
+      console.log(accountPublickey);
+      if(accountPublickey === undefined) {
+        // throw new Error("No account selected");
+        return Promise.reject("No account selected");
+      }
       return {
         accountName: results.accountName,
         permission: results.permission,

@@ -19,7 +19,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types", "./src/typings"],
-    "types": ["eosjs-ecc", "bigi", "ledgerhq__hw-transport-webauthn", "ledgerhq__hw-transport-web-ble"]
+    "types": ["eosjs-ecc", "bigi", "ledgerhq__hw-transport-webauthn", "ledgerhq__hw-transport-web-ble", "ledgerhq__hw-transport-webusb"]
   },
   "files": ["src/index.ts"]
 }

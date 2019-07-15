@@ -26,6 +26,7 @@ const walContext = initDefaultAccessContext({
 		ledger({exchangeTimeout : 30000, transport: 'TransportWebBLE', name: 'Ledger Nano S BLE', shortName: 'Ledger Nano S BLE', id: 'ledgerble' }),
 		ledger({exchangeTimeout : 30000, transport: 'TransportU2F', name: 'Ledger Nano S U2F', shortName: 'Ledger Nano S U2F', id: 'ledgeru2f' }),
 		ledger({exchangeTimeout : 30000, transport: 'TransportWebAuthn', name: 'Ledger Nano S WebAuthn', shortName: 'Ledger Nano S WebAuthn', id: 'ledgeruwebauthn' }),
+		ledger({exchangeTimeout : 30000, transport: 'TransportWebusb', name: 'Ledger Nano S Web USB', shortName: 'Ledger Nano S Web USB', id: 'ledgeruwebusb' }),
 		lynx(),
 		tokenpocket(),
 		meetone(),

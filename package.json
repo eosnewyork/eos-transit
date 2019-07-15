@@ -28,7 +28,7 @@
 		"tslint-config-prettier": "^1.16.0",
 		"tslint-react": "^3.6.0",
 		"typescript": "3.1.6",
-		"webpack": "^4.25.1",
+		"webpack": "4.29.6",
 		"webpack-cli": "^3.1.2"
 	},
 	"prettier": {
