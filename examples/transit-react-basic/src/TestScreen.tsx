@@ -1,5 +1,5 @@
 import React from 'react';
-import ArbSign from 'ArbSign';
+import ArbSign from './ArbSign';
 
 export function TestScreen() {
 	return <ArbSign />;
