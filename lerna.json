@@ -1,5 +1,5 @@
 {
-	"packages": [ "packages/*", "examples/transit-react-basic",  "examples/transit-electron-basic" ],
+	"packages": [ "packages/*", "examples/transit-react-basic",  "examples/transit-electron-dualbuild" ],
 	"version": "independent",
 	"npmClient": "yarn",
 	"command": {

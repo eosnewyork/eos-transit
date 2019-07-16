@@ -1,0 +1,85 @@
+{
+  "name": "cra-craco-electron-example",
+  "version": "0.1.1",
+  "main": "public/electron.js",
+  "homepage": "./",
+  "private": true,
+  "scripts": {
+    "start": "yarn start:electron",
+    "start:web": "env-cmd -f .env.web craco start --config craco.config.web.js",
+    "start:electron": "electron .",
+    "start:electron-dev": "electron electron-dev.js",
+    "build": "yarn build:electron",
+    "build:web": "craco build --config craco.config.web.js",
+    "build:electron": "env-cmd -f .env.electron craco build --config craco.config.electron.js",
+    "watch:electron": "npm-watch",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "watch": {
+    "build:electron": "src/**/*.*"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "dependencies": {
+    "react": "^16.8.6",
+    "@craco/craco": "^5.2.1",
+    "electron": "^5.0.2",
+    "electron-builder": "^20.41.0",
+    "env-cmd": "^9.0.2",
+    "npm-watch": "^0.6.0",
+		"minireset.css": "^0.0.3",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1",
+    "react-emotion": "^9.2.10",
+		"react-icons": "^3.1.0",
+		"react-onclickoutside": "^6.7.1",
+		"react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+		"eos-transit": "^4.0.0",
+		"eos-transit-keycat-provider": "^4.0.0",
+		"eos-transit-ledger-provider": "^4.0.1",
+		"eos-transit-lynx-provider": "^4.0.0",
+		"eos-transit-meetone-provider": "^4.0.0",
+		"eos-transit-metro-provider": "^4.0.0",
+		"eos-transit-portis-provider": "^4.0.0",
+		"eos-transit-scatter-provider": "^4.0.0",
+		"eos-transit-simpleos-provider": "^4.0.0",
+		"eos-transit-tokenpocket-provider": "^4.0.0",
+    "eos-transit-whalevault-provider": "^4.0.0",
+    "@babel/runtime": "^7.1.2",
+		"emotion": "^9.2.10"    
+  },
+	"devDependencies": {
+    "@types/jest": "24.0.13",
+    "@types/node": "12.0.3",
+    "@types/react": "16.8.19",
+    "@types/react-dom": "16.8.4",
+		"@types/react-onclickoutside": "^6.0.4",
+		"@types/react-router": "^4.0.31",
+		"@types/react-router-dom": "^4.3.1",
+		"prettier": "^1.14.3",
+		"tslint": "^5.11.0",
+		"tslint-config-prettier": "^1.15.0",
+		"tslint-react": "^3.6.0",
+    "typescript": "3.5.1"
+	},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:wwlib/cra-craco-electron-example.git"
+  },
+  "keywords": [
+    "react,create-react-app,cra,craco,electron,electron-builder"
+  ],
+  "author": "Andrew Rapo <andrew@wwlib.org> (http://wwlib.org/)",
+  "license": "MIT"
+}
