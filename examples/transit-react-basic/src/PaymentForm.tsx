@@ -82,6 +82,7 @@ interface PaymentFormProps {
 interface PaymentFormState {
 	receiverName: string;
 	amount: number;
+	txnCount: number;
 	inProgress?: boolean;
 	progressMessage?: string;
 	hasError?: boolean;
@@ -97,6 +98,7 @@ const defaultErrorMessage = 'Transaction failed. See console for details';
 const DEFAULT_STATE = {
 	receiverName: 'wozzawozza55',
 	amount: 0.0001,
+	txnCount: 1,
 	inProgress: false,
 	hasError: false,
 	success: false
@@ -111,8 +113,12 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 		this.setState({ amount: Number(event.currentTarget.value) });
 	};
 
+	handleTxnCountChange = (event: FormEvent<HTMLInputElement>) => {
+		this.setState({ txnCount: Number(event.currentTarget.value) });
+	};	
+
 	handleSubmit = (wallet: Wallet) => {
-		const { amount, receiverName } = this.state;
+		const { amount, receiverName, txnCount } = this.state;
 		if (!wallet) {
 			this.setState({ hasError: true, errorMessage: defaultErrorMessage });
 			return;
@@ -145,7 +151,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 		// 		});
 		// 	});		
 
-		return transfer(wallet, receiverName, amount)
+		return transfer(wallet, receiverName, amount, "",txnCount)
 			.then((result: any) => {
 				this.setState({
 					inProgress: false,
@@ -182,8 +188,8 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 	}
 
 	render() {
-		const { getDefaultWallet, handleAmountChange, handleSubmit, resetForm } = this;
-		const { receiverName, amount, ...buttonProps } = this.state;
+		const { getDefaultWallet, handleAmountChange, handleTxnCountChange, handleSubmit, resetForm } = this;
+		const { receiverName, amount, txnCount, ...buttonProps } = this.state;
 		const defaultWallet = getDefaultWallet();
 
 		return (
@@ -202,6 +208,11 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 						<FieldLabel>Amount (EOS)</FieldLabel>
 						<Input type="number" value={amount} onChange={handleAmountChange} />
 					</FormElement>
+
+					<FormElement>
+						<FieldLabel>Test multiple Txn (Repeat this transfer X times in a single transaction)</FieldLabel>
+						<Input type="number" value={txnCount} onChange={handleTxnCountChange} />
+					</FormElement>					
 
 					<PaymentFormActions>
 						<TransactionButtonBlock

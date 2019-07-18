@@ -121,7 +121,7 @@ export function stake(wallet: Wallet) {
 	  }, {blocksBehind: 3, expireSeconds: 60});
 }
 
-export function transfer(wallet: Wallet, receiverName: string, amount: number, memo: string = '') {
+export function transfer(wallet: Wallet, receiverName: string, amount: number, memo: string = '', txnCount: number = 2) {
 	const { auth } = wallet;
 	if (!auth) {
 		return Promise.reject('No auth information has been passed with transaction');
@@ -139,27 +139,36 @@ export function transfer(wallet: Wallet, receiverName: string, amount: number, m
 
 	if (!amount) return Promise.reject(new Error('Amount not specified'));
 
+	const txnBuilder = [];
+
+	console.log(`Build ${txnCount} transactions`);
+
+	for (let index = 0; index < txnCount; index++) {
+		txnBuilder.push(
+			{
+				account: 'eosio.token',
+				name: 'transfer',
+				authorization: [
+					{
+						actor: senderName,
+						permission
+					}
+				],
+				data: {
+					from: senderName,
+					to: receiverName,
+					quantity: `${Number(amount).toFixed(4)} EOS`,
+					memo: `Test Txn ${index}`
+				}
+			}
+		);
+		
+	}
+
 	return wallet.eosApi
 		.transact(
 			{
-				actions: [
-					{
-						account: 'eosio.token',
-						name: 'transfer',
-						authorization: [
-							{
-								actor: senderName,
-								permission
-							}
-						],
-						data: {
-							from: senderName,
-							to: receiverName,
-							quantity: `${Number(amount).toFixed(4)} EOS`,
-							memo
-						}
-					}
-				]
+				actions: txnBuilder
 			},
 			{
 				broadcast: true,
