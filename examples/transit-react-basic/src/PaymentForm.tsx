@@ -210,7 +210,7 @@ export class PaymentForm extends Component<PaymentFormProps, PaymentFormState> {
 					</FormElement>
 
 					<FormElement>
-						<FieldLabel>Test multiple Txn (Repeat this transfer X times in a single transaction)</FieldLabel>
+						<FieldLabel>Test multiple Actions (Repeat this transfer Action X times in a single transaction)</FieldLabel>
 						<Input type="number" value={txnCount} onChange={handleTxnCountChange} />
 					</FormElement>					
 
