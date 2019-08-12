@@ -1,6 +1,6 @@
 import { Api, JsonRpc, ApiInterfaces, RpcInterfaces } from 'eosjs';
 import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
-import { Metro, retries_response,get_pubkey_response, authenticate_response }  from 'eos-metro-api';
+import { Metro, retries_response,get_pubkey_response, authenticate_response, MetroSettings }  from 'eos-metro-api';
 import * as U2FTransport from 'eos-metro-transport-u2f';
 
 export interface matchedIndexItem {
@@ -56,6 +56,8 @@ export function metroWalletProvider() {
 		function connect(appName: string) {
 			// TODO: We're going to need to adjust the framework to allow an optional paramert pin or settings object. 
 			let pin = "sogyhdxoh3qwli😀";
+
+
 
 			const transport = new U2FTransport.U2FTransport();
 			metro = new Metro([transport]);
@@ -144,7 +146,12 @@ export function metroWalletProvider() {
 
 					console.log(signBuf);
 
-					const signResponse = await metro.sign(signBuf);
+					const settings: MetroSettings = {
+						apiTimeout: 15,
+						u2fTimeout: 15
+					  };
+
+					const signResponse = await metro.sign(signBuf, settings);
 
 
 					var respone: RpcInterfaces.PushTransactionArgs = {
