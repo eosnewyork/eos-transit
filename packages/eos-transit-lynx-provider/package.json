@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-lynx-provider",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"description": "EOS Lynx wallet provider for eos-transit",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
@@ -18,7 +18,7 @@
 		"lint": "tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
-		"eos-transit": "^4.0.0"
+		"eos-transit": "^4.0.1"
 	},
 	"devDependencies": {
 		"@babel/plugin-transform-regenerator": "^7.0.0",

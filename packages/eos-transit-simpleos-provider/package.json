@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-simpleos-provider",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"description": "simpleos - a wallet in your browser",
 	"license": "UNLICENSED",
 	"main": "lib/index.js",
@@ -18,7 +18,7 @@
 		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
-		"eos-transit": "^4.0.0",
+		"eos-transit": "^4.0.1",
 		"eosjs": "^20.0.0"
 	},
 	"devDependencies": {
