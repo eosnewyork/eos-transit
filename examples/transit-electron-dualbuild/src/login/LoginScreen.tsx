@@ -73,7 +73,7 @@ export class LoginScreen extends Component<any, LoginScreenState> {
     this.setState(state => ({ showLoginOptions: !state.showLoginOptions }));
   };
 
-  handleWalletProviderSelect = (walletProvider: WalletProvider) => {
+  handleWalletProviderSelect = (walletProvider: WalletProvider, pin: any) => {
     const wallet = WAL.accessContext.initWallet(walletProvider);
     // wallet.connect().then(wallet.discover().then(wallet.login));
     

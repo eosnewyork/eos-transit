@@ -19,7 +19,7 @@ const LoginScreenWalletListRoot = styled('div')({
 interface LoginScreenWalletListProps {
   walletProviders: WalletProvider[];
   wallets: Wallet[];
-  onWalletProviderSelect?: (walletProvider: WalletProvider) => void;
+  onWalletProviderSelect?: (walletProvider: WalletProvider, pin: any) => void;
   onWalletReconnectClick?: (wallets: Wallet) => void;
 }
 
@@ -27,10 +27,10 @@ export class LoginScreenWalletList extends Component<
   LoginScreenWalletListProps
 > {
 
-  handleWalletProviderSelect = (walletProvider: WalletProvider) => {
+  handleWalletProviderSelect = (walletProvider: WalletProvider, pin: any) => {
     const { onWalletProviderSelect } = this.props;
     if (walletProvider && typeof onWalletProviderSelect === 'function') {
-      onWalletProviderSelect(walletProvider);
+      onWalletProviderSelect(walletProvider, pin);
     }
   };
 

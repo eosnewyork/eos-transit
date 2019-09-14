@@ -7,7 +7,8 @@ import { WalletListItemProgress } from './WalletListItemProgress';
 import { WalletListItemStatus } from './WalletListItemStatus';
 import { WalletListItemInfo } from './WalletListItemInfo';
 import { WalletProviderIcon } from './WalletProviderIcon';
-
+import { ProviderHasPin } from '../helpers'
+import Provider from '../providers/Provider'
 // Visual components
 
 interface WalletListItemStyleProps {
@@ -57,7 +58,7 @@ const WalletListItemRoot = styled('div')(
             cursor: 'pointer'
           }
         }) ||
-          void 0
+        void 0
       );
     } else if (active) {
       Object.assign(style, {
@@ -216,20 +217,19 @@ export interface WalletListItemProps {
   dismissable?: boolean;
   onConnect?: () => void;
   onLogin?: (accountName: string) => void; // ???
-  onSelect?: (walletProvider: WalletProvider) => void;
+  onSelect?: (walletProvider: WalletProvider, pin: any) => void;
   onReconnectClick?: (wallet: Wallet) => void;
   onDismissClick?: (wallet: Wallet) => void;
   onLogoutClick?: (wallet: Wallet) => void;
 }
 
 export class WalletListItem extends Component<WalletListItemProps> {
-  handleSelect = () => {
+  handleSelect = (pin: any) => {
     const { isSelectable } = this;
     if (!isSelectable()) return;
-
     const { onSelect, walletProvider } = this.props;
     if (typeof onSelect === 'function') {
-      onSelect(walletProvider);
+      onSelect(walletProvider, pin);
     }
   };
 
@@ -259,17 +259,17 @@ export class WalletListItem extends Component<WalletListItemProps> {
     return !wallet;
   };
 
-  render() {
+  renderProvider = () => {
     const { large, dismissable } = this.props;
     const {
-      isSelectable,
       handleSelect,
       handleReconnectClick,
       handleDismissClick,
       handleLogoutClick
     } = this;
+
     const { walletProvider, wallet } = this.props;
-    // Note: Temp hackery
+
     const walletState: WalletState = (wallet && wallet.state) || {};
     const { accountInfo } = walletState;
     const hasError = (wallet && wallet.hasError) || false;
@@ -284,66 +284,97 @@ export class WalletListItem extends Component<WalletListItemProps> {
     ) : IconComponent ? (
       <IconComponent />
     ) : (
-      <WalletProviderIcon providerId={walletProvider.id} />
-    );
+          <WalletProviderIcon providerId={walletProvider.id} />
+        );
+
 
     return (
-      <WalletListItemRoot
-        hasError={hasError}
-        active={isSelectable()}
-        large={large}
-        onClick={handleSelect}
-      >
-        <WalletListItemContent>
-          <WalletListItemIcon hasError={hasError} large={large}>
-            {icon}
-          </WalletListItemIcon>
+      <><WalletListItemContent>
+        <WalletListItemIcon hasError={hasError} large={large}>
+          {icon}
+        </WalletListItemIcon>
 
-          <WalletListItemBody large={large}>
-            <WalletListItemBodyTop>
-              <WalletListItemBodyTopMain>
-                <WalletListItemTitle large={large}>
-                  {providerName}
-                </WalletListItemTitle>
-                <WalletListItemStatus
-                  walletProvider={walletProvider}
-                  wallet={wallet}
-                  large={large}
-                />
-              </WalletListItemBodyTopMain>
-              {dismissable !== false && (
-                <>
-                  {active && (
-                    <WalletListItemBodyTopActions>
-                      <WalletListItemDismissButton onClick={handleLogoutClick}>
-                        <IoIosLogOut />
-                      </WalletListItemDismissButton>
-                    </WalletListItemBodyTopActions>
-                  )}
-                  {hasError && (
-                    <WalletListItemBodyTopActions>
-                      <WalletListItemDismissButton onClick={handleDismissClick}>
-                        <IoMdClose />
-                      </WalletListItemDismissButton>
-                    </WalletListItemBodyTopActions>
-                  )}
-                </>
-              )}
-            </WalletListItemBodyTop>
-            {accountInfo && (
-              <WalletListItemInfo accountInfo={accountInfo} compact={true} />
+        <WalletListItemBody large={large}>
+          <WalletListItemBodyTop>
+            <WalletListItemBodyTopMain>
+              <WalletListItemTitle large={large}>
+                {providerName}
+              </WalletListItemTitle>
+
+              <WalletListItemStatus
+                walletProvider={walletProvider}
+                wallet={wallet}
+                large={large}
+              />
+             { (!hasError && !inProgress) && (<Provider onSelect={handleSelect} ProviderId={walletProvider.id} />)}
+            </WalletListItemBodyTopMain>
+            {dismissable !== false && (
+              <>
+                {active && (
+                  <WalletListItemBodyTopActions>
+                    <WalletListItemDismissButton onClick={handleLogoutClick}>
+                      <IoIosLogOut />
+                    </WalletListItemDismissButton>
+                  </WalletListItemBodyTopActions>
+                )}
+                {hasError && (
+                  <WalletListItemBodyTopActions>
+                    <WalletListItemDismissButton onClick={handleDismissClick}>
+                      <IoMdClose />
+                    </WalletListItemDismissButton>
+                  </WalletListItemBodyTopActions>
+                )}
+              </>
             )}
-          </WalletListItemBody>
-        </WalletListItemContent>
+          </WalletListItemBodyTop>
+          {accountInfo && (
+            <WalletListItemInfo accountInfo={accountInfo} compact={true} />
+          )}
+        </WalletListItemBody>
+      </WalletListItemContent>
 
         <WalletListItemProgress active={inProgress} indeterminate={true} />
         {hasError && (
           <WalletListItemConnectButton onClick={handleReconnectClick}>
             Reconnect
-          </WalletListItemConnectButton>
-        )}
-      </WalletListItemRoot>
-    );
+    </WalletListItemConnectButton>
+        )}</>
+    )
+
+  }
+
+  render() {
+    const { large } = this.props;
+    const {
+      isSelectable,
+      handleSelect
+    } = this;
+    const { walletProvider, wallet } = this.props;
+    const hasError = (wallet && wallet.hasError) || false;
+    const providerHasPin = ProviderHasPin(walletProvider.id);
+    
+    if (!providerHasPin) {
+      return (
+        <WalletListItemRoot
+          hasError={hasError}
+          active={isSelectable()}
+          large={large}
+          onClick={() => handleSelect(null)}
+        >
+          {this.renderProvider()}
+        </WalletListItemRoot>
+      );
+    }
+    else {
+      return (
+        <WalletListItemRoot
+          hasError={hasError}
+          large={large}
+        >
+          {this.renderProvider()}
+        </WalletListItemRoot>
+      );
+    }
   }
 }
 
