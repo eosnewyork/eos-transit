@@ -1,5 +1,5 @@
 import { Api, JsonRpc, ApiInterfaces, RpcInterfaces } from 'eosjs';
-import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
+import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions, ConnectSettings } from 'eos-transit';
 import { Metro, retries_response,get_pubkey_response, authenticate_response, MetroSettings }  from 'eos-metro-api';
 import * as U2FTransport from 'eos-metro-transport-u2f';
 
@@ -46,6 +46,8 @@ function signArbitrary(data: string, userMessage: string): Promise<string> {
 	throw new Error("Not implemented");
 }
 
+
+
 export function metroWalletProvider() {
 	// const rpc = new JsonRpc(network.protocol + '://' + network.host + ':' + network.port);
 	let selectedIndex: number = -1;
@@ -53,11 +55,10 @@ export function metroWalletProvider() {
 	
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
 		// connection
-		function connect(appName: string) {
+		function connect(connectSettings: ConnectSettings) {
 			// TODO: We're going to need to adjust the framework to allow an optional paramert pin or settings object. 
-			let pin = "sogyhdxoh3qwli😀";
-
-
+			// let pin = "sogyhdxoh3qwli😀";
+			const pin = connectSettings.pin;
 
 			const transport = new U2FTransport.U2FTransport();
 			metro = new Metro([transport]);
@@ -68,16 +69,18 @@ export function metroWalletProvider() {
 				metro.get_retries().then((retriesResp: retries_response) => {
 					if(retriesResp.remainingTries > 0 ) {
 						metro.authenticate(pin).then((authResponse: authenticate_response)=> {
+
 							if(authResponse.authenticated) {
 								resolve(true);		
 							} else {
-								resolve(false);		
+								reject("Incorrect PIN code provided");
 							}
 								
 						})
 					} else {
 						// The user us locked out of the device.
-						resolve(false);
+						// resolve(false);
+						reject("Device locked due to too many failed authentication attempts");
 					}
 				});
 			});
@@ -99,7 +102,7 @@ export function metroWalletProvider() {
 			if (accountName && authorization && key && index !== undefined) {
 				selectedIndexArray.push({ id: accountName + '@' + authorization, index });
 			} else {
-				throw new Error('When calling the ledger login function: accountName, authorization, index and key must be supplied');
+				throw new Error('When calling the metro login function: accountName, authorization, index and key must be supplied');
 			}
 
 			return new Promise<WalletAuth>((resolve, reject) => {

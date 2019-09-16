@@ -10,7 +10,8 @@ import {
 	StateUnsubscribeFn,
 	DiscoveryAccount,
 	DiscoveryData,
-	DiscoveryOptions
+	DiscoveryOptions,
+	ConnectSettings
 } from './types';
 import { makeStateContainer } from './stateContainer';
 import { getErrorMessage } from './util';
@@ -93,7 +94,7 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 
 	// Connection
 
-	function connect(): Promise<boolean> {
+	function connect(connectSettings: ConnectSettings): Promise<boolean> {
 		_stateContainer.updateState((state) => ({
 			...state,
 			connected: false,
@@ -103,7 +104,7 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 		}));
 
 		return walletProvider
-			.connect(ctx.appName)
+			.connect(connectSettings)
 			.then(() => {
 				_stateContainer.updateState((state) => ({
 					...state,

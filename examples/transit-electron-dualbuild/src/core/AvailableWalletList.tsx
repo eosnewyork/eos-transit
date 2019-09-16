@@ -28,7 +28,7 @@ export function AvailableWalletList({ onItemSelect }: AvailableWalletListProps) 
 				}
 				const wallet = accessContext.initWallet(walletProvider);
 				const start = window.performance.now();
-				wallet.connect().then(() => {
+				wallet.connect({}).then(() => {
 					const end = window.performance.now();
 					const time = end - start;
 					console.log(time);

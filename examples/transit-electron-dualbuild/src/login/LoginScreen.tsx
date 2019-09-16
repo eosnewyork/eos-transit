@@ -74,6 +74,8 @@ export class LoginScreen extends Component<any, LoginScreenState> {
   };
 
   handleWalletProviderSelect = (walletProvider: WalletProvider, pin: any) => {
+    console.log("pin:");
+    console.log(pin);
     const wallet = WAL.accessContext.initWallet(walletProvider);
     // wallet.connect().then(wallet.discover().then(wallet.login));
     // @ts-ignore
@@ -136,7 +138,7 @@ export class LoginScreen extends Component<any, LoginScreenState> {
   };
 
   handleWalletReconnectClick = (wallet: Wallet) => {
-    wallet.connect().then(wallet.login);
+    wallet.connect({}).then(wallet.login);
   };
 
   isLoggedIn = () => !!WAL.accessContext.getActiveWallets().length;

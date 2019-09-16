@@ -1,6 +1,6 @@
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs2';
-import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions } from 'eos-transit';
+import { WalletProvider, NetworkConfig, WalletAuth, DiscoveryOptions, ConnectSettings } from 'eos-transit';
 
 const { scatter } = ScatterJS;
 let accountPublickey: string;
@@ -17,8 +17,8 @@ export function scatterWalletProvider() {
 	return function makeWalletProvider(network: NetworkConfig): WalletProvider {
 		// Connection
 
-		function connect(appName: string): Promise<any> {
-			return scatter.connect(appName, { initTimeout: 10000 }).then((connected: boolean) => {
+		function connect(connectSettings: ConnectSettings): Promise<any> {
+			return scatter.connect(connectSettings.appname, { initTimeout: 10000 }).then((connected: boolean) => {
 				if (connected) return true;
 				return Promise.reject('Cannot connect to Scatter');
 			});

@@ -22,7 +22,7 @@ export function UserWalletList() {
       wallets={wallets}
       onItemDismissClick={wallet => wallet.terminate()}
       onItemLogoutClick={wallet => wallet.terminate()}
-      onItemReconnectClick={wallet => wallet.connect()}
+      onItemReconnectClick={wallet => wallet.connect({})}
     />
   );
 }

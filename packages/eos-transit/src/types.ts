@@ -84,7 +84,7 @@ export interface WalletProvider {
 	id: string;
 	meta?: WalletProviderMetadata;
 	signatureProvider: ApiInterfaces.SignatureProvider;
-	connect(appName: string): Promise<any>;
+	connect(connectSettings: ConnectSettings): Promise<any>;
 	discover(discoveryOptions: DiscoveryOptions): Promise<any>;
 	disconnect(): Promise<any>;
 	login(accountName?: string, authorization?: string, index?: number, key?: string): Promise<WalletAuth>;
@@ -122,6 +122,11 @@ export interface DiscoveryOptions {
 	presetKeyMap?: any; // TODO: This data structure is not defined as a type right now, but should be. It's the same as the response structure from discover()
 }
 
+export interface ConnectSettings {
+	appname?: string;
+	pin?: string;
+}
+
 export interface Wallet {
 	_instanceId: string; // UUID, for internal purposes
 	ctx: WalletAccessContext;
@@ -136,7 +141,7 @@ export interface Wallet {
 	active: boolean;
 	hasError: boolean;
 	errorMessage?: string;
-	connect(): Promise<any>;
+	connect(connectSettings: ConnectSettings): Promise<any>;
 	discover(discoveryOptions: DiscoveryOptions): Promise<any>;
 	disconnect(): Promise<any>;
 	login(accountName?: string, authorization?: string): Promise<AccountInfo>;
