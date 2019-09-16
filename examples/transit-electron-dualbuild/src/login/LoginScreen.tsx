@@ -76,8 +76,8 @@ export class LoginScreen extends Component<any, LoginScreenState> {
   handleWalletProviderSelect = (walletProvider: WalletProvider, pin: any) => {
     const wallet = WAL.accessContext.initWallet(walletProvider);
     // wallet.connect().then(wallet.discover().then(wallet.login));
-    
-    wallet.connect().then(() => {
+    // @ts-ignore
+    wallet.connect(pin).then(() => {
 
       const start1 = window.performance.now();
         // wallet.discover({ pathIndexList: [ 0,1 ], keyModifierFunc: keyModCallback} ).then((discoveryData: DiscoveryData) => {
