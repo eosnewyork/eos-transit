@@ -4,6 +4,7 @@ import { Wallet, WalletProvider } from 'eos-transit';
 import WalletListItem from '../shared/wallets/WalletListItem';
 import WalletStateSubscribe from '../WalletStateSubscribe';
 import AccessContextSubscribe from 'AccessContextSubscribe';
+import {ConnectSettings} from '../shared/providers/ProviderTypes'
 
 // Visual components
 
@@ -19,8 +20,8 @@ const LoginScreenWalletListRoot = styled('div')({
 interface LoginScreenWalletListProps {
   walletProviders: WalletProvider[];
   wallets: Wallet[];
-  onWalletProviderSelect?: (walletProvider: WalletProvider, pin: any) => void;
-  onWalletReconnectClick?: (wallets: Wallet) => void;
+  onWalletProviderSelect?: (walletProvider: WalletProvider, connectSettings: ConnectSettings) => void;
+  onWalletReconnectClick?: (wallets: Wallet, connectSettings: ConnectSettings) => void;
 }
 
 export class LoginScreenWalletList extends Component<
@@ -34,10 +35,10 @@ export class LoginScreenWalletList extends Component<
     }
   };
 
-  handleReconnectClick = (walletSession: Wallet) => {
+  handleReconnectClick = (walletSession: Wallet, connectSettings: ConnectSettings) => {
     const { onWalletReconnectClick } = this.props;
     if (walletSession && typeof onWalletReconnectClick === 'function') {
-      onWalletReconnectClick(walletSession);
+      onWalletReconnectClick(walletSession, connectSettings);
     }
   };
 

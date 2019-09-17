@@ -12,3 +12,5 @@ export const GoButton = styled('button')({
     textAlign: 'center',
     margin:5
   })
+
+  export default GoButton

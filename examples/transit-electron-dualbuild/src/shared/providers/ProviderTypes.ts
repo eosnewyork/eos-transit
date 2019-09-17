@@ -1,6 +1,11 @@
-
+export interface ConnectSettings {
+	appname?: string;
+	pin?: string;
+}
 
 export interface ProviderProps {
-    onSelect?: (pin: any) => void;
+    onSelect?: (connectSettings: ConnectSettings) => void;
     ProviderId: string;
+    providerName?:string;
+    hasError:boolean
   }

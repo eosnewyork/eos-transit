@@ -9,6 +9,8 @@ import { WalletListItemInfo } from './WalletListItemInfo';
 import { WalletProviderIcon } from './WalletProviderIcon';
 import { ProviderHasPin } from '../helpers'
 import Provider from '../providers/Provider'
+import { ConnectSettings } from '../providers/ProviderTypes'
+import WalletListItemConnectButton from '../buttons/WalletListItemConnectButton'
 // Visual components
 
 interface WalletListItemStyleProps {
@@ -131,41 +133,6 @@ const WalletListItemTitle = styled('div')(
   })
 );
 
-export const WalletListItemConnectButton = styled('button')({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  border: 'none',
-  borderRadius: 1,
-  padding: '8px 20px',
-  fontSize: 11,
-  fontWeight: 300,
-  textAlign: 'center',
-  backgroundColor: '#98243f',
-  color: 'white',
-  textTransform: 'uppercase',
-  outline: 'none',
-  transition: 'all 0.2s',
-
-  '&:last-child': {
-    borderBottomLeftRadius: 1,
-    borderBottomRightRadius: 1
-  },
-
-  '&:hover': {
-    // backgroundColor: '#2e3542',
-    backgroundColor: '#ab2847',
-    color: 'white',
-    cursor: 'pointer'
-  },
-
-  '&:active': {
-    // backgroundColor: '#2e3542',
-    backgroundColor: '#c3173f'
-  }
-});
-
 export const WalletListItemDismissButton = styled('button')({
   display: 'flex',
   alignItems: 'center',
@@ -217,26 +184,27 @@ export interface WalletListItemProps {
   dismissable?: boolean;
   onConnect?: () => void;
   onLogin?: (accountName: string) => void; // ???
-  onSelect?: (walletProvider: WalletProvider, pin: any) => void;
-  onReconnectClick?: (wallet: Wallet) => void;
+  onSelect?: (walletProvider: WalletProvider, connectSettings: ConnectSettings) => void;
+  onReconnectClick?: (wallet: Wallet, connectSettings: ConnectSettings) => void;
   onDismissClick?: (wallet: Wallet) => void;
   onLogoutClick?: (wallet: Wallet) => void;
 }
 
 export class WalletListItem extends Component<WalletListItemProps> {
-  handleSelect = (pin: any) => {
+  handleSelect = (connectSettings: ConnectSettings) => {
     const { isSelectable } = this;
     if (!isSelectable()) return;
     const { onSelect, walletProvider } = this.props;
     if (typeof onSelect === 'function') {
-      onSelect(walletProvider, pin);
+      connectSettings.appname =  walletProvider.meta && walletProvider.meta.name
+      onSelect(walletProvider, connectSettings);
     }
   };
 
-  handleReconnectClick = () => {
+  handleReconnectClick = (connectSettings: ConnectSettings) => {
     const { onReconnectClick, wallet } = this.props;
     if (wallet && typeof onReconnectClick === 'function') {
-      onReconnectClick(wallet);
+      onReconnectClick(wallet, connectSettings);
     }
   };
 
@@ -277,8 +245,10 @@ export class WalletListItem extends Component<WalletListItemProps> {
     const active = (wallet && wallet.active) || false;
 
     const providerName = walletProvider.meta && walletProvider.meta.name;
+    const providerHasPin = ProviderHasPin(walletProvider.id);
 
     const IconComponent = this.props.iconComponent;
+
     const icon = inProgress ? (
       <SpinnerIcon size={large ? 26 : 24} />
     ) : IconComponent ? (
@@ -306,7 +276,7 @@ export class WalletListItem extends Component<WalletListItemProps> {
                 wallet={wallet}
                 large={large}
               />
-             { (!hasError && !inProgress) && (<Provider onSelect={handleSelect} ProviderId={walletProvider.id} />)}
+             { (!inProgress) && (<Provider onSelect={handleSelect} ProviderId={walletProvider.id} providerName={providerName} hasError={hasError} />)}
             </WalletListItemBodyTopMain>
             {dismissable !== false && (
               <>
@@ -334,10 +304,10 @@ export class WalletListItem extends Component<WalletListItemProps> {
       </WalletListItemContent>
 
         <WalletListItemProgress active={inProgress} indeterminate={true} />
-        {hasError && (
-          <WalletListItemConnectButton onClick={handleReconnectClick}>
+        {hasError && !providerHasPin &&(
+          <WalletListItemConnectButton onClick={() => handleReconnectClick({appname:providerName})}>
             Reconnect
-    </WalletListItemConnectButton>
+         </WalletListItemConnectButton>
         )}</>
     )
 
@@ -352,14 +322,15 @@ export class WalletListItem extends Component<WalletListItemProps> {
     const { walletProvider, wallet } = this.props;
     const hasError = (wallet && wallet.hasError) || false;
     const providerHasPin = ProviderHasPin(walletProvider.id);
-    
+    const providerName = walletProvider.meta && walletProvider.meta.name;
+
     if (!providerHasPin) {
       return (
         <WalletListItemRoot
           hasError={hasError}
           active={isSelectable()}
           large={large}
-          onClick={() => handleSelect(null)}
+          onClick={() => handleSelect({appname:providerName})}
         >
           {this.renderProvider()}
         </WalletListItemRoot>

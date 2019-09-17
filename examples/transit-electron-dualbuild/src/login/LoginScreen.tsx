@@ -5,6 +5,7 @@ import WAL, { WalletProvider, Wallet, DiscoveryData, DiscoveryOptions } from 'eo
 import { CloseButton } from '../shared/buttons/CloseButton';
 import { LoginButton } from './LoginButton';
 import { LoginScreenWalletList } from './LoginScreenWalletList';
+import {ConnectSettings} from '../shared/providers/ProviderTypes'
 
 // Visual components
 
@@ -73,13 +74,13 @@ export class LoginScreen extends Component<any, LoginScreenState> {
     this.setState(state => ({ showLoginOptions: !state.showLoginOptions }));
   };
 
-  handleWalletProviderSelect = (walletProvider: WalletProvider, pin: any) => {
+  handleWalletProviderSelect = (walletProvider: WalletProvider, connectSettings: ConnectSettings) => {
     console.log("pin:");
-    console.log(pin);
+    console.log(connectSettings);
     const wallet = WAL.accessContext.initWallet(walletProvider);
     // wallet.connect().then(wallet.discover().then(wallet.login));
     // @ts-ignore
-    wallet.connect(pin).then(() => {
+    wallet.connect(connectSettings).then(() => {
 
       const start1 = window.performance.now();
         // wallet.discover({ pathIndexList: [ 0,1 ], keyModifierFunc: keyModCallback} ).then((discoveryData: DiscoveryData) => {
@@ -137,8 +138,9 @@ export class LoginScreen extends Component<any, LoginScreenState> {
     });
   };
 
-  handleWalletReconnectClick = (wallet: Wallet) => {
-    wallet.connect({}).then(wallet.login);
+  handleWalletReconnectClick = (wallet: Wallet, connectSettings: ConnectSettings) => {
+    // @ts-ignore
+    wallet.connect(connectSettings).then(wallet.login);
   };
 
   isLoggedIn = () => !!WAL.accessContext.getActiveWallets().length;
