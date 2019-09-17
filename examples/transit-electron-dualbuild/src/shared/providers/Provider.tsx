@@ -4,7 +4,7 @@ import {ProviderProps} from './ProviderTypes'
 
 const Provider = (props: ProviderProps) => {
 
-    switch(props.ProviderId)
+    switch(props.providerId)
     {
         case 'Metro' :
             {
