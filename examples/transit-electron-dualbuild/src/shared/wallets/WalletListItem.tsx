@@ -211,7 +211,6 @@ export class WalletListItem extends Component<WalletListItemProps, IState> {
 
   onPinValid = (connectSettings: ConnectSettings) => {
     this.setState({ ...this.state, isPinValid: true, connectSettings })
-    console.log(this.state)
   }
 
   handleSelect = () => {
@@ -340,7 +339,8 @@ export class WalletListItem extends Component<WalletListItemProps, IState> {
                 wallet={wallet}
                 large={large}
               />
-              {(!inProgress) && (<><Provider onPinValid={onPinValid} providerId={walletProvider.id} />{this.renderConnectButtons(providerHasPin,hasError)}</>)}
+              {(!inProgress && !accountInfo && !active) 
+                && (<><Provider onPinValid={onPinValid} providerId={walletProvider.id} />{this.renderConnectButtons(providerHasPin,hasError)}</>)}
             </WalletListItemBodyTopMain>
             {dismissable !== false && (
               <>

@@ -3,6 +3,7 @@ import styled from 'react-emotion';
 import { WalletProvider, Wallet } from 'eos-transit';
 import WalletListItem from './WalletListItem';
 import WalletStateSubscribe from 'WalletStateSubscribe';
+import {ConnectSettings} from '../providers/ProviderTypes'
 
 // Visual components
 
@@ -16,10 +17,10 @@ const WalletListRoot = styled('div')({
 export interface WalletListProps {
 	walletProviders?: WalletProvider[];
 	wallets?: Wallet[];
-	onItemSelect?: (item: WalletProvider) => void;
+	onItemSelect?: (item: WalletProvider, connectSettings: ConnectSettings) => void;
 	onItemDismissClick?: (item: Wallet) => void;
 	onItemLogoutClick?: (item: Wallet) => void;
-	onItemReconnectClick?: (item: Wallet) => void;
+	onItemReconnectClick?: (item: Wallet, connectSettings: ConnectSettings) => void;
 }
 
 export class WalletList extends Component<WalletListProps> {

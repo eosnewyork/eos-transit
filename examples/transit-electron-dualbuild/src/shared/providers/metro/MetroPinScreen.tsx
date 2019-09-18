@@ -32,7 +32,6 @@ export const PinCreationScreen: React.FC<ProviderProps> = (props) => {
 
       if (isPinValid) {
         const pin = `${pin1.current.value}${pin2.current.value}${pin3.current.value}${pin4.current.value}`
-        console.log(pin)
         props.onPinValid({ pin , appname : 'My Dapp'})
       }
     }
