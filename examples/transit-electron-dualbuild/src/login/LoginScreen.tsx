@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'react-emotion';
 import { Redirect, withRouter } from 'react-router';
-import WAL, { WalletProvider, Wallet, DiscoveryData, DiscoveryOptions } from 'eos-transit';
+import WAL, { WalletProvider, Wallet, DiscoveryData, DiscoveryOptions, DiscoverContinueCallback, DiscoveryAccount } from 'eos-transit';
 import { CloseButton } from '../shared/buttons/CloseButton';
 import { LoginButton } from './LoginButton';
 import { LoginScreenWalletList } from './LoginScreenWalletList';
@@ -85,6 +85,63 @@ export class LoginScreen extends Component<any, LoginScreenState> {
         const discoveryDataCached : any = localStorage.getItem('discoveryData');
         let presetKeyMap : any;
         const discoveryOptions : DiscoveryOptions = { pathIndexList: [ 0,1 ] };
+
+        discoveryOptions.keyLookupFunc = (discoveryData: DiscoveryData, callback: DiscoverContinueCallback) => {
+          console.log('discoveryData in keyLookupFunc: ');
+          console.log(discoveryData);
+
+          /*
+          Exmaple discoveryData structure:
+          {
+            "keys": [
+              {
+                "index": 0,
+                "key": "EOS5TYtUXsbRJrz61gsQWQho6AYyCcRFgbFm4TPfrEbzb43x8Ewfq"
+              },
+              {
+                "index": 1,
+                "key": "EOS8MBNb9GwkqM3eXYCDVsgeqVeMbf3wS7fp6smzCj63CVZgFEede"
+              }
+            ],
+          }
+          */
+
+          /*
+          * Your function is provided with an array of keys in the format above. 
+          * Use whatever method you'd like to resolve the keys to account information and build a structure that looks like the DiscoveryAccount[] structure below. 
+          * Then call the callback() function with the data which will allow the login process to continue.
+          */
+
+          let accountInfoArray: DiscoveryAccount[] = [{
+            index: 0,
+            key: "EOS5TYtUXsbRJrz61gsQWQho6AYyCcRFgbFm4TPfrEbzb43x8Ewfq",
+            accounts : [{
+              account: "wozzawozza",
+              authorization: "active"
+            }]
+          }];
+
+          /*
+          Example DiscoveryAccount[] structure
+          [
+            {
+              "index": 0,
+              "key": "EOS5TYtUXsbRJrz61gsQWQho6AYyCcRFgbFm4TPfrEbzb43x8Ewfq",
+              "accounts": [
+                {
+                  "account": "wozzawozza",
+                  "authorization": "active"
+                }
+              ]
+            }
+          ]
+          */
+
+          callback(accountInfoArray);
+        }
+
+        // Uncomment this when testing the keyLookupFunc above
+        discoveryOptions.keyLookupFunc = undefined;
 
         if(discoveryDataCached) { 
           presetKeyMap = JSON.parse(discoveryDataCached);

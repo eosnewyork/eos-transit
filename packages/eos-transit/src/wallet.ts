@@ -129,8 +129,8 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 		let accountsDataObjToMerge: DiscoveryData = { keyToAccountMap: [] };
 
 		let discoverResult = await walletProvider.discover(discoveryOptions).then(async (walletDiscoveryData) => {
-			// console.log('walletDiscoveryData');
-			// console.log(walletDiscoveryData);
+			console.log('walletDiscoveryData');
+			console.log(walletDiscoveryData);
 			//Merge any properties that were returned from the wallets specific discovery process. This allows the wallet to add custom properties to the response if needed.
 			accountsDataObjToMerge = { ...accountsDataObjToMerge, ...walletDiscoveryData };
 			delete accountsDataObjToMerge.keys;
@@ -146,59 +146,83 @@ export function initWallet(walletProvider: WalletProvider, ctx: WalletAccessCont
 				const modifiedData = discoveryOptions.keyModifierFunc(walletDiscoveryData);
 				walletDiscoveryData = modifiedData;
 			}
-			
 
-			let promises = [];
+			//If the user has supplied a KeyLookupFunc then they intend to do the account lookup themseves. 
+			//We will provide them with the discovery data and expect them to call the callback function once they have done the account lookups.
+			if(discoveryOptions.keyLookupFunc !== undefined) {
+				// discoveryOptions.keyLookupFunc(walletDiscoveryData);
+				discoveryOptions.keyLookupFunc(walletDiscoveryData, function(discoveredAccounts: DiscoveryAccount[]) {
 
-			for (let keyData of walletDiscoveryData.keys) {
-				let key = keyData.key;
-				let keyIndex = keyData.index;
+					accountsDataObjToMerge.keyToAccountMap = discoveredAccounts;
+	
+					console.log('accountsDataObjToMerge(keyLookupFunc)');
+					console.log({ accountsDataObjToMerge });
+	
+					return Promise.resolve({ accountsDataObjToMerge });
 
-				let cached = false;
-				if (discoverData.keyToAccountMap) {
-					let foundInCache = discoverData.keyToAccountMap.findIndex(
-						(y: DiscoveryAccount) => y.index == keyIndex
-					);
-					if (foundInCache > -1) cached = true;
-				}
+				});				
+			} 
+			else 
+			{
 
-				if (key && !cached) {
-					let p = ctx.eosRpc.history_get_key_accounts(key).then(async (accountData) => {
-						// let keyIndex = keys.findIndex((y: string) => y == key);
+				let promises = [];
 
-						let accountEntry: DiscoveryAccount = {
-							index: keyIndex,
-							key: key,
-							accounts: []
-						};
-
-						if (accountData.account_names.length > 0) {
-							for (let account of accountData.account_names) {
-								await ctx.eosRpc.get_account(account).then(async (accountInfo) => {
-									for (let permission of accountInfo.permissions) {
-										for (let permissionKey of permission.required_auth.keys) {
-											if (permissionKey.key == key) {
-												accountEntry.accounts.push({
-													account: account,
-													authorization: permission.perm_name
-												});
+				for (let keyData of walletDiscoveryData.keys) {
+					let key = keyData.key;
+					let keyIndex = keyData.index;
+	
+					let cached = false;
+					if (discoverData.keyToAccountMap) {
+						let foundInCache = discoverData.keyToAccountMap.findIndex(
+							(y: DiscoveryAccount) => y.index == keyIndex
+						);
+						if (foundInCache > -1) cached = true;
+					}
+	
+					if (key && !cached) {
+						let p = ctx.eosRpc.history_get_key_accounts(key).then(async (accountData) => {
+							// let keyIndex = keys.findIndex((y: string) => y == key);
+	
+							let accountEntry: DiscoveryAccount = {
+								index: keyIndex,
+								key: key,
+								accounts: []
+							};
+	
+							if (accountData.account_names.length > 0) {
+								for (let account of accountData.account_names) {
+									await ctx.eosRpc.get_account(account).then(async (accountInfo) => {
+										for (let permission of accountInfo.permissions) {
+											for (let permissionKey of permission.required_auth.keys) {
+												if (permissionKey.key == key) {
+													accountEntry.accounts.push({
+														account: account,
+														authorization: permission.perm_name
+													});
+												}
 											}
 										}
-									}
-								});
+									});
+								}
 							}
-						}
-
-						return accountEntry;
-					});
-					promises.push(p);
+	
+							return accountEntry;
+						});
+						promises.push(p);
+					}
 				}
+	
+				await Promise.all(promises).then((results) => {
+					accountsDataObjToMerge.keyToAccountMap = results;
+	
+					console.log('accountsDataObjToMerge');
+					console.log({ accountsDataObjToMerge });
+	
+					return Promise.resolve({ accountsDataObjToMerge });
+				});
+
 			}
 
-			await Promise.all(promises).then((results) => {
-				accountsDataObjToMerge.keyToAccountMap = results;
-				return Promise.resolve({ accountsDataObjToMerge });
-			});
 		});
 
 		counter++;

@@ -115,10 +115,14 @@ export interface WalletState {
 
 export type KeyModifierCallback = ( discoveryData: DiscoveryData ) => DiscoveryData;
 
+export type DiscoverContinueCallback = ( discoveredAccounts: DiscoveryAccount[] ) => void;
+export type KeyLookupCallback = ( discoveryData: DiscoveryData, callback: DiscoverContinueCallback ) => void;
+
 //{ pathIndexList: [ 0, 1, 2, 35 ] }
 export interface DiscoveryOptions {
 	pathIndexList: number[];
 	keyModifierFunc?: KeyModifierCallback;
+	keyLookupFunc?: KeyLookupCallback;
 	presetKeyMap?: any; // TODO: This data structure is not defined as a type right now, but should be. It's the same as the response structure from discover()
 }
 
