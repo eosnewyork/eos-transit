@@ -22,24 +22,20 @@ const config: Configuration = {
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {
-    filename: 'eos-transit-ledger-provider.min.js',
+    filename: 'eos-transit-lynx-provider.min.js',
     path: path.resolve(__dirname, 'umd'),
     libraryTarget: 'umd',
-    library: ['WAL', 'providers', 'ledger'],
+    library: ['WAL', 'providers', 'lynx'],
     libraryExport: 'default'
   },
   plugins: [
     new ProvidePlugin(
     	{
-          'window.WAL': ['eos-transit', 'default'],
-          '_hwTransport2': ['@babel/runtime/regenerator']
+          'window.WAL': ['eos-transit', 'default']
 	    }
     )
   ],
-  externals: {
-    'eos-transit':'WAL',
-    'eosjs' : 'rpc'
-  },
+  externals: 'eosjs',
   stats: {
     colors: true
   }

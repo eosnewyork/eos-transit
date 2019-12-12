@@ -11,15 +11,15 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types", "./src/typings"],
-    "types": ["eosjs-ecc", "bigi"]
+    //"typeRoots": ["./node_modules/@types", "./src/typings"],
+    //"types": ["eosjs-ecc","eosjs", "bigi"]
   },
   "files": ["src/index.ts"]
 }
