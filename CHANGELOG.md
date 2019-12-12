@@ -4,6 +4,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+##  2019-12-12 - 4.0.2
+
+Added the ability for hosting applicaiton to do account lookup once the wallet returns the keys. 
+
+- The wallet.discover method currently takes a discoveryOptions parameter - wallet.discover( discoveryOptions )
+- A new property "keyLookupFunc" has been added to the discoveryOptions object. 
+- Example: 
+
+        discoveryOptions.keyLookupFunc = (discoveryData: DiscoveryData, callback: DiscoverContinueCallback) => {
+
+			// Get the discoveryData object contains the keys. 
+			// It is up to your function to fetch the Account info and then call callback(accountInfoArray);          
+		}
+
+- Detailed Example:
+
+		discoveryOptions.keyLookupFunc = (discoveryData: DiscoveryData, callback: DiscoverContinueCallback) => {
+
+          /*
+          Exmaple discoveryData structure:
+          {
+            "keys": [
+              {
+                "index": 0,
+                "key": "EOS5TYtUXsbRJrz61gsQWQho6AYyCcRFgbFm4TPfrEbzb43x8Ewfq"
+              },
+              {
+                "index": 1,
+                "key": "EOS8MBNb9GwkqM3eXYCDVsgeqVeMbf3wS7fp6smzCj63CVZgFEede"
+              }
+            ],
+          }
+          */
+
+          /*
+          * Your function is provided with an array of keys in the format above. 
+          * Use whatever method you'd like to resolve the keys to account information and build a structure that looks like the DiscoveryAccount[] structure below. 
+          * Then call the callback() function with the data which will allow the login process to continue.
+          */
+
+          let accountInfoArray: DiscoveryAccount[] = [{
+            index: 0,
+            key: "EOS5TYtUXsbRJrz61gsQWQho6AYyCcRFgbFm4TPfrEbzb43x8Ewfq",
+            accounts : [{
+              account: "wozzawozza",
+              authorization: "active"
+            }]
+          }];
+
+          /*
+          Example DiscoveryAccount[] structure
+          [
+            {
+              "index": 0,
+              "key": "EOS5TYtUXsbRJrz61gsQWQho6AYyCcRFgbFm4TPfrEbzb43x8Ewfq",
+              "accounts": [
+                {
+                  "account": "wozzawozza",
+                  "authorization": "active"
+                }
+              ]
+            }
+          ]
+          */
+
+          callback(accountInfoArray);
+        }
+
+		....
+
+		wallet.discover( discoveryOptions ).then( .... );
+
+
 ##  2019-08-12 - 4.0.2
 
 Update the timeout in the metro plugin
