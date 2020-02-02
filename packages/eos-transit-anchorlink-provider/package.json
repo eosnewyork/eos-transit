@@ -1,0 +1,38 @@
+{
+	"name": "eos-transit-anchorlink-provider",
+	"version": "4.0.2",
+	"description": "Anchor (and other ESR compatible wallets) provider for eos-transit",
+	"license": "MIT",
+	"main": "lib/index.js",
+	"module": "lib/index.js",
+	"types": "lib",
+	"scripts": {
+		"echo": "echo \"================== eos-transit-anchorlink-provider ===================\"",
+		"installpkg": "yarn echo && npm install",
+		"clean": "rm -rf lib && rm -rf umd",
+		"prebuild": "yarn clean",
+		"build": "../../node_modules/typescript/bin/tsc",
+		"build-production": "yarn build && TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack",
+		"watch": "../../node_modules/typescript/bin/tsc -w",
+		"test": "",
+		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
+	},
+	"dependencies": {
+		"anchor-link": "^0.2.0",
+		"anchor-link-browser-transport": "^0.1.0",
+		"eos-transit": "^4.0.2",
+		"prettier": "^1.19.1"
+	},
+	"devDependencies": {
+		"eosjs": "^20.0.0",
+		"webpack": "^4.25.1",
+		"webpack-cli": "^3.1.2"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"printWidth": 80,
+		"tabWidth": 2,
+		"useTabs": false,
+		"bracketSpacing": true
+	}
+}
