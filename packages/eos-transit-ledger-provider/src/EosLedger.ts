@@ -133,7 +133,7 @@ export default class EOS {
   getAppConfiguration() {
     return this.transport.send(CLA, INS_GET_APP_CONFIGURATION, P1_FIRST, P1_FIRST).then((response : any) => {
       let result: Result2 = new Result2();
-      result.arbitraryDataEnabled = response[0] & 0x01;
+      result.arbitraryDataEnabled = Boolean(response[0] & 0x01);
       result.version = "" + response[1] + "." + response[2] + "." + response[3];
       return result;
     });

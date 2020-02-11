@@ -67,6 +67,11 @@ class LedgerProxy {
 		return si.toString();
 	}
 
+	async getAppConfig() {
+		const eos = new EosLedger.default(this.transport);
+		return eos.getAppConfiguration()
+	}
+
 	// private async initTransport() {
 	// 	let transport: any;
 	// 	if (this._transport === 'TransportWebAuthn') {
@@ -88,6 +93,8 @@ export interface ledgerWalletProviderOptions {
 	exchangeTimeout?: number;
 	transport?: 'TransportWebAuthn' | 'TransportU2F' | 'TransportWebBLE' | 'TransportWebusb';
 }
+
+export type ConfigWalletProvider = WalletProvider & { getAppConfig: () => Promise<{ arbitraryDataEnabled: boolean, version: string }> }
 
 export function ledgerWalletProvider(
 	{
@@ -163,6 +170,10 @@ export function ledgerWalletProvider(
 						resolve(discoveryInfo);
 					})
 			});
+		}
+
+		async function getAppConfig() {
+			return ledger.getAppConfig()
 		}
 
 		function disconnect(): Promise<any> {
@@ -287,7 +298,7 @@ export function ledgerWalletProvider(
 			};
 		}
 
-		const walletProvider: WalletProvider = {
+		const walletProvider: ConfigWalletProvider = {
 			id,
 			meta: {
 				name,
@@ -300,7 +311,8 @@ export function ledgerWalletProvider(
 			disconnect,
 			login,
 			logout,
-			signArbitrary
+			signArbitrary,
+			getAppConfig,
 		};
 
 		return walletProvider;
