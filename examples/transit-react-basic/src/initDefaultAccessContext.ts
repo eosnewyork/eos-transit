@@ -9,6 +9,8 @@ import portis from 'eos-transit-portis-provider';
 import whaleVault from 'eos-transit-whalevault-provider'
 import keycat from 'eos-transit-keycat-provider'
 import simplEOS from 'eos-transit-simpleos-provider'
+import anchorlink from 'eos-transit-anchorlink-provider'
+
 
 const appName = 'My Dapp';
 
@@ -34,7 +36,8 @@ const walContext = initDefaultAccessContext({
 		portis({DappId: '0f987db7-f1f6-4ec6-bd8e-64672f8b5ac2'}),
 		whaleVault(),
 		keycat(),
-		simplEOS() ]
+		simplEOS()
+		anchorlink(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),{}) ]
 });
 
 // walContext.addWalletProvider(ledger({ pathIndexList: [ 0, 1, 2, 35 ] }));
