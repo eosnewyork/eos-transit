@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-anchorlink-provider",
-	"version": "4.0.4",
+	"version": "4.0.5",
 	"description": "Anchor / ESR provider for eos-transit",
 	"license": "MIT",
 	"main": "lib/index.js",
@@ -20,7 +20,7 @@
 	"dependencies": {
 		"anchor-link": "^1.0.0",
 		"anchor-link-browser-transport": "^1.0.0",
-		"eos-transit": "^4.0.4"
+		"eos-transit": "^4.0.5"
 	},
 	"devDependencies": {
 		"eosjs": "^20.0.0",
