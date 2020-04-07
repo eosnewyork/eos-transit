@@ -34,7 +34,7 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 | [`eos-transit-keycat-provider`](packages/eos-transit-keycat-provider) | [![npm version](https://badge.fury.io/js/eos-transit-keycat-provider.svg)](https://badge.fury.io/js/eos-transit-keycat-provider)   | Wallet provider for [Keycat](https://github.com/EOSDAQ/keycat) in browser wallet |
 | [`eos-transit-simpleos-provider`](packages/eos-transit-keycat-provider) | [![npm version](https://badge.fury.io/js/eos-transit-simpleos-provider.svg)](https://badge.fury.io/js/eos-transit-simpleos-provider)   | Wallet provider for [simplEOS](https://eosrio.io/simpleos/) app |
 | [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)               | [![npm version](https://badge.fury.io/js/eos-transit-stub-provider.svg)](https://badge.fury.io/js/eos-transit-stub-provider)   | Stub wallet provider that does nothing, for demo and testing only |
-
+| [`eos-transit-anchorlink-provider`](packages/eos-transit-anchorlink-provider)               | [![npm version](https://badge.fury.io/js/eos-transit-anchorlink-provider.svg)](https://badge.fury.io/js/eos-transit-anchorlink-provider)   | Anchor / ESR provider for eos-transit |
 
 ## Contribution
 
