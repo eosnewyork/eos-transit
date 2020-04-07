@@ -1,6 +1,6 @@
 {
 	"name": "eos-transit-anchorlink-provider",
-	"version": "4.0.2",
+	"version": "4.0.3",
 	"description": "Anchor / ESR provider for eos-transit",
 	"license": "MIT",
 	"main": "lib/index.js",
@@ -20,11 +20,11 @@
 	"dependencies": {
 		"anchor-link": "^1.0.0",
 		"anchor-link-browser-transport": "^1.0.0",
-		"eos-transit": "^4.0.2"
+		"eos-transit": "^4.0.3"
 	},
 	"devDependencies": {
-		"prettier": "^1.19.1",
 		"eosjs": "^20.0.0",
+		"prettier": "^1.19.1",
 		"webpack": "^4.25.1",
 		"webpack-cli": "^3.1.2"
 	},
