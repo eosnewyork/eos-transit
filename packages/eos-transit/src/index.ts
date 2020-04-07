@@ -33,3 +33,5 @@ const WAL = {
 };
 
 export default WAL;
+
+// force rebuild
