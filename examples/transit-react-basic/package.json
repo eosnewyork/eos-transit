@@ -25,6 +25,7 @@
 		"eos-transit-simpleos-provider": "^4.0.5",
 		"eos-transit-tokenpocket-provider": "^4.0.5",
 		"eos-transit-whalevault-provider": "^4.0.5",
+		"eos-transit-anchorlink-provider": "^4.0.5",
 		"minireset.css": "^0.0.3",
 		"react": "^16.5.2",
 		"react-dom": "^16.5.2",
