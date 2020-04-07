@@ -48,6 +48,7 @@
     "eos-transit-simpleos-provider": "^4.0.2",
     "eos-transit-tokenpocket-provider": "^4.0.2",
     "eos-transit-whalevault-provider": "^4.0.2",
+    "eos-transit-anchorlink-provider": "^4.0.2",
     "minireset.css": "^0.0.3",
     "npm-watch": "^0.6.0",
     "react": "^16.8.6",

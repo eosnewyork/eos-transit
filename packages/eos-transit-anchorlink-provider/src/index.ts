@@ -1,5 +1,5 @@
 import { Link, LinkOptions, LinkSession, LinkTransport } from 'anchor-link';
-import { NetworkConfig, WalletAuth, WalletProvider } from 'eos-transit';
+import { NetworkConfig, WalletAuth, WalletProvider, DiscoveryOptions } from 'eos-transit';
 import { ApiInterfaces } from 'eosjs';
 import BrowserTransport, {
   BrowserTransportOptions
@@ -43,7 +43,14 @@ class AnchorLinkProvider implements WalletProvider {
 
   async connect() {}
   async disconnect() {}
-  async discover() {}
+  // async discover() {}
+  async discover(discoveryOptions: DiscoveryOptions) {
+    // console.log('in scatter discover.');
+    return {
+        keys: [],
+        note: 'anchorlink does not support discovery'
+      };
+  }
 
   async signArbitrary(): Promise<string> {
     throw new Error('signArbitrary not supported');
