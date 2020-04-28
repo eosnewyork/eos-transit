@@ -9,7 +9,7 @@ import portis from 'eos-transit-portis-provider';
 import whaleVault from 'eos-transit-whalevault-provider'
 import keycat from 'eos-transit-keycat-provider'
 import simplEOS from 'eos-transit-simpleos-provider'
-import anchorlink from 'eos-transit-anchorlink-provider'
+// import anchorlink from 'eos-transit-anchorlink-provider'
 
 const appName = 'My Dapp';
 
@@ -28,6 +28,7 @@ initDefaultAccessContext({
 		ledger({exchangeTimeout : 30000, transport: 'TransportU2F', name: 'Ledger Nano S U2F', shortName: 'Ledger Nano S U2F', id: 'ledgeru2f' }),
 		ledger({exchangeTimeout : 30000, transport: 'TransportWebAuthn', name: 'Ledger Nano S WebAuthn', shortName: 'Ledger Nano S WebAuthn', id: 'ledgeruwebauthn' }),
 		ledger({exchangeTimeout : 30000, transport: 'TransportWebusb', name: 'Ledger Nano S Web USB', shortName: 'Ledger Nano S Web USB', id: 'ledgeruwebusb' }),
+		// ledger({exchangeTimeout : 30000, transport: 'TransportNodeHid', name: 'Ledger Nano S Node HID', shortName: 'Ledger Nano S Node HID', id: 'ledgernodehid' }),
 		lynx(),
 		tokenpocket(),
 		meetone(),
@@ -35,8 +36,9 @@ initDefaultAccessContext({
 		portis({DappId: '0f987db7-f1f6-4ec6-bd8e-64672f8b5ac2'}),
 		whaleVault(),
 		keycat(),
-		simplEOS(),
-		anchorlink(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),{}) ]
+		simplEOS()
+		//anchorlink(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),{}) 
+	]
 });
 
 // walContext.addWalletProvider(ledger({ pathIndexList: [ 0, 1, 2, 35 ] }));

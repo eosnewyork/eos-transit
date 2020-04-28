@@ -3,6 +3,7 @@ import { Configuration, ProvidePlugin } from 'webpack';
 
 const config: Configuration = {
 	mode: 'production',
+	target: 'node',
 	entry: './src/index.ts',
 	module: {
 		rules: [
@@ -34,7 +35,7 @@ const config: Configuration = {
 			_hwTransport2: [ '@babel/runtime/regenerator' ]
 		})
 	],
-	externals: 'eosjs',
+	externals: 'eosjs', 
 	stats: {
 		colors: true
 	}

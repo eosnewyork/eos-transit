@@ -18,7 +18,7 @@
 		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
 	},
 	"dependencies": {
-		"anchor-link": "^1.0.0",
+		"anchor-link": "^1.0.2",
 		"anchor-link-browser-transport": "^1.0.0",
 		"eos-transit": "^4.0.5"
 	},
