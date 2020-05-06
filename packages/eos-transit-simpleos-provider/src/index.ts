@@ -98,7 +98,7 @@ export function myWalletProvider() {
       console.log("resp");
       console.log(resp);
       const results = await resp.json();
-      accountPublickey = results.publicKey;
+      accountPublickey = results.publicKey || results.storedKey;
       console.log("accountPublickey");
       console.log(accountPublickey);
       if(accountPublickey === undefined) {
@@ -106,8 +106,8 @@ export function myWalletProvider() {
         return Promise.reject("No account selected");
       }
       return {
-        accountName: results.accountName,
-        permission: results.permission,
+        accountName: results.accountName || results.name,
+        permission: results.permission || results.storedPerm,
         publicKey: accountPublickey
       };
     }
