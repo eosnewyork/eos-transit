@@ -6,7 +6,7 @@ let accountPublickey: string;
 let scatter: any;
 let signatureProvider: ApiInterfaces.SignatureProvider;
  
-if (typeof window !== undefined || typeof document !== undefined) {
+if (typeof window !== 'undefined' || typeof document !== 'undefined') {
 	// @ts-ignore:
 	scatter = window.scatter;
 	document.addEventListener('scatterLoaded', () => {
