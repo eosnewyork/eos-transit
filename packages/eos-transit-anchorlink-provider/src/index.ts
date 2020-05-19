@@ -88,7 +88,9 @@ class AnchorLinkProvider implements WalletProvider {
   }
 
   async logout(accountName?: string, permission?: string) {
-    await this.link.removeSession(this.sessionId, { actor: accountName, permission });
+    if (accountName && permission) {
+      await this.link.removeSession(this.sessionId, { actor: accountName, permission });      
+    }
   }
 }
 
