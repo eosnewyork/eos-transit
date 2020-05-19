@@ -1,6 +1,6 @@
 import { Link, LinkOptions, LinkSession, LinkTransport } from 'anchor-link';
 import { NetworkConfig, WalletAuth, WalletProvider, DiscoveryOptions } from 'eos-transit';
-import { ApiInterfaces } from 'eosjs';
+import { ApiInterfaces, JsonRpc } from 'eosjs';
 import BrowserTransport, {
   BrowserTransportOptions
 } from 'anchor-link-browser-transport';
@@ -16,7 +16,6 @@ class AnchorLinkProvider implements WalletProvider {
 
   link: Link;
   sessionId: string;
-  storage: SessionStorage;
 
   session?: LinkSession;
   sessionProvider?: ApiInterfaces.SignatureProvider;
@@ -35,17 +34,14 @@ class AnchorLinkProvider implements WalletProvider {
     }
   };
 
-  constructor(link: Link, sessionId: string, storage: SessionStorage) {
+  constructor(link: Link, sessionId: string) {
     this.link = link;
     this.sessionId = sessionId;
-    this.storage = storage;
   }
 
   async connect() {}
   async disconnect() {}
-  // async discover() {}
   async discover(discoveryOptions: DiscoveryOptions) {
-    // console.log('in scatter discover.');
     return {
         keys: [],
         note: 'anchorlink does not support discovery'
@@ -63,82 +59,47 @@ class AnchorLinkProvider implements WalletProvider {
     key?: string
   ): Promise<WalletAuth> {
     let session: LinkSession;
-    const existing = await this.storage.restore(
-      this.link,
-      this.sessionId,
-      accountName
-    );
+    let auth = undefined;
+    let existing
+    if (accountName && authorization) {
+      auth = {
+        actor: accountName,
+        permission: authorization,
+      }
+      existing = await this.link.restoreSession(
+        this.sessionId,
+        auth
+      );
+    }
     if (existing) {
       session = existing;
     } else {
       const loginResult = await this.link.login(this.sessionId);
       session = loginResult.session;
-      await this.storage.store(session, this.sessionId, accountName);
     }
     this.session = session;
     this.sessionProvider = session.makeSignatureProvider();
-    const auth: WalletAuth = {
+    const walletAuth: WalletAuth = {
       accountName: session.auth.actor,
       permission: session.auth.permission,
       publicKey: session.publicKey
     };
-    return auth;
+    return walletAuth;
   }
 
-  async logout(accountName?: string) {
-    await this.storage.remove(this.sessionId, accountName);
-    this.session = undefined;
-    this.sessionProvider = undefined;
-  }
-}
-
-interface SessionStorage {
-  store(session: LinkSession, id: string, accountName?: string): Promise<void>;
-  restore(
-    link: Link,
-    id: string,
-    accountName?: string
-  ): Promise<LinkSession | null>;
-  remove(id: string, accountName?: string): Promise<void>;
-}
-
-class LocalSessionStorage implements SessionStorage {
-  constructor(readonly keyPrefix: string = 'anchorlink') {}
-
-  private sessionKey(id: string, accountName?: string) {
-    return [this.keyPrefix, id, accountName]
-      .filter(v => typeof v === 'string' && v.length > 0)
-      .join('-');
-  }
-
-  async store(session: LinkSession, id: string, accountName?: string) {
-    const key = this.sessionKey(id, accountName);
-    const data = session.serialize();
-    localStorage.setItem(key, JSON.stringify(data));
-  }
-
-  async restore(link: Link, id: string, accountName?: string) {
-    const key = this.sessionKey(id, accountName);
-    const data = JSON.parse(localStorage.getItem(key) || 'null');
-    if (data) {
-      return LinkSession.restore(link, data);
-    }
-    return null;
-  }
-
-  async remove(id: string, accountName?: string) {
-    localStorage.removeItem(this.sessionKey(id, accountName));
+  async logout(accountName?: string, permission?: string) {
+    await this.link.removeSession(this.sessionId, { actor: accountName, permission });
   }
 }
 
 type ProviderOptions = Partial<LinkOptions> &
-  Partial<BrowserTransportOptions> & {
-    sessionStorage?: SessionStorage;
-  };
+  Partial<BrowserTransportOptions>;
 
 export default function makeProvider(
   sessionId: string,
-  options: ProviderOptions = {}
+  options: ProviderOptions = {
+    transport: new BrowserTransport()
+  }
 ) {
   return function(network: NetworkConfig): WalletProvider {
     let resolvedOptions: LinkOptions;
@@ -150,13 +111,16 @@ export default function makeProvider(
     } else {
       resolvedOptions = options as LinkOptions;
     }
+    let rpc:string | JsonRpc = network.protocol + '://' + network.host + ':' + network.port
+    if (options.rpc) {
+      rpc = options.rpc
+    }
     const link = new Link({
       ...resolvedOptions,
       chainId: network.chainId,
-      rpc: network.protocol + '://' + network.host + ':' + network.port
+      rpc,
     });
-    const storage = options.sessionStorage || new LocalSessionStorage();
-    return new AnchorLinkProvider(link, sessionId, storage);
+    return new AnchorLinkProvider(link, sessionId);
   };
 }
 
