@@ -3,7 +3,6 @@ import { Configuration, ProvidePlugin } from 'webpack';
 
 const config: Configuration = {
 	mode: 'production',
-	target: 'node',
 	entry: './src/index.ts',
 	module: {
 		rules: [

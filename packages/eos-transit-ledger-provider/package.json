@@ -23,7 +23,6 @@
 		"@babel/core": "^7.2.2",
 		"@babel/runtime": "^7.3.1",
 		"@ledgerhq/hw-transport": "^4.60.2",
-		"@ledgerhq/hw-transport-node-hid": "^5.13.0",
 		"@ledgerhq/hw-transport-u2f": "^4.60.2",
 		"@ledgerhq/hw-transport-web-ble": "^4.60.3",
 		"@ledgerhq/hw-transport-webauthn": "^4.55.0",
