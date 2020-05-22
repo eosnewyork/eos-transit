@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+##  2020-05-22 - 4.0.7
+
+- New version of tokenpoket plugin which has some minor updates. 
+
+##  2020-05-22 - 4.0.6
+
+- New version of anchor-link plugin which has some major upgrades. 
+
 ##  2019-12-12 - 4.0.2
 
 Added the ability for hosting applicaiton to do account lookup once the wallet returns the keys. 
