@@ -42,7 +42,7 @@ export function initAccessContext(options: WalletAccessContextOptions): WalletAc
 	const stateUnsubscribe = _stateContainer.subscribe(_handleUpdate);
 
 	const eosRpcUrl = getNetworkUrl(network);
-	const eosRpc = new JsonRpc(eosRpcUrl, { fetch });
+	const eosRpc = new JsonRpc(eosRpcUrl);
 
 	const ctx: WalletAccessContext = {
 		appName,
