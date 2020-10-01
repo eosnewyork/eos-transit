@@ -1,0 +1,38 @@
+{
+	"name": "eos-transit-proton-provider",
+	"version": "4.0.7",
+	"description": "ESR provider for Proton Wallet",
+	"license": "MIT",
+	"main": "lib/index.js",
+	"module": "lib/index.js",
+	"types": "lib",
+	"scripts": {
+		"echo": "echo \"================== eos-transit-proton-provider ===================\"",
+		"installpkg": "yarn echo && npm install",
+		"clean": "rm -rf lib && rm -rf umd",
+		"prebuild": "yarn clean",
+		"build": "../../node_modules/typescript/bin/tsc",
+		"build-production": "yarn build && TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack",
+		"watch": "../../node_modules/typescript/bin/tsc -w",
+		"test": "",
+		"lint": "../../node_modules/.bin/tslint -c ../../tslint.json -p ./tsconfig.json"
+	},
+	"dependencies": {
+		"@protonprotocol/proton-browser-transport": "^2.4.14",
+		"@protonprotocol/proton-link": "^2.4.11",
+		"@protonprotocol/proton-web-sdk": "^2.4.16"
+	},
+	"devDependencies": {
+		"eosjs": "^20.0.0",
+		"prettier": "^1.19.1",
+		"webpack": "^4.25.1",
+		"webpack-cli": "^3.1.2"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"printWidth": 80,
+		"tabWidth": 2,
+		"useTabs": false,
+		"bracketSpacing": true
+	}
+}

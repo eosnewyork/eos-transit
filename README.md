@@ -18,7 +18,7 @@ Instead of focusing on supporting specific signature providers one by one, devel
 
 ## Packages
 
-This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna).  
+This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna).
 
 
 | Package                                                                         | Version | Description                       |
@@ -35,16 +35,17 @@ This is a monorepo that is managed with [`lerna`](https://github.com/lerna/lerna
 | [`eos-transit-simpleos-provider`](packages/eos-transit-simpleos-provider) | [![npm version](https://badge.fury.io/js/eos-transit-simpleos-provider.svg)](https://badge.fury.io/js/eos-transit-simpleos-provider)   | Wallet provider for [simplEOS](https://eosrio.io/simpleos/) app |
 | [`eos-transit-stub-provider`](packages/eos-transit-stub-provider)               | [![npm version](https://badge.fury.io/js/eos-transit-stub-provider.svg)](https://badge.fury.io/js/eos-transit-stub-provider)   | Stub wallet provider that does nothing, for demo and testing only |
 | [`eos-transit-anchorlink-provider`](packages/eos-transit-anchorlink-provider)               | [![npm version](https://badge.fury.io/js/eos-transit-anchorlink-provider.svg)](https://badge.fury.io/js/eos-transit-anchorlink-provider)   | Anchor / ESR provider for eos-transit |
+| [`eos-transit-proton-provider`](packages/eos-transit-proton-provider)               | [![npm version](https://badge.fury.io/js/eos-transit-proton-provider.svg)](https://badge.fury.io/js/eos-transit-proton-provider)   | Proton provider for eos-transit |
 
 ## Contribution
 
-The below instructions only apply to developers wishing to build the transit project. In most cases developers will want to pull the NPM pakckages. 
+The below instructions only apply to developers wishing to build the transit project. In most cases developers will want to pull the NPM pakckages.
 
 If you're wanting to USE eos-transit and plugins:
 
  👉🏻 **Please see the "Quick Start" and thorough guide in the [`eos-transit` package docs](packages/eos-transit)**
 
-If you are looking to build your own plugin, the [Transit PLUGIN Developer Kit](/eosnewyork/eos-transit/tree/master/plugin-dev/transit-dev-simple) is a good place to start. 
+If you are looking to build your own plugin, the [Transit PLUGIN Developer Kit](/eosnewyork/eos-transit/tree/master/plugin-dev/transit-dev-simple) is a good place to start.
 
 ### Package development
 
@@ -53,7 +54,7 @@ If you are looking to build your own plugin, the [Transit PLUGIN Developer Kit](
 2.  Install the dependencies with
 
         $ yarn install
-   
+
     **Note** that before `eos-transit`, `eos-transit-scatter-provider` and `eos-transit-stub-provider` are published, they are managed by `lerna` along with packages themselves. That means, before running the examples, `lerna` should wire up all the dependencies and instead of running `yarn install` manually from this folder, the following commands should be run from the project root:
 
 3.  Bootstrap the dependencies with

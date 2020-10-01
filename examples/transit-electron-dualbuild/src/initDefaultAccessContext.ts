@@ -10,6 +10,7 @@ import whaleVault from 'eos-transit-whalevault-provider'
 import keycat from 'eos-transit-keycat-provider'
 import simplEOS from 'eos-transit-simpleos-provider'
 import anchorlink from 'eos-transit-anchorlink-provider'
+import proton from 'eos-transit-proton-provider'
 
 const appName = 'My Dapp';
 
@@ -22,7 +23,7 @@ initDefaultAccessContext({
 		chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 	},
 	// walletProviders: [ scatter() ]
-	walletProviders: [ 
+	walletProviders: [
 		scatter(),
 		ledger({exchangeTimeout : 30000, transport: 'TransportWebBLE', name: 'Ledger Nano S BLE', shortName: 'Ledger Nano S BLE', id: 'ledgerble' }),
 		ledger({exchangeTimeout : 30000, transport: 'TransportU2F', name: 'Ledger Nano S U2F', shortName: 'Ledger Nano S U2F', id: 'ledgeru2f' }),
@@ -37,7 +38,8 @@ initDefaultAccessContext({
 		whaleVault(),
 		keycat(),
 		simplEOS(),
-		anchorlink(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),{}) 
+		anchorlink(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),{}),
+		proton(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),{})
 	]
 });
 
