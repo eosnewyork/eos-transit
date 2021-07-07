@@ -77,7 +77,7 @@ export default class EOS {
     paths.forEach((element: any, index: any) => {
       buffer.writeUInt32BE(element, 1 + 4 * index);
     });
-    return this.transport.send(0xD4, 0x02, 0x00, 0x00, buffer).then((response:any) => {
+    return this.transport.send(CLA, INS_GET_PUBLIC_KEY, P1_NON_CONFIRM, P1_NON_CONFIRM, buffer).then((response:any) => {
       let result: Result1 = new Result1();
       let publicKeyLength = response[0];
       let addressLength = response[1 + publicKeyLength];
@@ -118,7 +118,7 @@ export default class EOS {
       toSend.push(buffer);
       offset += chunkSize;
     }
-    return foreach(toSend, (data: any, i: any) => this.transport.send(0xD4, 0x04, i === 0 ? 0x00 : 0x80, 0x00, data).then((apduResponse: any) => {
+    return foreach(toSend, (data: any, i: any) => this.transport.send(CLA, INS_SIGN, i === 0 ? P1_FIRST : P1_MORE, P1_NON_CONFIRM, data).then((apduResponse: any) => {
       response = apduResponse;
     })).then(() => {
       const v = response.slice(0, 1).toString("hex");
@@ -131,9 +131,9 @@ export default class EOS {
   /**
    */
   getAppConfiguration() {
-    return this.transport.send(0xe0, 0x06, 0x00, 0x00).then((response : any) => {
+    return this.transport.send(CLA, INS_GET_APP_CONFIGURATION, P1_FIRST, P1_FIRST).then((response : any) => {
       let result: Result2 = new Result2();
-      result.arbitraryDataEnabled = response[0] & 0x01;
+      result.arbitraryDataEnabled = Boolean(response[0] & 0x01);
       result.version = "" + response[1] + "." + response[2] + "." + response[3];
       return result;
     });
@@ -174,7 +174,7 @@ export default class EOS {
       toSend.push(buffer);
       offset += chunkSize;
     }
-    return foreach(toSend, (data: any, i: any) => this.transport.send(0xD4, 0x02, i === 0 ? 0x00 : 0x80, 0x00, data).then((apduResponse : any)=> {
+    return foreach(toSend, (data: any, i: any) => this.transport.send(CLA, INS_GET_PUBLIC_KEY, i === 0 ? P1_FIRST : P1_MORE, P1_NON_CONFIRM, data).then((apduResponse : any)=> {
       response = apduResponse;
     })).then(() => {
       const v = response[0];
