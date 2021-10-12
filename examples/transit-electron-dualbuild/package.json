@@ -33,7 +33,7 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "@craco/craco": "^5.2.1",
-    "electron": "^5.0.2",
+    "electron": "^11.5.0",
     "electron-builder": "^20.41.0",
     "emotion": "^9.2.10",
     "env-cmd": "^9.0.2",
