@@ -21,7 +21,7 @@
     "scatterjs-plugin-eosjs": "^1.1.1"
   },
   "devDependencies": {
-    "node-sass": "^4.9.3"
+    "node-sass": "^7.0.0"
   },
   "prettier": {
     "singleQuote": true,
