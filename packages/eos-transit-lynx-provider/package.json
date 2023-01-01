@@ -23,7 +23,7 @@
 	},
 	"devDependencies": {
 		"@babel/plugin-transform-regenerator": "^7.0.0",
-		"webpack": "^4.25.1"
+		"webpack": "^5.75.0"
 	},
 	"prettier": {
 		"singleQuote": true,
